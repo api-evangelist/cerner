@@ -1,0 +1,7 @@
+aid: cerner
+url: https://raw.githubusercontent.com/api-evangelist/cerner/refs/heads/main/apis.yml
+modified: '2026-03-23'
+apis: []
+common:
+  - type: Website
+    url: https://www.cerner.com
