@@ -1,7 +1,12 @@
 aid: cerner
-url: https://raw.githubusercontent.com/api-evangelist/cerner/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/cerner/refs/heads/main/apis.yml
 modified: '2026-03-23'
 apis: []
 common:
   - type: Website
     url: https://www.cerner.com
+description: >-
+  Cerner is a global healthcare technology company that designs and develops electronic
+  health records and other health information technology solutions for hospitals,
+  clinics, and health systems.
