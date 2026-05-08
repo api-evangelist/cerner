@@ -51,6 +51,8 @@ apis:
         type: Portal
       - url: https://www.oracle.com/health/developer/
         type: DeveloperProgram
+      - type: OpenAPI
+        url: openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
     description: >-
       The Oracle Health Millennium Platform FHIR R4 API provides
       OAuth 2.0-secured access to Cerner Millennium EHR data in the HL7

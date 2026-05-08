@@ -1,0 +1,353 @@
+openapi: 3.1.0
+info:
+  title: Oracle Health Millennium Platform FHIR R4 API
+  description: >-
+    The Oracle Health (Cerner Millennium) FHIR R4 API provides
+    OAuth 2.0-secured access to EHR data in the HL7 FHIR R4 format. It
+    exposes USCDI-aligned resources such as Patient, Practitioner,
+    Observation, Condition, MedicationRequest, DocumentReference, and
+    Encounter for patient-access apps, provider apps, and interoperability
+    partners. The API supports SMART on FHIR app launching and is the
+    successor to the Cerner Millennium DSTU2 FHIR API.
+  version: 'R4'
+  contact:
+    name: Oracle Health Developer Program
+    url: https://www.oracle.com/health/developer/
+externalDocs:
+  description: Oracle Health Millennium FHIR R4 Documentation
+  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+servers:
+- url: https://fhir-ehr.cerner.com/r4
+  description: Cerner Millennium FHIR R4 production endpoint
+- url: https://fhir-open.cerner.com/r4
+  description: Cerner Millennium FHIR R4 sandbox endpoint
+tags:
+- name: Capability
+  description: FHIR server metadata and capability statements.
+- name: Patient
+  description: Patient demographics and identifiers.
+- name: Encounter
+  description: Patient encounter records.
+- name: Condition
+  description: Patient conditions and problem-list entries.
+- name: Procedure
+  description: Patient procedures.
+- name: Definitions
+  description: FHIR conformance definitions and operations.
+- name: Generic
+  description: Generic FHIR resource read/write operations.
+security:
+- oauth2: []
+paths:
+  /metadata:
+    get:
+      operationId: getCapabilityStatement
+      summary: Get Capability Statement
+      description: Returns the FHIR CapabilityStatement describing supported resources and operations.
+      tags:
+      - Capability
+      security: []
+      responses:
+        '200':
+          description: Capability statement
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRResource'
+  /CapabilityStatement:
+    get:
+      operationId: readCapabilityStatement
+      summary: Read CapabilityStatement
+      description: Returns the CapabilityStatement resource for the FHIR server.
+      tags:
+      - Capability
+      security: []
+      responses:
+        '200':
+          description: CapabilityStatement resource
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRResource'
+  /Condition:
+    get:
+      operationId: searchCondition
+      summary: Search or Read Condition
+      description: Search or read Condition resources for a patient.
+      tags:
+      - Condition
+      parameters:
+      - name: patient
+        in: query
+        description: Patient resource reference.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A FHIR Bundle of Condition resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /Encounter:
+    get:
+      operationId: searchEncounter
+      summary: Search or Read Encounter
+      description: Search or read Encounter resources for a patient.
+      tags:
+      - Encounter
+      parameters:
+      - name: patient
+        in: query
+        description: Patient resource reference.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A FHIR Bundle of Encounter resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /Patient:
+    get:
+      operationId: searchPatient
+      summary: Search or Read Patient
+      description: Search or read Patient resources.
+      tags:
+      - Patient
+      parameters:
+      - name: identifier
+        in: query
+        description: Patient identifier.
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: Patient name.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A FHIR Bundle of Patient resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /Procedure:
+    get:
+      operationId: searchProcedure
+      summary: Search or Read Procedure
+      description: Search or read Procedure resources for a patient.
+      tags:
+      - Procedure
+      parameters:
+      - name: patient
+        in: query
+        description: Patient resource reference.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A FHIR Bundle of Procedure resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /OperationDefinition:
+    get:
+      operationId: searchOperationDefinition
+      summary: Search OperationDefinition
+      description: Returns OperationDefinition resources defined for the server.
+      tags:
+      - Definitions
+      security: []
+      responses:
+        '200':
+          description: A FHIR Bundle of OperationDefinition resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundle'
+  /StructureDefinition:
+    get:
+      operationId: searchStructureDefinition
+      summary: Search StructureDefinition
+      description: Returns StructureDefinition resources defined for the server.
+      tags:
+      - Definitions
+      security: []
+      responses:
+        '200':
+          description: A FHIR Bundle of StructureDefinition resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundle'
+  /{resource}:
+    post:
+      operationId: createResource
+      summary: Create FHIR Resource
+      description: Creates a new instance of the named FHIR resource type.
+      tags:
+      - Generic
+      parameters:
+      - name: resource
+        in: path
+        required: true
+        description: The FHIR resource type (e.g., Observation, Condition).
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/FHIRResource'
+      responses:
+        '201':
+          description: Resource created
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /{resource}/{id}:
+    put:
+      operationId: updateResource
+      summary: Update FHIR Resource
+      description: Updates an existing FHIR resource by ID.
+      tags:
+      - Generic
+      parameters:
+      - name: resource
+        in: path
+        required: true
+        description: The FHIR resource type.
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: The FHIR resource ID.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/FHIRResource'
+      responses:
+        '200':
+          description: Resource updated
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRResource'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: patchResource
+      summary: Patch FHIR Resource
+      description: Partially updates an existing FHIR resource by ID.
+      tags:
+      - Generic
+      parameters:
+      - name: resource
+        in: path
+        required: true
+        description: The FHIR resource type.
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: The FHIR resource ID.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/FHIRResource'
+      responses:
+        '200':
+          description: Resource patched
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRResource'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: >-
+        SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            patient/*.read: Read all patient-scoped resources.
+            user/*.read: Read all user-scoped resources.
+            system/*.read: System-level read access.
+        clientCredentials:
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            system/*.read: System-level read access.
+            system/*.write: System-level write access.
+  responses:
+    Unauthorized:
+      description: Authentication credentials are missing or invalid.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIRResource'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIRResource'
+  schemas:
+    FHIRResource:
+      type: object
+      description: A generic FHIR R4 resource.
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+      additionalProperties: true
+    FHIRBundle:
+      type: object
+      description: A FHIR R4 Bundle resource wrapping a collection of resources.
+      properties:
+        resourceType:
+          type: string
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      additionalProperties: true
+x-generated-from: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+x-generated-by: claude-crawl-2026-05-08
