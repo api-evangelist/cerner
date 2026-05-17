@@ -168,7 +168,7 @@ common:
     url: https://code.cerner.com/
   - type: OpenSource
     url: https://github.com/cerner
-  - type: Privacy Policy
+  - type: PrivacyPolicy
     url: https://www.oracle.com/legal/privacy/
 maintainers:
   - FN: Kin Lane
