@@ -1,0 +1,80 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Oracle Health Millennium Platform FHIR R4 API — Procedure
+  description: 'Oracle Health Millennium Platform FHIR R4 API — Procedure. 1 operations. Lead operation: Search or Read Procedure.
+    Self-contained Naftiko capability covering one Cerner business surface.'
+  tags:
+  - Cerner
+  - Procedure
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CERNER_API_KEY: CERNER_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: oracle-health-fhir-r4-procedure
+    baseUri: https://fhir-ehr.cerner.com/r4
+    description: Oracle Health Millennium Platform FHIR R4 API — Procedure business capability. Self-contained, no shared
+      references.
+    resources:
+    - name: Procedure
+      path: /Procedure
+      operations:
+      - name: searchprocedure
+        method: GET
+        description: Search or Read Procedure
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: patient
+          in: query
+          type: string
+          description: Patient resource reference.
+    authentication:
+      type: bearer
+      token: '{{env.CERNER_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: oracle-health-fhir-r4-procedure-rest
+    port: 8080
+    description: REST adapter for Oracle Health Millennium Platform FHIR R4 API — Procedure. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/procedure
+      name: procedure
+      description: REST surface for Procedure.
+      operations:
+      - method: GET
+        name: searchprocedure
+        description: Search or Read Procedure
+        call: oracle-health-fhir-r4-procedure.searchprocedure
+        with:
+          patient: rest.patient
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: oracle-health-fhir-r4-procedure-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Oracle Health Millennium Platform FHIR R4 API — Procedure. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: search-read-procedure
+      description: Search or Read Procedure
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: oracle-health-fhir-r4-procedure.searchprocedure
+      with:
+        patient: tools.patient
+      outputParameters:
+      - type: object
+        mapping: $.

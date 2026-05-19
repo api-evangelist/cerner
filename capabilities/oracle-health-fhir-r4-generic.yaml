@@ -1,0 +1,192 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Oracle Health Millennium Platform FHIR R4 API — Generic
+  description: 'Oracle Health Millennium Platform FHIR R4 API — Generic. 3 operations. Lead operation: Create FHIR Resource.
+    Self-contained Naftiko capability covering one Cerner business surface.'
+  tags:
+  - Cerner
+  - Generic
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CERNER_API_KEY: CERNER_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: oracle-health-fhir-r4-generic
+    baseUri: https://fhir-ehr.cerner.com/r4
+    description: Oracle Health Millennium Platform FHIR R4 API — Generic business capability. Self-contained, no shared references.
+    resources:
+    - name: resource
+      path: /{resource}
+      operations:
+      - name: createresource
+        method: POST
+        description: Create FHIR Resource
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: resource
+          in: path
+          type: string
+          description: The FHIR resource type (e.g., Observation, Condition).
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: resource-id
+      path: /{resource}/{id}
+      operations:
+      - name: updateresource
+        method: PUT
+        description: Update FHIR Resource
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: resource
+          in: path
+          type: string
+          description: The FHIR resource type.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: The FHIR resource ID.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: patchresource
+        method: PATCH
+        description: Patch FHIR Resource
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: resource
+          in: path
+          type: string
+          description: The FHIR resource type.
+          required: true
+        - name: id
+          in: path
+          type: string
+          description: The FHIR resource ID.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: bearer
+      token: '{{env.CERNER_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: oracle-health-fhir-r4-generic-rest
+    port: 8080
+    description: REST adapter for Oracle Health Millennium Platform FHIR R4 API — Generic. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/{resource}
+      name: resource
+      description: REST surface for resource.
+      operations:
+      - method: POST
+        name: createresource
+        description: Create FHIR Resource
+        call: oracle-health-fhir-r4-generic.createresource
+        with:
+          resource: rest.resource
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/{resource}/{id}
+      name: resource-id
+      description: REST surface for resource-id.
+      operations:
+      - method: PUT
+        name: updateresource
+        description: Update FHIR Resource
+        call: oracle-health-fhir-r4-generic.updateresource
+        with:
+          resource: rest.resource
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PATCH
+        name: patchresource
+        description: Patch FHIR Resource
+        call: oracle-health-fhir-r4-generic.patchresource
+        with:
+          resource: rest.resource
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: oracle-health-fhir-r4-generic-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Oracle Health Millennium Platform FHIR R4 API — Generic. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: create-fhir-resource
+      description: Create FHIR Resource
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: oracle-health-fhir-r4-generic.createresource
+      with:
+        resource: tools.resource
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-fhir-resource
+      description: Update FHIR Resource
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: oracle-health-fhir-r4-generic.updateresource
+      with:
+        resource: tools.resource
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: patch-fhir-resource
+      description: Patch FHIR Resource
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: oracle-health-fhir-r4-generic.patchresource
+      with:
+        resource: tools.resource
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

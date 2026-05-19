@@ -1,0 +1,80 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Oracle Health Millennium Platform FHIR R4 API — Encounter
+  description: 'Oracle Health Millennium Platform FHIR R4 API — Encounter. 1 operations. Lead operation: Search or Read Encounter.
+    Self-contained Naftiko capability covering one Cerner business surface.'
+  tags:
+  - Cerner
+  - Encounter
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CERNER_API_KEY: CERNER_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: oracle-health-fhir-r4-encounter
+    baseUri: https://fhir-ehr.cerner.com/r4
+    description: Oracle Health Millennium Platform FHIR R4 API — Encounter business capability. Self-contained, no shared
+      references.
+    resources:
+    - name: Encounter
+      path: /Encounter
+      operations:
+      - name: searchencounter
+        method: GET
+        description: Search or Read Encounter
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: patient
+          in: query
+          type: string
+          description: Patient resource reference.
+    authentication:
+      type: bearer
+      token: '{{env.CERNER_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: oracle-health-fhir-r4-encounter-rest
+    port: 8080
+    description: REST adapter for Oracle Health Millennium Platform FHIR R4 API — Encounter. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/encounter
+      name: encounter
+      description: REST surface for Encounter.
+      operations:
+      - method: GET
+        name: searchencounter
+        description: Search or Read Encounter
+        call: oracle-health-fhir-r4-encounter.searchencounter
+        with:
+          patient: rest.patient
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: oracle-health-fhir-r4-encounter-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Oracle Health Millennium Platform FHIR R4 API — Encounter. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: search-read-encounter
+      description: Search or Read Encounter
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: oracle-health-fhir-r4-encounter.searchencounter
+      with:
+        patient: tools.patient
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,85 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Oracle Health Millennium Platform FHIR R4 API — Patient
+  description: 'Oracle Health Millennium Platform FHIR R4 API — Patient. 1 operations. Lead operation: Search or Read Patient.
+    Self-contained Naftiko capability covering one Cerner business surface.'
+  tags:
+  - Cerner
+  - Patient
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    CERNER_API_KEY: CERNER_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: oracle-health-fhir-r4-patient
+    baseUri: https://fhir-ehr.cerner.com/r4
+    description: Oracle Health Millennium Platform FHIR R4 API — Patient business capability. Self-contained, no shared references.
+    resources:
+    - name: Patient
+      path: /Patient
+      operations:
+      - name: searchpatient
+        method: GET
+        description: Search or Read Patient
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: identifier
+          in: query
+          type: string
+          description: Patient identifier.
+        - name: name
+          in: query
+          type: string
+          description: Patient name.
+    authentication:
+      type: bearer
+      token: '{{env.CERNER_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: oracle-health-fhir-r4-patient-rest
+    port: 8080
+    description: REST adapter for Oracle Health Millennium Platform FHIR R4 API — Patient. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/patient
+      name: patient
+      description: REST surface for Patient.
+      operations:
+      - method: GET
+        name: searchpatient
+        description: Search or Read Patient
+        call: oracle-health-fhir-r4-patient.searchpatient
+        with:
+          identifier: rest.identifier
+          name: rest.name
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: oracle-health-fhir-r4-patient-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Oracle Health Millennium Platform FHIR R4 API — Patient. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: search-read-patient
+      description: Search or Read Patient
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: oracle-health-fhir-r4-patient.searchpatient
+      with:
+        identifier: tools.identifier
+        name: tools.name
+      outputParameters:
+      - type: object
+        mapping: $.
