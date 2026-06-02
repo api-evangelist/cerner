@@ -1,0 +1,271 @@
+aid: cerner
+name: Cerner (Oracle Health)
+review_type: fhir-subscription-and-webhook-surface
+question: Does Cerner (Oracle Health) Millennium expose a documented, first-party
+  FHIR R4 Subscription resource (REST-Hook or other channel) or any outbound webhook
+  / push-event surface for clinical, administrative, or developer-program events?
+answer: 'No'
+summary: |
+  Cerner / Oracle Health Millennium's documented FHIR R4 surface — published at
+  fhir.cerner.com (which now redirects to docs.oracle.com/en/industries/health/
+  millennium-platform-apis/) and mirrored at github.com/cerner/fhir.cerner.com —
+  does not list the FHIR Subscription resource in its CapabilityStatement and
+  does not document a REST-Hook, email, websocket, or message channel. The R4
+  CapabilityStatement documented on the Oracle Health Millennium Platform pages
+  enumerates a focused list of supported resources (CapabilityStatement,
+  Condition, Encounter, OperationDefinition, Patient, Procedure,
+  StructureDefinition) plus the broader USCDI-aligned set reachable through
+  SMART scopes; Subscription is not among them. The DSTU2 implementation at
+  fhir.cerner.com/millennium/dstu2/ similarly does not document Subscription.
+  Bulk Data Access (Flat FHIR group export) is supported, but Bulk Data is
+  request-driven async polling, not a Subscription / push channel. The
+  CareAware integration product delivers real-time clinical events via HL7 v2
+  through Cerner Open Interface (COI), not via FHIR Subscription and not via
+  customer-registered HTTP webhooks. A connectathon-only Subscription server
+  was demonstrated by Cerner engineering on the FHIR community chat in January
+  2018 (Max Philips, Cerner FHIR developers group), but that endpoint was
+  explicitly a connectathon server and has never been promoted into the
+  production Millennium developer surface. The Oracle Cerner developer team
+  reply on the cerner-fhir-developers Google group is on record stating
+  "Oracle Cerner's implementation of FHIR do not have support for the
+  Subscription resource." Therefore the correct artifact is this review,
+  not a Subscription channel spec or an AsyncAPI description.
+investigated_on: '2026-05-30'
+investigated_by: API Evangelist
+findings:
+  - name: Subscription is not in the documented R4 CapabilityStatement
+    detail: |
+      The Oracle Health Millennium Platform R4 overview page and the
+      cerner/fhir.cerner.com repository's content/millennium/r4.md document
+      the supported resources for the production R4 endpoint. The list
+      includes CapabilityStatement, Condition, Encounter, OperationDefinition,
+      Patient, Procedure, and StructureDefinition with their documented
+      interactions; Subscription is not present in that list. Broader USCDI
+      resources are reachable through SMART scopes, but none of the
+      documentation introduces a Subscription resource, a Subscription
+      endpoint, or a SubscriptionTopic.
+    sources:
+      - https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+      - https://github.com/cerner/fhir.cerner.com/blob/main/content/millennium/r4.md
+      - https://fhir.cerner.com/
+  - name: No REST-Hook, email, websocket, or message channel documented
+    detail: |
+      FHIR R4 Subscription supports rest-hook, websocket, email, sms, and
+      message channels. None of these channels are documented in the
+      Oracle Health Millennium Platform FHIR API documentation or in the
+      Authorization Framework documentation. No customer-supplied callback
+      URL can be registered against a Cerner Millennium tenant through any
+      documented FHIR endpoint.
+    sources:
+      - https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+      - https://docs.oracle.com/en/industries/health/millennium-platform-apis/fhir-authorization-framework/
+  - name: Bulk Data is async polling, not Subscription
+    detail: |
+      Oracle Health Millennium supports the HL7 Bulk Data Access (Flat FHIR)
+      specification for group-level export to NDJSON. Bulk Data uses
+      $export kickoff plus client polling of the status endpoint plus
+      authenticated file download; it is not a push subscription and does
+      not invoke a customer-registered callback URL. It cannot be used as
+      a substitute for FHIR Subscription notification semantics.
+    sources:
+      - https://fhir.cerner.com/millennium/r4/
+      - https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - name: Real-time events route through HL7 v2 / CareAware, not FHIR webhooks
+    detail: |
+      Cerner CareAware is the documented integration product for real-time
+      clinical event delivery (ADT, orders, results, device data) and uses
+      HL7 v2 messaging through Cerner Open Interface (COI) plus device and
+      workflow APIs. CareAware is not a FHIR Subscription channel and is
+      not a customer-registered HTTP webhook surface on the FHIR API — it
+      is a separate integration product with its own contracting and
+      onboarding path.
+    sources:
+      - https://www.cerner.com/solutions/careaware-interoperability
+  - name: Connectathon Subscription server existed in 2018 but is not documented production
+    detail: |
+      The FHIR community chat archive (chat-archive.fhir.org, stream
+      179229-subscriptions, topic "Cerner Subscription server") records a
+      January 2018 announcement by Max Philips of Cerner that Subscription
+      create and search were available on Cerner's connectathon server,
+      with a /notify endpoint used to trigger notifications. This was
+      explicitly a connectathon server, not a production Millennium
+      endpoint. The capability has never been promoted into the public
+      Oracle Health Millennium Platform documentation, the
+      fhir.cerner.com R4 reference, or the cerner/fhir.cerner.com
+      repository.
+    sources:
+      - https://chat-archive.fhir.org/stream/179229-subscriptions/topic/Cerner.20Subscription.20server.html
+  - name: Oracle Cerner engineering has stated on the developer group that Subscription is not supported
+    detail: |
+      The cerner-fhir-developers Google group thread on FHIR Subscriptions
+      contains a reply from Davis Christi (Oracle Cerner) stating that
+      Oracle Cerner's implementation of FHIR does not have support for
+      the Subscription resource. The response directs developers to
+      fhir.cerner.com for the current set of supported APIs and does
+      not reference a roadmap for production Subscription support.
+    sources:
+      - https://groups.google.com/g/cerner-fhir-developers/c/0Wt0p3e4zBI
+  - name: Code Console developer portal does not offer webhook registration
+    detail: |
+      The Oracle Health Code Console (code.cerner.com) is the registration
+      portal for SMART on FHIR and system-level applications. It manages
+      OAuth 2.0 client credentials, redirect URIs, and launch parameters.
+      The Code Console does not expose a webhook-registration UI or API
+      for clinical events, app lifecycle events, or developer-program
+      events. There is no documented outbound webhook for app
+      registration, key rotation, sandbox provisioning, or production
+      promotion.
+    sources:
+      - https://code.cerner.com/
+      - https://fhir.cerner.com/authorization/
+  - name: DSTU2 surface also does not document Subscription
+    detail: |
+      The legacy Cerner Millennium DSTU2 documentation at
+      fhir.cerner.com/millennium/dstu2/ does not document Subscription
+      either. (DSTU2 Subscription exists in the HL7 spec but is not
+      part of the documented Cerner DSTU2 conformance.)
+    sources:
+      - https://fhir.cerner.com/millennium/dstu2/
+documented_apis:
+  - name: Oracle Health Millennium Platform FHIR R4 API
+    protocol: HTTPS / FHIR R4 REST
+    websocket: false
+    sse: false
+    webhooks: false
+    subscription_resource: false
+    subscription_channels: []
+    notes: |
+      Read and search interactions on documented resources. No Subscription
+      resource and no REST-Hook channel in the documented
+      CapabilityStatement.
+  - name: Oracle Health Millennium FHIR DSTU2 API
+    protocol: HTTPS / FHIR DSTU2 REST
+    websocket: false
+    sse: false
+    webhooks: false
+    subscription_resource: false
+    subscription_channels: []
+    notes: |
+      Legacy SMART on FHIR surface. Subscription resource is not
+      documented in the Cerner DSTU2 conformance.
+  - name: Oracle Health Millennium Bulk FHIR API
+    protocol: HTTPS / FHIR Bulk Data Access (Flat FHIR)
+    websocket: false
+    sse: false
+    webhooks: false
+    subscription_resource: false
+    subscription_channels: []
+    notes: |
+      $export kickoff plus client polling of the status endpoint plus
+      NDJSON download. Async pull, not push. No customer-registered
+      callback URL.
+  - name: Oracle Health SMART on FHIR App Launch
+    protocol: HTTPS / OAuth 2.0 + OpenID Connect
+    websocket: false
+    sse: false
+    webhooks: false
+    subscription_resource: false
+    subscription_channels: []
+    notes: |
+      Standalone launch and EHR launch flows. Authorization plane only;
+      no event subscription or push delivery.
+  - name: Oracle Health Code Console (Developer Portal)
+    protocol: HTTPS (web UI + management endpoints)
+    websocket: false
+    sse: false
+    webhooks: false
+    subscription_resource: false
+    subscription_channels: []
+    notes: |
+      App registration, client credential management, sandbox access.
+      No outbound webhook for app or developer events.
+  - name: Cerner CareAware Integration APIs
+    protocol: HL7 v2 + device/workflow APIs
+    websocket: false
+    sse: false
+    webhooks: false
+    subscription_resource: false
+    subscription_channels: []
+    notes: |
+      Separate integration product for real-time clinical events.
+      Uses HL7 v2 through Cerner Open Interface (COI), not FHIR
+      Subscription and not customer-registered HTTP webhooks.
+event_surface:
+  fhir_subscription_resource: false
+  fhir_subscription_channels: []
+  fhir_subscriptiontopic: false
+  webhooks: []
+  asyncapi_channels: []
+  sse: []
+  websocket: []
+  push_email: []
+  streaming_sinks: []
+  pull_endpoints:
+    - FHIR R4 read / search across documented resources
+    - FHIR DSTU2 read / search (legacy)
+    - Bulk Data $export status polling + NDJSON download
+  out_of_band_event_paths:
+    - HL7 v2 via Cerner CareAware / Cerner Open Interface (COI) — separate
+      integration product, not part of the FHIR API
+subscription_channel_recommendation:
+  produce_subscription_spec: false
+  reason: |
+    Cerner / Oracle Health Millennium does not document a FHIR Subscription
+    resource, a SubscriptionTopic, or any channel (rest-hook, email,
+    websocket, sms, message) on its public R4 or DSTU2 surface. The only
+    Subscription implementation referenced anywhere is a 2018 connectathon
+    server, and Oracle Cerner engineering has stated on the developer group
+    that Subscription is not supported in production. Producing a
+    Subscription channel spec or AsyncAPI description for Cerner would
+    require fabricating channels, topics, and bindings that the vendor
+    does not publish. The correct artifact is this review.
+  alternative_artifacts:
+    - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml — existing
+      OpenAPI for the documented R4 read / search surface.
+    - capabilities/oracle-health-fhir-r4-capability.yaml and sibling
+      capability YAMLs — Naftiko capability descriptions of the
+      documented resources.
+    - Future, if Oracle Health Millennium publishes a production
+      Subscription / SubscriptionTopic implementation in its
+      CapabilityStatement, a FHIR Subscription channel description (and
+      / or AsyncAPI 2.6 description of the rest-hook channel) should be
+      produced at that time and referenced from apis.yml.
+sources_checked:
+  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    note: R4 overview. Documents supported resources (CapabilityStatement,
+      Condition, Encounter, OperationDefinition, Patient, Procedure,
+      StructureDefinition) plus USCDI scopes. No Subscription.
+  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
+    note: Oracle Health Millennium Platform docs index. Lists EHR APIs,
+      FHIR R4, Bulk Data, DSTU2, Authorization, SMART, Public Endpoints.
+      No Subscription / webhook section.
+  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/fhir-authorization-framework/
+    note: Authorization framework. OAuth 2.0 + SMART scopes. No webhook
+      subscription mechanism.
+  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/fhir-faqs-common-issues/
+    note: FAQ. States the FHIR implementation supports REST over HTTPS.
+      No mention of Subscription, webhook, REST-Hook, or push delivery.
+  - url: https://fhir.cerner.com/
+    note: fhir.cerner.com root. Redirects to docs.oracle.com Millennium
+      Platform docs.
+  - url: https://fhir.cerner.com/millennium/dstu2/
+    note: Legacy DSTU2 surface. Subscription not documented.
+  - url: https://fhir.cerner.com/authorization/
+    note: SMART on FHIR authorization. No webhook surface.
+  - url: https://github.com/cerner/fhir.cerner.com/blob/main/content/millennium/r4.md
+    note: Source content for fhir.cerner.com R4 docs. Subscription not
+      among documented resources.
+  - url: https://code.cerner.com/
+    note: Code Console developer portal. App registration only. No
+      webhook registration for app or developer events.
+  - url: https://groups.google.com/g/cerner-fhir-developers/c/0Wt0p3e4zBI
+    note: Oracle Cerner engineering reply stating Subscription is not
+      supported in their FHIR implementation.
+  - url: https://chat-archive.fhir.org/stream/179229-subscriptions/topic/Cerner.20Subscription.20server.html
+    note: 2018 connectathon-only Subscription server. Not production.
+  - url: https://www.cerner.com/solutions/careaware-interoperability
+    note: CareAware. Real-time clinical events via HL7 v2 through COI.
+      Separate integration product, not FHIR Subscription.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

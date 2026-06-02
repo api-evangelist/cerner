@@ -19,7 +19,7 @@ type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
 created: '2026-03-23'
-modified: '2026-05-19'
+modified: '2026-05-30'
 position: Consumer
 specificationVersion: '0.19'
 description: Cerner is a global healthcare technology company that designs and develops electronic health record (EHR) and
