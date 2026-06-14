@@ -1,0 +1,2696 @@
+# Cerner (Oracle Health) Conceptual GraphQL Schema
+# Derived from FHIR R4 resources as implemented by Cerner Millennium
+# Source: https://fhir.cerner.com/millennium/r4/
+# No native GraphQL endpoint exists; this is a conceptual mapping.
+
+scalar Date
+scalar DateTime
+scalar Instant
+scalar Decimal
+scalar Base64Binary
+scalar URI
+scalar URL
+scalar Canonical
+scalar UUID
+scalar OID
+scalar PositiveInt
+scalar UnsignedInt
+scalar Markdown
+scalar Code
+scalar ID
+
+# ─────────────────────────────────────────────────
+# Shared / Backbone types
+# ─────────────────────────────────────────────────
+
+type Coding {
+  system: URI
+  version: String
+  code: Code
+  display: String
+  userSelected: Boolean
+}
+
+type CodeableConcept {
+  coding: [Coding!]
+  text: String
+}
+
+type Identifier {
+  use: Code
+  type: CodeableConcept
+  system: URI
+  value: String
+  period: Period
+  assigner: Reference
+}
+
+type Reference {
+  reference: String
+  type: URI
+  identifier: Identifier
+  display: String
+}
+
+type Period {
+  start: DateTime
+  end: DateTime
+}
+
+type Quantity {
+  value: Decimal
+  comparator: Code
+  unit: String
+  system: URI
+  code: Code
+}
+
+type Range {
+  low: Quantity
+  high: Quantity
+}
+
+type Ratio {
+  numerator: Quantity
+  denominator: Quantity
+}
+
+type HumanName {
+  use: Code
+  text: String
+  family: String
+  given: [String!]
+  prefix: [String!]
+  suffix: [String!]
+  period: Period
+}
+
+type Address {
+  use: Code
+  type: Code
+  text: String
+  line: [String!]
+  city: String
+  district: String
+  state: String
+  postalCode: String
+  country: String
+  period: Period
+}
+
+type ContactPoint {
+  system: Code
+  value: String
+  use: Code
+  rank: PositiveInt
+  period: Period
+}
+
+type Attachment {
+  contentType: Code
+  language: Code
+  data: Base64Binary
+  url: URL
+  size: UnsignedInt
+  hash: Base64Binary
+  title: String
+  creation: DateTime
+}
+
+type Extension {
+  url: URI!
+  valueString: String
+  valueBoolean: Boolean
+  valueCode: Code
+  valueDateTime: DateTime
+  valueCoding: Coding
+  valueCodeableConcept: CodeableConcept
+  valueReference: Reference
+  valueQuantity: Quantity
+  valueInteger: Int
+}
+
+type Meta {
+  versionId: ID
+  lastUpdated: Instant
+  source: URI
+  profile: [Canonical!]
+  security: [Coding!]
+  tag: [Coding!]
+}
+
+type Narrative {
+  status: Code!
+  div: String!
+}
+
+type Annotation {
+  authorReference: Reference
+  authorString: String
+  time: DateTime
+  text: Markdown!
+}
+
+type Timing {
+  event: [DateTime!]
+  code: CodeableConcept
+}
+
+type Dosage {
+  sequence: Int
+  text: String
+  additionalInstruction: [CodeableConcept!]
+  patientInstruction: String
+  timing: Timing
+  asNeededBoolean: Boolean
+  asNeededCodeableConcept: CodeableConcept
+  site: CodeableConcept
+  route: CodeableConcept
+  method: CodeableConcept
+  doseAndRate: [DosageAndRate!]
+  maxDosePerPeriod: Ratio
+  maxDosePerAdministration: Quantity
+  maxDosePerLifetime: Quantity
+}
+
+type DosageAndRate {
+  type: CodeableConcept
+  doseRange: Range
+  doseQuantity: Quantity
+  rateRatio: Ratio
+  rateRange: Range
+  rateQuantity: Quantity
+}
+
+type BundleEntry {
+  fullUrl: URI
+  resource: Resource
+}
+
+interface Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+}
+
+# ─────────────────────────────────────────────────
+# Individuals
+# ─────────────────────────────────────────────────
+
+type Patient implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  active: Boolean
+  name: [HumanName!]
+  telecom: [ContactPoint!]
+  gender: Code
+  birthDate: Date
+  deceasedBoolean: Boolean
+  deceasedDateTime: DateTime
+  address: [Address!]
+  maritalStatus: CodeableConcept
+  multipleBirthBoolean: Boolean
+  multipleBirthInteger: Int
+  photo: [Attachment!]
+  contact: [PatientContact!]
+  communication: [PatientCommunication!]
+  generalPractitioner: [Reference!]
+  managingOrganization: Reference
+  link: [PatientLink!]
+}
+
+type PatientContact {
+  relationship: [CodeableConcept!]
+  name: HumanName
+  telecom: [ContactPoint!]
+  address: Address
+  gender: Code
+  organization: Reference
+  period: Period
+}
+
+type PatientCommunication {
+  language: CodeableConcept!
+  preferred: Boolean
+}
+
+type PatientLink {
+  other: Reference!
+  type: Code!
+}
+
+type Person implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  name: [HumanName!]
+  telecom: [ContactPoint!]
+  gender: Code
+  birthDate: Date
+  address: [Address!]
+  photo: Attachment
+  managingOrganization: Reference
+  active: Boolean
+  link: [PersonLink!]
+}
+
+type PersonLink {
+  target: Reference!
+  assurance: Code
+}
+
+type RelatedPerson implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  active: Boolean
+  patient: Reference!
+  relationship: [CodeableConcept!]
+  name: [HumanName!]
+  telecom: [ContactPoint!]
+  gender: Code
+  birthDate: Date
+  address: [Address!]
+  photo: [Attachment!]
+  period: Period
+  communication: [RelatedPersonCommunication!]
+}
+
+type RelatedPersonCommunication {
+  language: CodeableConcept!
+  preferred: Boolean
+}
+
+type Practitioner implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  active: Boolean
+  name: [HumanName!]
+  telecom: [ContactPoint!]
+  address: [Address!]
+  gender: Code
+  birthDate: Date
+  photo: [Attachment!]
+  qualification: [PractitionerQualification!]
+  communication: [CodeableConcept!]
+}
+
+type PractitionerQualification {
+  identifier: [Identifier!]
+  code: CodeableConcept!
+  period: Period
+  issuer: Reference
+}
+
+type PractitionerRole implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  active: Boolean
+  period: Period
+  practitioner: Reference
+  organization: Reference
+  code: [CodeableConcept!]
+  specialty: [CodeableConcept!]
+  location: [Reference!]
+  healthcareService: [Reference!]
+  telecom: [ContactPoint!]
+  availableTime: [PractitionerRoleAvailableTime!]
+  notAvailable: [PractitionerRoleNotAvailable!]
+  availabilityExceptions: String
+  endpoint: [Reference!]
+}
+
+type PractitionerRoleAvailableTime {
+  daysOfWeek: [Code!]
+  allDay: Boolean
+  availableStartTime: String
+  availableEndTime: String
+}
+
+type PractitionerRoleNotAvailable {
+  description: String!
+  during: Period
+}
+
+# ─────────────────────────────────────────────────
+# Organizations and Locations
+# ─────────────────────────────────────────────────
+
+type Organization implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  active: Boolean
+  type: [CodeableConcept!]
+  name: String
+  alias: [String!]
+  telecom: [ContactPoint!]
+  address: [Address!]
+  partOf: Reference
+  contact: [OrganizationContact!]
+  endpoint: [Reference!]
+}
+
+type OrganizationContact {
+  purpose: CodeableConcept
+  name: HumanName
+  telecom: [ContactPoint!]
+  address: Address
+}
+
+type Location implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code
+  operationalStatus: Coding
+  name: String
+  alias: [String!]
+  description: String
+  mode: Code
+  type: [CodeableConcept!]
+  telecom: [ContactPoint!]
+  address: Address
+  physicalType: CodeableConcept
+  position: LocationPosition
+  managingOrganization: Reference
+  partOf: Reference
+  hoursOfOperation: [LocationHoursOfOperation!]
+  availabilityExceptions: String
+  endpoint: [Reference!]
+}
+
+type LocationPosition {
+  longitude: Decimal!
+  latitude: Decimal!
+  altitude: Decimal
+}
+
+type LocationHoursOfOperation {
+  daysOfWeek: [Code!]
+  allDay: Boolean
+  openingTime: String
+  closingTime: String
+}
+
+# ─────────────────────────────────────────────────
+# Encounters
+# ─────────────────────────────────────────────────
+
+type Encounter implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  statusHistory: [EncounterStatusHistory!]
+  class: Coding!
+  classHistory: [EncounterClassHistory!]
+  type: [CodeableConcept!]
+  serviceType: CodeableConcept
+  priority: CodeableConcept
+  subject: Reference
+  episodeOfCare: [Reference!]
+  basedOn: [Reference!]
+  participant: [EncounterParticipant!]
+  appointment: [Reference!]
+  period: Period
+  length: Quantity
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  diagnosis: [EncounterDiagnosis!]
+  account: [Reference!]
+  hospitalization: EncounterHospitalization
+  location: [EncounterLocation!]
+  serviceProvider: Reference
+  partOf: Reference
+}
+
+type EncounterStatusHistory {
+  status: Code!
+  period: Period!
+}
+
+type EncounterClassHistory {
+  class: Coding!
+  period: Period!
+}
+
+type EncounterParticipant {
+  type: [CodeableConcept!]
+  period: Period
+  individual: Reference
+}
+
+type EncounterDiagnosis {
+  condition: Reference!
+  use: CodeableConcept
+  rank: PositiveInt
+}
+
+type EncounterHospitalization {
+  preAdmissionIdentifier: Identifier
+  origin: Reference
+  admitSource: CodeableConcept
+  reAdmission: CodeableConcept
+  dietPreference: [CodeableConcept!]
+  specialCourtesy: [CodeableConcept!]
+  specialArrangement: [CodeableConcept!]
+  destination: Reference
+  dischargeDisposition: CodeableConcept
+}
+
+type EncounterLocation {
+  location: Reference!
+  status: Code
+  physicalType: CodeableConcept
+  period: Period
+}
+
+type EpisodeOfCare implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  statusHistory: [EpisodeOfCareStatusHistory!]
+  type: [CodeableConcept!]
+  diagnosis: [EpisodeOfCareDiagnosis!]
+  patient: Reference!
+  managingOrganization: Reference
+  period: Period
+  referralRequest: [Reference!]
+  careManager: Reference
+  team: [Reference!]
+  account: [Reference!]
+}
+
+type EpisodeOfCareStatusHistory {
+  status: Code!
+  period: Period!
+}
+
+type EpisodeOfCareDiagnosis {
+  condition: Reference!
+  role: CodeableConcept
+  rank: PositiveInt
+}
+
+# ─────────────────────────────────────────────────
+# Scheduling
+# ─────────────────────────────────────────────────
+
+type Appointment implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  cancelationReason: CodeableConcept
+  serviceCategory: [CodeableConcept!]
+  serviceType: [CodeableConcept!]
+  specialty: [CodeableConcept!]
+  appointmentType: CodeableConcept
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  priority: UnsignedInt
+  description: String
+  supportingInformation: [Reference!]
+  start: Instant
+  end: Instant
+  minutesDuration: PositiveInt
+  slot: [Reference!]
+  created: DateTime
+  comment: String
+  basedOn: [Reference!]
+  participant: [AppointmentParticipant!]!
+  requestedPeriod: [Period!]
+}
+
+type AppointmentParticipant {
+  type: [CodeableConcept!]
+  actor: Reference
+  required: Code
+  status: Code!
+  period: Period
+}
+
+type Slot implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  serviceCategory: [CodeableConcept!]
+  serviceType: [CodeableConcept!]
+  specialty: [CodeableConcept!]
+  appointmentType: CodeableConcept
+  schedule: Reference!
+  status: Code!
+  start: Instant!
+  end: Instant!
+  overbooked: Boolean
+  comment: String
+}
+
+type Schedule implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  active: Boolean
+  serviceCategory: [CodeableConcept!]
+  serviceType: [CodeableConcept!]
+  specialty: [CodeableConcept!]
+  actor: [Reference!]!
+  planningHorizon: Period
+  comment: String
+}
+
+# ─────────────────────────────────────────────────
+# Clinical Summary
+# ─────────────────────────────────────────────────
+
+type Condition implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  clinicalStatus: CodeableConcept
+  verificationStatus: CodeableConcept
+  category: [CodeableConcept!]
+  severity: CodeableConcept
+  code: CodeableConcept
+  bodySite: [CodeableConcept!]
+  subject: Reference!
+  encounter: Reference
+  onsetDateTime: DateTime
+  onsetAge: Quantity
+  onsetPeriod: Period
+  onsetRange: Range
+  onsetString: String
+  abatementDateTime: DateTime
+  abatementAge: Quantity
+  abatementPeriod: Period
+  abatementRange: Range
+  abatementString: String
+  recordedDate: DateTime
+  recorder: Reference
+  asserter: Reference
+  stage: [ConditionStage!]
+  evidence: [ConditionEvidence!]
+  note: [Annotation!]
+}
+
+type ConditionStage {
+  summary: CodeableConcept
+  assessment: [Reference!]
+  type: CodeableConcept
+}
+
+type ConditionEvidence {
+  code: [CodeableConcept!]
+  detail: [Reference!]
+}
+
+type AllergyIntolerance implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  clinicalStatus: CodeableConcept
+  verificationStatus: CodeableConcept
+  type: Code
+  category: [Code!]
+  criticality: Code
+  code: CodeableConcept
+  patient: Reference!
+  encounter: Reference
+  onsetDateTime: DateTime
+  onsetAge: Quantity
+  onsetPeriod: Period
+  onsetRange: Range
+  onsetString: String
+  recordedDate: DateTime
+  recorder: Reference
+  asserter: Reference
+  lastOccurrence: DateTime
+  note: [Annotation!]
+  reaction: [AllergyIntoleranceReaction!]
+}
+
+type AllergyIntoleranceReaction {
+  substance: CodeableConcept
+  manifestation: [CodeableConcept!]!
+  description: String
+  onset: DateTime
+  severity: Code
+  exposureRoute: CodeableConcept
+  note: [Annotation!]
+}
+
+type Procedure implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  instantiatesCanonical: [Canonical!]
+  instantiatesUri: [URI!]
+  basedOn: [Reference!]
+  partOf: [Reference!]
+  status: Code!
+  statusReason: CodeableConcept
+  category: CodeableConcept
+  code: CodeableConcept
+  subject: Reference!
+  encounter: Reference
+  performedDateTime: DateTime
+  performedPeriod: Period
+  performedString: String
+  performedAge: Quantity
+  performedRange: Range
+  recorder: Reference
+  asserter: Reference
+  performer: [ProcedurePerformer!]
+  location: Reference
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  bodySite: [CodeableConcept!]
+  outcome: CodeableConcept
+  report: [Reference!]
+  complication: [CodeableConcept!]
+  complicationDetail: [Reference!]
+  followUp: [CodeableConcept!]
+  note: [Annotation!]
+  focalDevice: [ProcedureFocalDevice!]
+  usedReference: [Reference!]
+  usedCode: [CodeableConcept!]
+}
+
+type ProcedurePerformer {
+  function: CodeableConcept
+  actor: Reference!
+  onBehalfOf: Reference
+}
+
+type ProcedureFocalDevice {
+  action: CodeableConcept
+  manipulated: Reference!
+}
+
+type CareTeam implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code
+  category: [CodeableConcept!]
+  name: String
+  subject: Reference
+  encounter: Reference
+  period: Period
+  participant: [CareTeamParticipant!]
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  managingOrganization: [Reference!]
+  telecom: [ContactPoint!]
+  note: [Annotation!]
+}
+
+type CareTeamParticipant {
+  role: [CodeableConcept!]
+  member: Reference
+  onBehalfOf: Reference
+  period: Period
+}
+
+type CarePlan implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  instantiatesCanonical: [Canonical!]
+  instantiatesUri: [URI!]
+  basedOn: [Reference!]
+  replaces: [Reference!]
+  partOf: [Reference!]
+  status: Code!
+  intent: Code!
+  category: [CodeableConcept!]
+  title: String
+  description: String
+  subject: Reference!
+  encounter: Reference
+  period: Period
+  created: DateTime
+  author: Reference
+  contributor: [Reference!]
+  careTeam: [Reference!]
+  addresses: [Reference!]
+  supportingInfo: [Reference!]
+  goal: [Reference!]
+  activity: [CarePlanActivity!]
+  note: [Annotation!]
+}
+
+type CarePlanActivity {
+  outcomeCodeableConcept: [CodeableConcept!]
+  outcomeReference: [Reference!]
+  progress: [Annotation!]
+  reference: Reference
+  detail: CarePlanActivityDetail
+}
+
+type CarePlanActivityDetail {
+  kind: Code
+  instantiatesCanonical: [Canonical!]
+  instantiatesUri: [URI!]
+  code: CodeableConcept
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  goal: [Reference!]
+  status: Code!
+  statusReason: CodeableConcept
+  doNotPerform: Boolean
+  scheduledTiming: Timing
+  scheduledPeriod: Period
+  scheduledString: String
+  location: Reference
+  performer: [Reference!]
+  productCodeableConcept: CodeableConcept
+  productReference: Reference
+  dailyAmount: Quantity
+  quantity: Quantity
+  description: String
+}
+
+type Goal implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  lifecycleStatus: Code!
+  achievementStatus: CodeableConcept
+  category: [CodeableConcept!]
+  priority: CodeableConcept
+  description: CodeableConcept!
+  subject: Reference!
+  startDate: Date
+  startCodeableConcept: CodeableConcept
+  target: [GoalTarget!]
+  statusDate: Date
+  statusReason: String
+  expressedBy: Reference
+  addresses: [Reference!]
+  note: [Annotation!]
+  outcomeCode: [CodeableConcept!]
+  outcomeReference: [Reference!]
+}
+
+type GoalTarget {
+  measure: CodeableConcept
+  detailQuantity: Quantity
+  detailRange: Range
+  detailCodeableConcept: CodeableConcept
+  detailString: String
+  detailBoolean: Boolean
+  detailInteger: Int
+  detailRatio: Ratio
+  dueDate: Date
+  dueDuration: Quantity
+}
+
+# ─────────────────────────────────────────────────
+# Medications
+# ─────────────────────────────────────────────────
+
+type Medication implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  code: CodeableConcept
+  status: Code
+  manufacturer: Reference
+  form: CodeableConcept
+  amount: Ratio
+  ingredient: [MedicationIngredient!]
+  batch: MedicationBatch
+}
+
+type MedicationIngredient {
+  itemCodeableConcept: CodeableConcept
+  itemReference: Reference
+  isActive: Boolean
+  strength: Ratio
+}
+
+type MedicationBatch {
+  lotNumber: String
+  expirationDate: DateTime
+}
+
+type MedicationRequest implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  statusReason: CodeableConcept
+  intent: Code!
+  category: [CodeableConcept!]
+  priority: Code
+  doNotPerform: Boolean
+  reportedBoolean: Boolean
+  reportedReference: Reference
+  medicationCodeableConcept: CodeableConcept
+  medicationReference: Reference
+  subject: Reference!
+  encounter: Reference
+  supportingInformation: [Reference!]
+  authoredOn: DateTime
+  requester: Reference
+  performer: Reference
+  performerType: CodeableConcept
+  recorder: Reference
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  instantiatesCanonical: [Canonical!]
+  instantiatesUri: [URI!]
+  basedOn: [Reference!]
+  groupIdentifier: Identifier
+  courseOfTherapyType: CodeableConcept
+  insurance: [Reference!]
+  note: [Annotation!]
+  dosageInstruction: [Dosage!]
+  dispenseRequest: MedicationRequestDispenseRequest
+  substitution: MedicationRequestSubstitution
+  priorPrescription: Reference
+  detectedIssue: [Reference!]
+  eventHistory: [Reference!]
+}
+
+type MedicationRequestDispenseRequest {
+  initialFill: MedicationRequestInitialFill
+  dispenseInterval: Quantity
+  validityPeriod: Period
+  numberOfRepeatsAllowed: UnsignedInt
+  quantity: Quantity
+  expectedSupplyDuration: Quantity
+  performer: Reference
+}
+
+type MedicationRequestInitialFill {
+  quantity: Quantity
+  duration: Quantity
+}
+
+type MedicationRequestSubstitution {
+  allowedBoolean: Boolean
+  allowedCodeableConcept: CodeableConcept
+  reason: CodeableConcept
+}
+
+type MedicationStatement implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  basedOn: [Reference!]
+  partOf: [Reference!]
+  status: Code!
+  statusReason: [CodeableConcept!]
+  category: CodeableConcept
+  medicationCodeableConcept: CodeableConcept
+  medicationReference: Reference
+  subject: Reference!
+  context: Reference
+  effectiveDateTime: DateTime
+  effectivePeriod: Period
+  dateAsserted: DateTime
+  informationSource: Reference
+  derivedFrom: [Reference!]
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  note: [Annotation!]
+  dosage: [Dosage!]
+}
+
+# ─────────────────────────────────────────────────
+# Diagnostics
+# ─────────────────────────────────────────────────
+
+type Observation implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  basedOn: [Reference!]
+  partOf: [Reference!]
+  status: Code!
+  category: [CodeableConcept!]
+  code: CodeableConcept!
+  subject: Reference
+  focus: [Reference!]
+  encounter: Reference
+  effectiveDateTime: DateTime
+  effectivePeriod: Period
+  effectiveTiming: Timing
+  effectiveInstant: Instant
+  issued: Instant
+  performer: [Reference!]
+  valueQuantity: Quantity
+  valueCodeableConcept: CodeableConcept
+  valueString: String
+  valueBoolean: Boolean
+  valueInteger: Int
+  valueRange: Range
+  valueRatio: Ratio
+  valueSampledData: SampledData
+  valueTime: String
+  valueDateTime: DateTime
+  valuePeriod: Period
+  dataAbsentReason: CodeableConcept
+  interpretation: [CodeableConcept!]
+  note: [Annotation!]
+  bodySite: CodeableConcept
+  method: CodeableConcept
+  specimen: Reference
+  device: Reference
+  referenceRange: [ObservationReferenceRange!]
+  hasMember: [Reference!]
+  derivedFrom: [Reference!]
+  component: [ObservationComponent!]
+}
+
+type ObservationReferenceRange {
+  low: Quantity
+  high: Quantity
+  type: CodeableConcept
+  appliesTo: [CodeableConcept!]
+  age: Range
+  text: String
+}
+
+type ObservationComponent {
+  code: CodeableConcept!
+  valueQuantity: Quantity
+  valueCodeableConcept: CodeableConcept
+  valueString: String
+  valueBoolean: Boolean
+  valueInteger: Int
+  valueRange: Range
+  valueRatio: Ratio
+  valueSampledData: SampledData
+  valueTime: String
+  valueDateTime: DateTime
+  valuePeriod: Period
+  dataAbsentReason: CodeableConcept
+  interpretation: [CodeableConcept!]
+  referenceRange: [ObservationReferenceRange!]
+}
+
+type SampledData {
+  origin: Quantity!
+  period: Decimal!
+  factor: Decimal
+  lowerLimit: Decimal
+  upperLimit: Decimal
+  dimensions: PositiveInt!
+  data: String
+}
+
+type DiagnosticReport implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  basedOn: [Reference!]
+  status: Code!
+  category: [CodeableConcept!]
+  code: CodeableConcept!
+  subject: Reference
+  encounter: Reference
+  effectiveDateTime: DateTime
+  effectivePeriod: Period
+  issued: Instant
+  performer: [Reference!]
+  resultsInterpreter: [Reference!]
+  specimen: [Reference!]
+  result: [Reference!]
+  imagingStudy: [Reference!]
+  media: [DiagnosticReportMedia!]
+  conclusion: String
+  conclusionCode: [CodeableConcept!]
+  presentedForm: [Attachment!]
+}
+
+type DiagnosticReportMedia {
+  comment: String
+  link: Reference!
+}
+
+type ServiceRequest implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  instantiatesCanonical: [Canonical!]
+  instantiatesUri: [URI!]
+  basedOn: [Reference!]
+  replaces: [Reference!]
+  requisition: Identifier
+  status: Code!
+  intent: Code!
+  category: [CodeableConcept!]
+  priority: Code
+  doNotPerform: Boolean
+  code: CodeableConcept
+  orderDetail: [CodeableConcept!]
+  quantityQuantity: Quantity
+  quantityRatio: Ratio
+  quantityRange: Range
+  subject: Reference!
+  encounter: Reference
+  occurrenceDateTime: DateTime
+  occurrencePeriod: Period
+  occurrenceTiming: Timing
+  asNeededBoolean: Boolean
+  asNeededCodeableConcept: CodeableConcept
+  authoredOn: DateTime
+  requester: Reference
+  performerType: CodeableConcept
+  performer: [Reference!]
+  locationCode: [CodeableConcept!]
+  locationReference: [Reference!]
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  insurance: [Reference!]
+  supportingInfo: [Reference!]
+  specimen: [Reference!]
+  bodySite: [CodeableConcept!]
+  note: [Annotation!]
+  patientInstruction: String
+  relevantHistory: [Reference!]
+}
+
+type Specimen implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  accessionIdentifier: Identifier
+  status: Code
+  type: CodeableConcept
+  subject: Reference
+  receivedTime: DateTime
+  parent: [Reference!]
+  request: [Reference!]
+  collection: SpecimenCollection
+  processing: [SpecimenProcessing!]
+  container: [SpecimenContainer!]
+  condition: [CodeableConcept!]
+  note: [Annotation!]
+}
+
+type SpecimenCollection {
+  collector: Reference
+  collectedDateTime: DateTime
+  collectedPeriod: Period
+  duration: Quantity
+  quantity: Quantity
+  method: CodeableConcept
+  bodySite: CodeableConcept
+  fastingStatusCodeableConcept: CodeableConcept
+  fastingStatusDuration: Quantity
+}
+
+type SpecimenProcessing {
+  description: String
+  procedure: CodeableConcept
+  additive: [Reference!]
+  timeDateTime: DateTime
+  timePeriod: Period
+}
+
+type SpecimenContainer {
+  identifier: [Identifier!]
+  description: String
+  type: CodeableConcept
+  capacity: Quantity
+  specimenQuantity: Quantity
+  additiveCodeableConcept: CodeableConcept
+  additiveReference: Reference
+}
+
+type ImagingStudy implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  modality: [Coding!]
+  subject: Reference!
+  encounter: Reference
+  started: DateTime
+  basedOn: [Reference!]
+  referrer: Reference
+  interpreter: [Reference!]
+  endpoint: [Reference!]
+  numberOfSeries: UnsignedInt
+  numberOfInstances: UnsignedInt
+  procedureReference: Reference
+  procedureCode: [CodeableConcept!]
+  location: Reference
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  note: [Annotation!]
+  description: String
+  series: [ImagingStudySeries!]
+}
+
+type ImagingStudySeries {
+  uid: ID!
+  number: UnsignedInt
+  modality: Coding!
+  description: String
+  numberOfInstances: UnsignedInt
+  endpoint: [Reference!]
+  bodySite: Coding
+  laterality: Coding
+  specimen: [Reference!]
+  started: DateTime
+  performer: [ImagingStudySeriesPerformer!]
+  instance: [ImagingStudySeriesInstance!]
+}
+
+type ImagingStudySeriesPerformer {
+  function: CodeableConcept
+  actor: Reference!
+}
+
+type ImagingStudySeriesInstance {
+  uid: ID!
+  sopClass: Coding!
+  number: UnsignedInt
+  title: String
+}
+
+# ─────────────────────────────────────────────────
+# Immunizations
+# ─────────────────────────────────────────────────
+
+type Immunization implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  statusReason: CodeableConcept
+  vaccineCode: CodeableConcept!
+  patient: Reference!
+  encounter: Reference
+  occurrenceDateTime: DateTime
+  occurrenceString: String
+  recorded: DateTime
+  primarySource: Boolean
+  reportOrigin: CodeableConcept
+  location: Reference
+  manufacturer: Reference
+  lotNumber: String
+  expirationDate: Date
+  site: CodeableConcept
+  route: CodeableConcept
+  doseQuantity: Quantity
+  performer: [ImmunizationPerformer!]
+  note: [Annotation!]
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  isSubpotent: Boolean
+  subpotentReason: [CodeableConcept!]
+  education: [ImmunizationEducation!]
+  programEligibility: [CodeableConcept!]
+  fundingSource: CodeableConcept
+  reaction: [ImmunizationReaction!]
+  protocolApplied: [ImmunizationProtocolApplied!]
+}
+
+type ImmunizationPerformer {
+  function: CodeableConcept
+  actor: Reference!
+}
+
+type ImmunizationEducation {
+  documentType: String
+  reference: URI
+  publicationDate: DateTime
+  presentationDate: DateTime
+}
+
+type ImmunizationReaction {
+  date: DateTime
+  detail: Reference
+  reported: Boolean
+}
+
+type ImmunizationProtocolApplied {
+  series: String
+  authority: Reference
+  targetDisease: [CodeableConcept!]
+  doseNumberPositiveInt: PositiveInt
+  doseNumberString: String
+  seriesDosesPositiveInt: PositiveInt
+  seriesDosesString: String
+}
+
+# ─────────────────────────────────────────────────
+# Devices
+# ─────────────────────────────────────────────────
+
+type Device implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  definition: Reference
+  udiCarrier: [DeviceUdiCarrier!]
+  status: Code
+  statusReason: [CodeableConcept!]
+  distinctIdentifier: String
+  manufacturer: String
+  manufactureDate: DateTime
+  expirationDate: DateTime
+  lotNumber: String
+  serialNumber: String
+  deviceName: [DeviceName!]
+  modelNumber: String
+  partNumber: String
+  type: CodeableConcept
+  specialization: [DeviceSpecialization!]
+  version: [DeviceVersion!]
+  property: [DeviceProperty!]
+  patient: Reference
+  owner: Reference
+  contact: [ContactPoint!]
+  location: Reference
+  url: URI
+  note: [Annotation!]
+  safety: [CodeableConcept!]
+  parent: Reference
+}
+
+type DeviceUdiCarrier {
+  deviceIdentifier: String
+  issuer: URI
+  jurisdiction: URI
+  carrierAIDC: Base64Binary
+  carrierHRF: String
+  entryType: Code
+}
+
+type DeviceName {
+  name: String!
+  type: Code!
+}
+
+type DeviceSpecialization {
+  systemType: CodeableConcept!
+  version: String
+}
+
+type DeviceVersion {
+  type: CodeableConcept
+  component: Identifier
+  value: String!
+}
+
+type DeviceProperty {
+  type: CodeableConcept!
+  valueQuantity: [Quantity!]
+  valueCode: [CodeableConcept!]
+}
+
+type DeviceRequest implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  instantiatesCanonical: [Canonical!]
+  instantiatesUri: [URI!]
+  basedOn: [Reference!]
+  priorRequest: [Reference!]
+  groupIdentifier: Identifier
+  status: Code
+  intent: Code!
+  priority: Code
+  codeReference: Reference
+  codeCodeableConcept: CodeableConcept
+  parameter: [DeviceRequestParameter!]
+  subject: Reference!
+  encounter: Reference
+  occurrenceDateTime: DateTime
+  occurrencePeriod: Period
+  occurrenceTiming: Timing
+  authoredOn: DateTime
+  requester: Reference
+  performerType: CodeableConcept
+  performer: Reference
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  insurance: [Reference!]
+  supportingInfo: [Reference!]
+  note: [Annotation!]
+  relevantHistory: [Reference!]
+}
+
+type DeviceRequestParameter {
+  code: CodeableConcept
+  valueCodeableConcept: CodeableConcept
+  valueQuantity: Quantity
+  valueRange: Range
+  valueBoolean: Boolean
+}
+
+# ─────────────────────────────────────────────────
+# Documents and Forms
+# ─────────────────────────────────────────────────
+
+type DocumentReference implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  masterIdentifier: Identifier
+  identifier: [Identifier!]
+  status: Code!
+  docStatus: Code
+  type: CodeableConcept
+  category: [CodeableConcept!]
+  subject: Reference
+  date: Instant
+  author: [Reference!]
+  authenticator: Reference
+  custodian: Reference
+  relatesTo: [DocumentReferenceRelatesTo!]
+  description: String
+  securityLabel: [CodeableConcept!]
+  content: [DocumentReferenceContent!]!
+  context: DocumentReferenceContext
+}
+
+type DocumentReferenceRelatesTo {
+  code: Code!
+  target: Reference!
+}
+
+type DocumentReferenceContent {
+  attachment: Attachment!
+  format: Coding
+}
+
+type DocumentReferenceContext {
+  encounter: [Reference!]
+  event: [CodeableConcept!]
+  period: Period
+  facilityType: CodeableConcept
+  practiceSetting: CodeableConcept
+  sourcePatientInfo: Reference
+  related: [Reference!]
+}
+
+type Binary implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  contentType: Code!
+  securityContext: Reference
+  data: Base64Binary
+}
+
+type Questionnaire implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  url: URI
+  identifier: [Identifier!]
+  version: String
+  name: String
+  title: String
+  derivedFrom: [Canonical!]
+  status: Code!
+  experimental: Boolean
+  subjectType: [Code!]
+  date: DateTime
+  publisher: String
+  contact: [ContactDetail!]
+  description: Markdown
+  useContext: [UsageContext!]
+  jurisdiction: [CodeableConcept!]
+  purpose: Markdown
+  copyright: Markdown
+  approvalDate: Date
+  lastReviewDate: Date
+  effectivePeriod: Period
+  code: [Coding!]
+  item: [QuestionnaireItem!]
+}
+
+type ContactDetail {
+  name: String
+  telecom: [ContactPoint!]
+}
+
+type UsageContext {
+  code: Coding!
+  valueCodeableConcept: CodeableConcept
+  valueQuantity: Quantity
+  valueRange: Range
+  valueReference: Reference
+}
+
+type QuestionnaireItem {
+  linkId: String!
+  definition: URI
+  code: [Coding!]
+  prefix: String
+  text: String
+  type: Code!
+  enableWhen: [QuestionnaireItemEnableWhen!]
+  enableBehavior: Code
+  required: Boolean
+  repeats: Boolean
+  readOnly: Boolean
+  maxLength: Int
+  answerValueSet: Canonical
+  answerOption: [QuestionnaireItemAnswerOption!]
+  initial: [QuestionnaireItemInitial!]
+  item: [QuestionnaireItem!]
+}
+
+type QuestionnaireItemEnableWhen {
+  question: String!
+  operator: Code!
+  answerBoolean: Boolean
+  answerDecimal: Decimal
+  answerInteger: Int
+  answerDate: Date
+  answerDateTime: DateTime
+  answerTime: String
+  answerString: String
+  answerCoding: Coding
+  answerQuantity: Quantity
+  answerReference: Reference
+}
+
+type QuestionnaireItemAnswerOption {
+  valueInteger: Int
+  valueDate: Date
+  valueTime: String
+  valueString: String
+  valueCoding: Coding
+  valueReference: Reference
+  initialSelected: Boolean
+}
+
+type QuestionnaireItemInitial {
+  valueBoolean: Boolean
+  valueDecimal: Decimal
+  valueInteger: Int
+  valueDate: Date
+  valueDateTime: DateTime
+  valueTime: String
+  valueString: String
+  valueUri: URI
+  valueAttachment: Attachment
+  valueCoding: Coding
+  valueQuantity: Quantity
+  valueReference: Reference
+}
+
+type QuestionnaireResponse implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: Identifier
+  basedOn: [Reference!]
+  partOf: [Reference!]
+  questionnaire: Canonical
+  status: Code!
+  subject: Reference
+  encounter: Reference
+  authored: DateTime
+  author: Reference
+  source: Reference
+  item: [QuestionnaireResponseItem!]
+}
+
+type QuestionnaireResponseItem {
+  linkId: String!
+  definition: URI
+  text: String
+  answer: [QuestionnaireResponseItemAnswer!]
+  item: [QuestionnaireResponseItem!]
+}
+
+type QuestionnaireResponseItemAnswer {
+  valueBoolean: Boolean
+  valueDecimal: Decimal
+  valueInteger: Int
+  valueDate: Date
+  valueDateTime: DateTime
+  valueTime: String
+  valueString: String
+  valueUri: URI
+  valueAttachment: Attachment
+  valueCoding: Coding
+  valueQuantity: Quantity
+  valueReference: Reference
+  item: [QuestionnaireResponseItem!]
+}
+
+# ─────────────────────────────────────────────────
+# Financial
+# ─────────────────────────────────────────────────
+
+type Coverage implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  type: CodeableConcept
+  policyHolder: Reference
+  subscriber: Reference
+  subscriberId: String
+  beneficiary: Reference!
+  dependent: String
+  relationship: CodeableConcept
+  period: Period
+  payor: [Reference!]!
+  class: [CoverageClass!]
+  order: PositiveInt
+  network: String
+  costToBeneficiary: [CoverageCostToBeneficiary!]
+  subrogation: Boolean
+  contract: [Reference!]
+}
+
+type CoverageClass {
+  type: CodeableConcept!
+  value: String!
+  name: String
+}
+
+type CoverageCostToBeneficiary {
+  type: CodeableConcept
+  valueQuantity: Quantity
+  valueMoney: Money
+  exception: [CoverageCostToBeneficiaryException!]
+}
+
+type Money {
+  value: Decimal
+  currency: Code
+}
+
+type CoverageCostToBeneficiaryException {
+  type: CodeableConcept!
+  period: Period
+}
+
+type Claim implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  type: CodeableConcept!
+  subType: CodeableConcept
+  use: Code!
+  patient: Reference!
+  billablePeriod: Period
+  created: DateTime!
+  enterer: Reference
+  insurer: Reference
+  provider: Reference!
+  priority: CodeableConcept!
+  fundsReserve: CodeableConcept
+  related: [ClaimRelated!]
+  prescription: Reference
+  originalPrescription: Reference
+  payee: ClaimPayee
+  referral: Reference
+  facility: Reference
+  careTeam: [ClaimCareTeam!]
+  supportingInfo: [ClaimSupportingInfo!]
+  diagnosis: [ClaimDiagnosis!]
+  procedure: [ClaimProcedure!]
+  insurance: [ClaimInsurance!]!
+  accident: ClaimAccident
+  item: [ClaimItem!]
+  total: Money
+}
+
+type ClaimRelated {
+  claim: Reference
+  relationship: CodeableConcept
+  reference: Identifier
+}
+
+type ClaimPayee {
+  type: CodeableConcept!
+  party: Reference
+}
+
+type ClaimCareTeam {
+  sequence: PositiveInt!
+  provider: Reference!
+  responsible: Boolean
+  role: CodeableConcept
+  qualification: CodeableConcept
+}
+
+type ClaimSupportingInfo {
+  sequence: PositiveInt!
+  category: CodeableConcept!
+  code: CodeableConcept
+  timingDate: Date
+  timingPeriod: Period
+  valueBoolean: Boolean
+  valueString: String
+  valueQuantity: Quantity
+  valueAttachment: Attachment
+  valueReference: Reference
+  reason: Coding
+}
+
+type ClaimDiagnosis {
+  sequence: PositiveInt!
+  diagnosisCodeableConcept: CodeableConcept
+  diagnosisReference: Reference
+  type: [CodeableConcept!]
+  onAdmission: CodeableConcept
+  packageCode: CodeableConcept
+}
+
+type ClaimProcedure {
+  sequence: PositiveInt!
+  type: [CodeableConcept!]
+  date: DateTime
+  procedureCodeableConcept: CodeableConcept
+  procedureReference: Reference
+  udi: [Reference!]
+}
+
+type ClaimInsurance {
+  sequence: PositiveInt!
+  focal: Boolean!
+  identifier: Identifier
+  coverage: Reference!
+  businessArrangement: String
+  preAuthRef: [String!]
+  claimResponse: Reference
+}
+
+type ClaimAccident {
+  date: Date!
+  type: CodeableConcept
+  locationAddress: Address
+  locationReference: Reference
+}
+
+type ClaimItem {
+  sequence: PositiveInt!
+  careTeamSequence: [PositiveInt!]
+  diagnosisSequence: [PositiveInt!]
+  procedureSequence: [PositiveInt!]
+  informationSequence: [PositiveInt!]
+  revenue: CodeableConcept
+  category: CodeableConcept
+  productOrService: CodeableConcept!
+  modifier: [CodeableConcept!]
+  programCode: [CodeableConcept!]
+  servicedDate: Date
+  servicedPeriod: Period
+  locationCodeableConcept: CodeableConcept
+  locationAddress: Address
+  locationReference: Reference
+  quantity: Quantity
+  unitPrice: Money
+  factor: Decimal
+  net: Money
+  udi: [Reference!]
+  bodySite: CodeableConcept
+  subSite: [CodeableConcept!]
+  encounter: [Reference!]
+  detail: [ClaimItemDetail!]
+}
+
+type ClaimItemDetail {
+  sequence: PositiveInt!
+  revenue: CodeableConcept
+  category: CodeableConcept
+  productOrService: CodeableConcept!
+  modifier: [CodeableConcept!]
+  programCode: [CodeableConcept!]
+  quantity: Quantity
+  unitPrice: Money
+  factor: Decimal
+  net: Money
+  udi: [Reference!]
+  subDetail: [ClaimItemSubDetail!]
+}
+
+type ClaimItemSubDetail {
+  sequence: PositiveInt!
+  revenue: CodeableConcept
+  category: CodeableConcept
+  productOrService: CodeableConcept!
+  modifier: [CodeableConcept!]
+  programCode: [CodeableConcept!]
+  quantity: Quantity
+  unitPrice: Money
+  factor: Decimal
+  net: Money
+  udi: [Reference!]
+}
+
+type ClaimResponse implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  type: CodeableConcept!
+  subType: CodeableConcept
+  use: Code!
+  patient: Reference!
+  created: DateTime!
+  insurer: Reference!
+  requestor: Reference
+  request: Reference
+  outcome: Code!
+  disposition: String
+  preAuthRef: String
+  preAuthPeriod: Period
+  payeeType: CodeableConcept
+  item: [ClaimResponseItem!]
+  addItem: [ClaimResponseAddItem!]
+  adjudication: [ClaimResponseAdjudication!]
+  total: [ClaimResponseTotal!]
+  payment: ClaimResponsePayment
+  fundsReserve: CodeableConcept
+  formCode: CodeableConcept
+  form: Attachment
+  processNote: [ClaimResponseProcessNote!]
+  communicationRequest: [Reference!]
+  insurance: [ClaimResponseInsurance!]
+  error: [ClaimResponseError!]
+}
+
+type ClaimResponseItem {
+  itemSequence: PositiveInt!
+  noteNumber: [PositiveInt!]
+  adjudication: [ClaimResponseAdjudication!]!
+  detail: [ClaimResponseItemDetail!]
+}
+
+type ClaimResponseAdjudication {
+  category: CodeableConcept!
+  reason: CodeableConcept
+  amount: Money
+  value: Decimal
+}
+
+type ClaimResponseItemDetail {
+  detailSequence: PositiveInt!
+  noteNumber: [PositiveInt!]
+  adjudication: [ClaimResponseAdjudication!]!
+  subDetail: [ClaimResponseItemSubDetail!]
+}
+
+type ClaimResponseItemSubDetail {
+  subDetailSequence: PositiveInt!
+  noteNumber: [PositiveInt!]
+  adjudication: [ClaimResponseAdjudication!]
+}
+
+type ClaimResponseAddItem {
+  itemSequence: [PositiveInt!]
+  detailSequence: [PositiveInt!]
+  subdetailSequence: [PositiveInt!]
+  provider: [Reference!]
+  productOrService: CodeableConcept!
+  modifier: [CodeableConcept!]
+  programCode: [CodeableConcept!]
+  servicedDate: Date
+  servicedPeriod: Period
+  locationCodeableConcept: CodeableConcept
+  locationAddress: Address
+  locationReference: Reference
+  quantity: Quantity
+  unitPrice: Money
+  factor: Decimal
+  net: Money
+  bodySite: CodeableConcept
+  subSite: [CodeableConcept!]
+  noteNumber: [PositiveInt!]
+  adjudication: [ClaimResponseAdjudication!]!
+  detail: [ClaimResponseAddItemDetail!]
+}
+
+type ClaimResponseAddItemDetail {
+  productOrService: CodeableConcept!
+  modifier: [CodeableConcept!]
+  quantity: Quantity
+  unitPrice: Money
+  factor: Decimal
+  net: Money
+  noteNumber: [PositiveInt!]
+  adjudication: [ClaimResponseAdjudication!]!
+  subDetail: [ClaimResponseAddItemSubDetail!]
+}
+
+type ClaimResponseAddItemSubDetail {
+  productOrService: CodeableConcept!
+  modifier: [CodeableConcept!]
+  quantity: Quantity
+  unitPrice: Money
+  factor: Decimal
+  net: Money
+  noteNumber: [PositiveInt!]
+  adjudication: [ClaimResponseAdjudication!]!
+}
+
+type ClaimResponseTotal {
+  category: CodeableConcept!
+  amount: Money!
+}
+
+type ClaimResponsePayment {
+  type: CodeableConcept!
+  adjustment: Money
+  adjustmentReason: CodeableConcept
+  date: Date
+  amount: Money!
+  identifier: Identifier
+}
+
+type ClaimResponseProcessNote {
+  number: PositiveInt
+  type: Code
+  text: String!
+  language: CodeableConcept
+}
+
+type ClaimResponseInsurance {
+  sequence: PositiveInt!
+  focal: Boolean!
+  coverage: Reference!
+  businessArrangement: String
+  claimResponse: Reference
+}
+
+type ClaimResponseError {
+  itemSequence: PositiveInt
+  detailSequence: PositiveInt
+  subDetailSequence: PositiveInt
+  code: CodeableConcept!
+}
+
+# ─────────────────────────────────────────────────
+# Workflow
+# ─────────────────────────────────────────────────
+
+type Task implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  instantiatesCanonical: Canonical
+  instantiatesUri: URI
+  basedOn: [Reference!]
+  groupIdentifier: Identifier
+  partOf: [Reference!]
+  status: Code!
+  statusReason: CodeableConcept
+  businessStatus: CodeableConcept
+  intent: Code!
+  priority: Code
+  code: CodeableConcept
+  description: String
+  focus: Reference
+  for: Reference
+  encounter: Reference
+  executionPeriod: Period
+  authoredOn: DateTime
+  lastModified: DateTime
+  requester: Reference
+  performerType: [CodeableConcept!]
+  owner: Reference
+  location: Reference
+  reasonCode: CodeableConcept
+  reasonReference: Reference
+  insurance: [Reference!]
+  note: [Annotation!]
+  relevantHistory: [Reference!]
+  restriction: TaskRestriction
+  input: [TaskInput!]
+  output: [TaskOutput!]
+}
+
+type TaskRestriction {
+  repetitions: PositiveInt
+  period: Period
+  recipient: [Reference!]
+}
+
+type TaskInput {
+  type: CodeableConcept!
+  valueString: String
+  valueReference: Reference
+  valueCodeableConcept: CodeableConcept
+  valueBoolean: Boolean
+  valueDateTime: DateTime
+}
+
+type TaskOutput {
+  type: CodeableConcept!
+  valueString: String
+  valueReference: Reference
+  valueCodeableConcept: CodeableConcept
+  valueBoolean: Boolean
+  valueDateTime: DateTime
+}
+
+type Communication implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  instantiatesCanonical: [Canonical!]
+  instantiatesUri: [URI!]
+  basedOn: [Reference!]
+  partOf: [Reference!]
+  inResponseTo: [Reference!]
+  status: Code!
+  statusReason: CodeableConcept
+  category: [CodeableConcept!]
+  priority: Code
+  medium: [CodeableConcept!]
+  subject: Reference
+  topic: CodeableConcept
+  about: [Reference!]
+  encounter: Reference
+  sent: DateTime
+  received: DateTime
+  recipient: [Reference!]
+  sender: Reference
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  payload: [CommunicationPayload!]
+  note: [Annotation!]
+}
+
+type CommunicationPayload {
+  contentString: String
+  contentAttachment: Attachment
+  contentReference: Reference
+}
+
+type CommunicationRequest implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  basedOn: [Reference!]
+  replaces: [Reference!]
+  groupIdentifier: Identifier
+  status: Code!
+  statusReason: CodeableConcept
+  category: [CodeableConcept!]
+  priority: Code
+  doNotPerform: Boolean
+  medium: [CodeableConcept!]
+  subject: Reference
+  about: [Reference!]
+  encounter: Reference
+  payload: [CommunicationRequestPayload!]
+  occurrenceDateTime: DateTime
+  occurrencePeriod: Period
+  authoredOn: DateTime
+  requester: Reference
+  recipient: [Reference!]
+  sender: Reference
+  reasonCode: [CodeableConcept!]
+  reasonReference: [Reference!]
+  note: [Annotation!]
+}
+
+type CommunicationRequestPayload {
+  contentString: String
+  contentAttachment: Attachment
+  contentReference: Reference
+}
+
+type Subscription implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  status: Code!
+  contact: [ContactPoint!]
+  end: Instant
+  reason: String!
+  criteria: String!
+  error: String
+  channel: SubscriptionChannel!
+}
+
+type SubscriptionChannel {
+  type: Code!
+  endpoint: URL
+  payload: Code
+  header: [String!]
+}
+
+# ─────────────────────────────────────────────────
+# Consent and Provenance
+# ─────────────────────────────────────────────────
+
+type Consent implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  identifier: [Identifier!]
+  status: Code!
+  scope: CodeableConcept!
+  category: [CodeableConcept!]!
+  patient: Reference
+  dateTime: DateTime
+  performer: [Reference!]
+  organization: [Reference!]
+  sourceAttachment: Attachment
+  sourceReference: Reference
+  policy: [ConsentPolicy!]
+  policyRule: CodeableConcept
+  verification: [ConsentVerification!]
+  provision: ConsentProvision
+}
+
+type ConsentPolicy {
+  authority: URI
+  uri: URI
+}
+
+type ConsentVerification {
+  verified: Boolean!
+  verifiedWith: Reference
+  verificationDate: DateTime
+}
+
+type ConsentProvision {
+  type: Code
+  period: Period
+  actor: [ConsentProvisionActor!]
+  action: [CodeableConcept!]
+  securityLabel: [Coding!]
+  purpose: [Coding!]
+  class: [Coding!]
+  code: [CodeableConcept!]
+  dataPeriod: Period
+  data: [ConsentProvisionData!]
+  provision: [ConsentProvision!]
+}
+
+type ConsentProvisionActor {
+  role: CodeableConcept!
+  reference: Reference!
+}
+
+type ConsentProvisionData {
+  meaning: Code!
+  reference: Reference!
+}
+
+type Provenance implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  target: [Reference!]!
+  occurredPeriod: Period
+  occurredDateTime: DateTime
+  recorded: Instant!
+  policy: [URI!]
+  location: Reference
+  reason: [CodeableConcept!]
+  activity: CodeableConcept
+  agent: [ProvenanceAgent!]!
+  entity: [ProvenanceEntity!]
+  signature: [Signature!]
+}
+
+type ProvenanceAgent {
+  type: CodeableConcept
+  role: [CodeableConcept!]
+  who: Reference!
+  onBehalfOf: Reference
+}
+
+type ProvenanceEntity {
+  role: Code!
+  what: Reference!
+  agent: [ProvenanceAgent!]
+}
+
+type Signature {
+  type: [Coding!]!
+  when: Instant!
+  who: Reference!
+  onBehalfOf: Reference
+  targetFormat: Code
+  sigFormat: Code
+  data: Base64Binary
+}
+
+type AuditEvent implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  type: Coding!
+  subtype: [Coding!]
+  action: Code
+  period: Period
+  recorded: Instant!
+  outcome: Code
+  outcomeDesc: String
+  purposeOfEvent: [CodeableConcept!]
+  agent: [AuditEventAgent!]!
+  source: AuditEventSource!
+  entity: [AuditEventEntity!]
+}
+
+type AuditEventAgent {
+  type: CodeableConcept
+  role: [CodeableConcept!]
+  who: Reference
+  altId: String
+  name: String
+  requestor: Boolean!
+  location: Reference
+  policy: [URI!]
+  media: Coding
+  network: AuditEventAgentNetwork
+  purposeOfUse: [CodeableConcept!]
+}
+
+type AuditEventAgentNetwork {
+  address: String
+  type: Code
+}
+
+type AuditEventSource {
+  site: String
+  observer: Reference!
+  type: [Coding!]
+}
+
+type AuditEventEntity {
+  what: Reference
+  type: Coding
+  role: Coding
+  lifecycle: Coding
+  securityLabel: [Coding!]
+  name: String
+  description: String
+  query: Base64Binary
+  detail: [AuditEventEntityDetail!]
+}
+
+type AuditEventEntityDetail {
+  type: String!
+  valueString: String
+  valueBase64Binary: Base64Binary
+}
+
+# ─────────────────────────────────────────────────
+# Infrastructure
+# ─────────────────────────────────────────────────
+
+type CapabilityStatement implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  url: URI
+  version: String
+  name: String
+  title: String
+  status: Code!
+  experimental: Boolean
+  date: DateTime!
+  publisher: String
+  contact: [ContactDetail!]
+  description: Markdown
+  useContext: [UsageContext!]
+  jurisdiction: [CodeableConcept!]
+  purpose: Markdown
+  copyright: Markdown
+  kind: Code!
+  instantiates: [Canonical!]
+  imports: [Canonical!]
+  software: CapabilityStatementSoftware
+  implementation: CapabilityStatementImplementation
+  fhirVersion: Code!
+  format: [Code!]!
+  patchFormat: [Code!]
+  implementationGuide: [Canonical!]
+  rest: [CapabilityStatementRest!]
+  messaging: [CapabilityStatementMessaging!]
+  document: [CapabilityStatementDocument!]
+}
+
+type CapabilityStatementSoftware {
+  name: String!
+  version: String
+  releaseDate: DateTime
+}
+
+type CapabilityStatementImplementation {
+  description: String!
+  url: URL
+  custodian: Reference
+}
+
+type CapabilityStatementRest {
+  mode: Code!
+  documentation: Markdown
+  security: CapabilityStatementRestSecurity
+  resource: [CapabilityStatementRestResource!]
+  interaction: [CapabilityStatementRestInteraction!]
+  searchParam: [CapabilityStatementRestResourceSearchParam!]
+  operation: [CapabilityStatementRestResourceOperation!]
+  compartment: [Canonical!]
+}
+
+type CapabilityStatementRestSecurity {
+  cors: Boolean
+  service: [CodeableConcept!]
+  description: Markdown
+}
+
+type CapabilityStatementRestResource {
+  type: Code!
+  profile: Canonical
+  supportedProfile: [Canonical!]
+  documentation: Markdown
+  interaction: [CapabilityStatementRestResourceInteraction!]
+  versioning: Code
+  readHistory: Boolean
+  updateCreate: Boolean
+  conditionalCreate: Boolean
+  conditionalRead: Code
+  conditionalUpdate: Boolean
+  conditionalDelete: Code
+  referencePolicy: [Code!]
+  searchInclude: [String!]
+  searchRevInclude: [String!]
+  searchParam: [CapabilityStatementRestResourceSearchParam!]
+  operation: [CapabilityStatementRestResourceOperation!]
+}
+
+type CapabilityStatementRestResourceInteraction {
+  code: Code!
+  documentation: Markdown
+}
+
+type CapabilityStatementRestResourceSearchParam {
+  name: String!
+  definition: Canonical
+  type: Code!
+  documentation: Markdown
+}
+
+type CapabilityStatementRestResourceOperation {
+  name: String!
+  definition: Canonical!
+  documentation: Markdown
+}
+
+type CapabilityStatementRestInteraction {
+  code: Code!
+  documentation: Markdown
+}
+
+type CapabilityStatementMessaging {
+  endpoint: [CapabilityStatementMessagingEndpoint!]
+  reliableCache: UnsignedInt
+  documentation: Markdown
+  supportedMessage: [CapabilityStatementMessagingSupportedMessage!]
+}
+
+type CapabilityStatementMessagingEndpoint {
+  protocol: Coding!
+  address: URL!
+}
+
+type CapabilityStatementMessagingSupportedMessage {
+  mode: Code!
+  definition: Canonical!
+}
+
+type CapabilityStatementDocument {
+  mode: Code!
+  documentation: Markdown
+  profile: Canonical!
+}
+
+type OperationOutcome implements Resource {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  text: Narrative
+  extension: [Extension!]
+  issue: [OperationOutcomeIssue!]!
+}
+
+type OperationOutcomeIssue {
+  severity: Code!
+  code: Code!
+  details: CodeableConcept
+  diagnostics: String
+  location: [String!]
+  expression: [String!]
+}
+
+# ─────────────────────────────────────────────────
+# Bundle (for paginated FHIR responses)
+# ─────────────────────────────────────────────────
+
+type Bundle {
+  id: ID
+  meta: Meta
+  implicitRules: URI
+  language: Code
+  identifier: Identifier
+  type: Code!
+  timestamp: Instant
+  total: UnsignedInt
+  link: [BundleLink!]
+  entry: [BundleEntry!]
+  signature: Signature
+}
+
+type BundleLink {
+  relation: String!
+  url: URI!
+}
+
+# ─────────────────────────────────────────────────
+# Root Query type
+# ─────────────────────────────────────────────────
+
+type Query {
+  # Individuals
+  patient(id: ID!): Patient
+  patients(name: String, birthdate: Date, identifier: String, gender: Code, _count: Int, _offset: Int): [Patient!]
+
+  person(id: ID!): Person
+  persons(name: String, identifier: String, _count: Int, _offset: Int): [Person!]
+
+  relatedPerson(id: ID!): RelatedPerson
+  relatedPersons(patient: ID!, relationship: Code, _count: Int, _offset: Int): [RelatedPerson!]
+
+  practitioner(id: ID!): Practitioner
+  practitioners(name: String, identifier: String, _count: Int, _offset: Int): [Practitioner!]
+
+  practitionerRole(id: ID!): PractitionerRole
+  practitionerRoles(practitioner: ID, organization: ID, specialty: Code, _count: Int, _offset: Int): [PractitionerRole!]
+
+  # Organizations and Locations
+  organization(id: ID!): Organization
+  organizations(name: String, identifier: String, _count: Int, _offset: Int): [Organization!]
+
+  location(id: ID!): Location
+  locations(name: String, organization: ID, _count: Int, _offset: Int): [Location!]
+
+  # Encounters
+  encounter(id: ID!): Encounter
+  encounters(patient: ID!, status: Code, date: String, _count: Int, _offset: Int): [Encounter!]
+
+  episodeOfCare(id: ID!): EpisodeOfCare
+  episodesOfCare(patient: ID!, status: Code, _count: Int, _offset: Int): [EpisodeOfCare!]
+
+  # Scheduling
+  appointment(id: ID!): Appointment
+  appointments(patient: ID, practitioner: ID, status: Code, date: String, _count: Int, _offset: Int): [Appointment!]
+
+  slot(id: ID!): Slot
+  slots(schedule: ID!, status: Code, start: String, _count: Int, _offset: Int): [Slot!]
+
+  schedule(id: ID!): Schedule
+  schedules(actor: ID!, _count: Int, _offset: Int): [Schedule!]
+
+  # Clinical Summary
+  condition(id: ID!): Condition
+  conditions(patient: ID!, category: Code, clinicalStatus: Code, _count: Int, _offset: Int): [Condition!]
+
+  allergyIntolerance(id: ID!): AllergyIntolerance
+  allergyIntolerances(patient: ID!, clinicalStatus: Code, _count: Int, _offset: Int): [AllergyIntolerance!]
+
+  procedure(id: ID!): Procedure
+  procedures(patient: ID!, status: Code, date: String, _count: Int, _offset: Int): [Procedure!]
+
+  careTeam(id: ID!): CareTeam
+  careTeams(patient: ID!, status: Code, _count: Int, _offset: Int): [CareTeam!]
+
+  carePlan(id: ID!): CarePlan
+  carePlans(patient: ID!, status: Code, category: Code, _count: Int, _offset: Int): [CarePlan!]
+
+  goal(id: ID!): Goal
+  goals(patient: ID!, lifecycleStatus: Code, _count: Int, _offset: Int): [Goal!]
+
+  # Medications
+  medication(id: ID!): Medication
+  medications(code: Code, _count: Int, _offset: Int): [Medication!]
+
+  medicationRequest(id: ID!): MedicationRequest
+  medicationRequests(patient: ID!, status: Code, intent: Code, _count: Int, _offset: Int): [MedicationRequest!]
+
+  medicationStatement(id: ID!): MedicationStatement
+  medicationStatements(patient: ID!, status: Code, _count: Int, _offset: Int): [MedicationStatement!]
+
+  # Diagnostics
+  observation(id: ID!): Observation
+  observations(patient: ID!, category: Code, code: Code, date: String, _count: Int, _offset: Int): [Observation!]
+
+  diagnosticReport(id: ID!): DiagnosticReport
+  diagnosticReports(patient: ID!, category: Code, code: Code, date: String, _count: Int, _offset: Int): [DiagnosticReport!]
+
+  serviceRequest(id: ID!): ServiceRequest
+  serviceRequests(patient: ID!, status: Code, category: Code, _count: Int, _offset: Int): [ServiceRequest!]
+
+  specimen(id: ID!): Specimen
+  specimens(patient: ID!, _count: Int, _offset: Int): [Specimen!]
+
+  imagingStudy(id: ID!): ImagingStudy
+  imagingStudies(patient: ID!, status: Code, _count: Int, _offset: Int): [ImagingStudy!]
+
+  # Immunizations
+  immunization(id: ID!): Immunization
+  immunizations(patient: ID!, status: Code, _count: Int, _offset: Int): [Immunization!]
+
+  # Devices
+  device(id: ID!): Device
+  devices(patient: ID, type: Code, _count: Int, _offset: Int): [Device!]
+
+  deviceRequest(id: ID!): DeviceRequest
+  deviceRequests(patient: ID!, status: Code, _count: Int, _offset: Int): [DeviceRequest!]
+
+  # Documents and Forms
+  documentReference(id: ID!): DocumentReference
+  documentReferences(patient: ID!, type: Code, category: Code, date: String, _count: Int, _offset: Int): [DocumentReference!]
+
+  binary(id: ID!): Binary
+
+  questionnaire(id: ID!): Questionnaire
+  questionnaires(title: String, status: Code, _count: Int, _offset: Int): [Questionnaire!]
+
+  questionnaireResponse(id: ID!): QuestionnaireResponse
+  questionnaireResponses(patient: ID!, questionnaire: Canonical, status: Code, _count: Int, _offset: Int): [QuestionnaireResponse!]
+
+  # Financial
+  coverage(id: ID!): Coverage
+  coverages(patient: ID!, status: Code, _count: Int, _offset: Int): [Coverage!]
+
+  claim(id: ID!): Claim
+  claims(patient: ID!, status: Code, _count: Int, _offset: Int): [Claim!]
+
+  claimResponse(id: ID!): ClaimResponse
+  claimResponses(patient: ID!, status: Code, _count: Int, _offset: Int): [ClaimResponse!]
+
+  # Workflow
+  task(id: ID!): Task
+  tasks(patient: ID, status: Code, intent: Code, _count: Int, _offset: Int): [Task!]
+
+  communication(id: ID!): Communication
+  communications(patient: ID!, status: Code, _count: Int, _offset: Int): [Communication!]
+
+  communicationRequest(id: ID!): CommunicationRequest
+  communicationRequests(patient: ID!, status: Code, _count: Int, _offset: Int): [CommunicationRequest!]
+
+  subscription(id: ID!): Subscription
+  subscriptions(status: Code, _count: Int, _offset: Int): [Subscription!]
+
+  # Consent and Provenance
+  consent(id: ID!): Consent
+  consents(patient: ID!, status: Code, _count: Int, _offset: Int): [Consent!]
+
+  provenance(id: ID!): Provenance
+  provenances(target: ID!, _count: Int, _offset: Int): [Provenance!]
+
+  auditEvent(id: ID!): AuditEvent
+  auditEvents(patient: ID, agent: ID, date: String, action: Code, _count: Int, _offset: Int): [AuditEvent!]
+
+  # Infrastructure
+  capabilityStatement(id: ID): CapabilityStatement
+  operationOutcome(id: ID!): OperationOutcome
+}
