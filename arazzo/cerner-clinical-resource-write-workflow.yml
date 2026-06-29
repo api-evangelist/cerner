@@ -1,0 +1,89 @@
+arazzo: 1.0.1
+info:
+  title: Cerner Oracle Health Clinical Resource Write-Back
+  summary: Locate a patient, create a FHIR resource against that patient, then update it by id.
+  description: >-
+    A FHIR R4 write-back flow against the Cerner / Oracle Health API. The patient
+    is located first so the new resource can reference it, a clinical resource is
+    created with the generic resource-type create operation, and the same resource
+    is then updated by id. This is the basis for documenting back into the EHR
+    (for example creating an Observation or DocumentReference). Every step inlines
+    its request so the flow is self-contained.
+  version: 1.0.0
+sourceDescriptions:
+- name: cernerFhir
+  url: ../openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: clinical-resource-write-back
+  summary: Create and then update a FHIR resource for a located patient.
+  description: >-
+    Finds the patient, creates a FHIR resource of the given type, and updates it by
+    id.
+  inputs:
+    type: object
+    required:
+    - patientName
+    - resourceType
+    - resource
+    - updatedResource
+    properties:
+      patientName:
+        type: string
+        description: Patient name used to locate the patient the resource will reference.
+      resourceType:
+        type: string
+        description: The FHIR resource type to write (e.g. Observation, DocumentReference).
+      resource:
+        type: object
+        description: The FHIR R4 resource body to create.
+      updatedResource:
+        type: object
+        description: The FHIR R4 resource body to write on update.
+  steps:
+  - stepId: findPatient
+    description: Locate the patient the new resource will reference.
+    operationId: searchPatient
+    parameters:
+    - name: name
+      in: query
+      value: $inputs.patientName
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      patientId: $response.body#/entry/0/resource/id
+  - stepId: createResource
+    description: Create the clinical resource of the requested type.
+    operationId: createResource
+    parameters:
+    - name: resource
+      in: path
+      value: $inputs.resourceType
+    requestBody:
+      contentType: application/fhir+json
+      payload: $inputs.resource
+    successCriteria:
+    - condition: $statusCode == 201
+    outputs:
+      resourceId: $response.body#/id
+  - stepId: updateResource
+    description: Update the created resource by id.
+    operationId: updateResource
+    parameters:
+    - name: resource
+      in: path
+      value: $inputs.resourceType
+    - name: id
+      in: path
+      value: $steps.createResource.outputs.resourceId
+    requestBody:
+      contentType: application/fhir+json
+      payload: $inputs.updatedResource
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      resource: $response.body
+  outputs:
+    patientId: $steps.findPatient.outputs.patientId
+    resourceId: $steps.createResource.outputs.resourceId
+    resource: $steps.updateResource.outputs.resource

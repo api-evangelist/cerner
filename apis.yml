@@ -161,6 +161,17 @@ common:
   url: https://github.com/cerner
 - type: PrivacyPolicy
   url: https://www.oracle.com/legal/privacy/
+- type: ArazzoWorkflows
+  workflows:
+  - url: arazzo/cerner-clinical-resource-write-workflow.yml
+    name: Cerner Oracle Health Clinical Resource Write-Back
+    summary: "Locate a patient, create a FHIR resource against that patient, then update it by id."
+  - url: arazzo/cerner-conformance-discovery-workflow.yml
+    name: Cerner Oracle Health Conformance Discovery
+    summary: "Read the server metadata and CapabilityStatement, then enumerate supported operations and structure definitions."
+  - url: arazzo/cerner-smart-on-fhir-patient-data-retrieval-workflow.yml
+    name: Cerner Oracle Health SMART on FHIR Patient Retrieval
+    summary: "Discover server capabilities, locate a patient, then pull the patient's conditions, encounters, and procedures."
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

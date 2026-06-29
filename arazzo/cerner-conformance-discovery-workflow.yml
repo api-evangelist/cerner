@@ -1,0 +1,58 @@
+arazzo: 1.0.1
+info:
+  title: Cerner Oracle Health Conformance Discovery
+  summary: Read the server metadata and CapabilityStatement, then enumerate supported operations and structure definitions.
+  description: >-
+    A SMART App Launch conformance-discovery flow against the Cerner / Oracle
+    Health FHIR R4 API. Before integrating, a client reads the server metadata and
+    CapabilityStatement to learn supported resources and SMART endpoints, then
+    enumerates the OperationDefinitions and StructureDefinitions the server
+    advertises. Every step inlines its request so the flow is self-contained.
+  version: 1.0.0
+sourceDescriptions:
+- name: cernerFhir
+  url: ../openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: conformance-discovery
+  summary: Discover server capabilities, operations, and structure definitions.
+  description: >-
+    Reads server metadata and the CapabilityStatement, then lists
+    OperationDefinitions and StructureDefinitions.
+  inputs:
+    type: object
+    properties:
+      _placeholder:
+        type: string
+        description: No inputs are required; conformance discovery reads server-published metadata.
+  steps:
+  - stepId: readMetadata
+    description: Fetch the FHIR server metadata endpoint.
+    operationId: getCapabilityStatement
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: readCapabilityStatement
+    description: Read the CapabilityStatement resource describing supported interactions.
+    operationId: readCapabilityStatement
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      capabilities: $response.body
+  - stepId: listOperations
+    description: Enumerate the OperationDefinitions the server supports.
+    operationId: searchOperationDefinition
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      operations: $response.body
+  - stepId: listStructures
+    description: Enumerate the StructureDefinitions (profiles) the server supports.
+    operationId: searchStructureDefinition
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      structures: $response.body
+  outputs:
+    capabilities: $steps.readCapabilityStatement.outputs.capabilities
+    operations: $steps.listOperations.outputs.operations
+    structures: $steps.listStructures.outputs.structures

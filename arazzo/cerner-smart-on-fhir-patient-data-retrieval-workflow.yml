@@ -1,0 +1,91 @@
+arazzo: 1.0.1
+info:
+  title: Cerner Oracle Health SMART on FHIR Patient Retrieval
+  summary: Discover server capabilities, locate a patient, then pull the patient's conditions, encounters, and procedures.
+  description: >-
+    The canonical SMART on FHIR read flow against the Cerner / Oracle Health FHIR
+    R4 API. The CapabilityStatement is fetched first (the SMART App Launch
+    conformance step), the patient is located by identifier or name, and the US
+    Core clinical context is retrieved: Conditions (problem list), Encounters, and
+    Procedures. Every step inlines its request so the flow can be read and executed
+    without opening the underlying OpenAPI description.
+  version: 1.0.0
+sourceDescriptions:
+- name: cernerFhir
+  url: ../openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: smart-patient-data-retrieval
+  summary: Retrieve a patient's conditions, encounters, and procedures after capability discovery.
+  description: >-
+    Reads the CapabilityStatement, finds the patient, then pulls Conditions,
+    Encounters, and Procedures for that patient.
+  inputs:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        description: Patient name to search on.
+      identifier:
+        type: string
+        description: Optional business identifier (system|value) to disambiguate the patient match.
+  steps:
+  - stepId: discoverCapabilities
+    description: Fetch the FHIR CapabilityStatement to confirm supported resources and SMART launch endpoints.
+    operationId: getCapabilityStatement
+    successCriteria:
+    - condition: $statusCode == 200
+  - stepId: findPatient
+    description: Locate the patient by name (and identifier when supplied).
+    operationId: searchPatient
+    parameters:
+    - name: name
+      in: query
+      value: $inputs.name
+    - name: identifier
+      in: query
+      value: $inputs.identifier
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      patientId: $response.body#/entry/0/resource/id
+  - stepId: getConditions
+    description: Retrieve the patient's Conditions (problem list).
+    operationId: searchCondition
+    parameters:
+    - name: patient
+      in: query
+      value: $steps.findPatient.outputs.patientId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      conditions: $response.body
+  - stepId: getEncounters
+    description: Retrieve the patient's Encounters.
+    operationId: searchEncounter
+    parameters:
+    - name: patient
+      in: query
+      value: $steps.findPatient.outputs.patientId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      encounters: $response.body
+  - stepId: getProcedures
+    description: Retrieve the patient's Procedures.
+    operationId: searchProcedure
+    parameters:
+    - name: patient
+      in: query
+      value: $steps.findPatient.outputs.patientId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      procedures: $response.body
+  outputs:
+    patientId: $steps.findPatient.outputs.patientId
+    conditions: $steps.getConditions.outputs.conditions
+    encounters: $steps.getEncounters.outputs.encounters
+    procedures: $steps.getProcedures.outputs.procedures
