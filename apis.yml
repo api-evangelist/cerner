@@ -143,6 +143,8 @@ apis:
     and patient-facing applications to embed inside Millennium PowerChart and Oracle
     Health portals.
 common:
+- type: OAuthScopes
+  url: scopes/cerner-scopes.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/cerner-corporation
 - type: Website

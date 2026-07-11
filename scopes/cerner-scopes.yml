@@ -1,0 +1,39 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+schemes:
+- name: oauth2
+  source: openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
+    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+  - flow: clientCredentials
+    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+  description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
+scopes:
+- scope: patient/*.read
+  description: Read all patient-scoped resources.
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+- scope: system/*.read
+  description: System-level read access.
+  flows:
+  - authorizationCode
+  - clientCredentials
+  sources:
+  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+- scope: system/*.write
+  description: System-level write access.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+- scope: user/*.read
+  description: Read all user-scoped resources.
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
