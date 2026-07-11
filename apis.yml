@@ -143,6 +143,12 @@ apis:
     and patient-facing applications to embed inside Millennium PowerChart and Oracle
     Health portals.
 common:
+- type: TrustCenter
+  url: security/cerner-trust-center.yml
+- type: DomainSecurity
+  url: security/cerner-domain-security.yml
+- type: Authentication
+  url: authentication/cerner-authentication.yml
 - type: OAuthScopes
   url: scopes/cerner-scopes.yml
 - type: LinkedIn
