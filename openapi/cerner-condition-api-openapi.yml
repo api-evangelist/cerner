@@ -1,0 +1,98 @@
+openapi: 3.1.0
+info:
+  title: Oracle Health Millennium Platform FHIR R4 Capability Condition API
+  description: The Oracle Health (Cerner Millennium) FHIR R4 API provides OAuth 2.0-secured access to EHR data in the HL7 FHIR R4 format. It exposes USCDI-aligned resources such as Patient, Practitioner, Observation, Condition, MedicationRequest, DocumentReference, and Encounter for patient-access apps, provider apps, and interoperability partners. The API supports SMART on FHIR app launching and is the successor to the Cerner Millennium DSTU2 FHIR API.
+  version: R4
+  contact:
+    name: Oracle Health Developer Program
+    url: https://www.oracle.com/health/developer/
+servers:
+- url: https://fhir-ehr.cerner.com/r4
+  description: Cerner Millennium FHIR R4 production endpoint
+- url: https://fhir-open.cerner.com/r4
+  description: Cerner Millennium FHIR R4 sandbox endpoint
+security:
+- oauth2: []
+tags:
+- name: Condition
+  description: Patient conditions and problem-list entries.
+paths:
+  /Condition:
+    get:
+      operationId: searchCondition
+      summary: Search or Read Condition
+      description: Search or read Condition resources for a patient.
+      tags:
+      - Condition
+      parameters:
+      - name: patient
+        in: query
+        description: Patient resource reference.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A FHIR Bundle of Condition resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FHIRBundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Authentication credentials are missing or invalid.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIRResource'
+  schemas:
+    FHIRResource:
+      type: object
+      description: A generic FHIR R4 resource.
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+      additionalProperties: true
+    FHIRBundle:
+      type: object
+      description: A FHIR R4 Bundle resource wrapping a collection of resources.
+      properties:
+        resourceType:
+          type: string
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      additionalProperties: true
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            patient/*.read: Read all patient-scoped resources.
+            user/*.read: Read all user-scoped resources.
+            system/*.read: System-level read access.
+        clientCredentials:
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            system/*.read: System-level read access.
+            system/*.write: System-level write access.
+externalDocs:
+  description: Oracle Health Millennium FHIR R4 Documentation
+  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+x-generated-from: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+x-generated-by: claude-crawl-2026-05-08
