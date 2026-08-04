@@ -1,0 +1,26 @@
+{
+  "provider": "cerner",
+  "sources": [
+    "cerner-capability-api-openapi.yml",
+    "cerner-condition-api-openapi.yml",
+    "cerner-definitions-api-openapi.yml",
+    "cerner-encounter-api-openapi.yml",
+    "cerner-generic-api-openapi.yml",
+    "cerner-patient-api-openapi.yml",
+    "cerner-procedure-api-openapi.yml"
+  ],
+  "outputs": [
+    "cerner-capability-api-openapi.yml",
+    "cerner-condition-api-openapi.yml",
+    "cerner-definitions-api-openapi.yml",
+    "cerner-encounter-api-openapi.yml",
+    "cerner-generic-api-openapi.yml",
+    "cerner-patient-api-openapi.yml",
+    "cerner-procedure-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
