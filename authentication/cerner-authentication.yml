@@ -1,23 +1,57 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+generated: '2026-08-14'
+method: probed
+source: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+docs: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
 summary:
   types:
   - oauth2
+  - openIdConnect
   oauth2_flows:
   - authorizationCode
   - clientCredentials
+  profile: SMART on FHIR App Launch (SMART v1 and v2)
+  pkce:
+  - S256
+  client_auth_methods:
+  - client_secret_basic
+  - private_key_jwt
+  client_auth_signing_algs:
+  - RS384
+  - ES384
+  scope_count: 303
+  anonymous_surface: The open endpoint https://fhir-open.cerner.com/r4/{tenant} serves read-only data with no token.
 schemes:
-- name: oauth2
+- name: smartOnFhir
   type: oauth2
+  description: 'SMART on FHIR OAuth 2.0. Every endpoint is tenant-scoped: the tenant id is a path segment of both
+    the FHIR service root and the authorization server, so a client must resolve the tenant before it can authenticate.
+    Public clients use authorization-code with PKCE (S256); confidential clients may use client_secret_basic or
+    private_key_jwt (RS384/ES384). Backend services use client-credentials with system/ scopes and asymmetric client
+    authentication.'
+  issuer: https://authorization.cerner.com/tenants/{tenant}
   flows:
   - flow: authorizationCode
-    authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
-    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-    scopes: 3
+    authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/provider/authorize
+    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+    scopes: 200
   - flow: clientCredentials
-    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-    scopes: 2
-  description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
+    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+    scopes: 103
+  endpoints:
+    jwks_uri: https://authorization.cerner.com/jwk
+    introspection_endpoint: https://authorization.cerner.com/tokeninfo
+    revocation_endpoint: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token/revoke
+    management_endpoint: https://authorization.cerner.com/tenants/{tenant}/personas/provider/my-authorizations
   sources:
-  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+  - openapi/cerner-millennium-fhir-r4-openapi.yml
+discovery:
+  well_known_path: /.well-known/smart-configuration
+  served_at: the FHIR service root, per tenant — not at the host root (the host root returns 502)
+  capability_statement: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+  smart_oauth_uris_extension: http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris
+registration:
+  model: manual — apps are registered in the Oracle Health developer console; there is no dynamic client registration
+    endpoint in the discovery document
+  console: https://www.oracle.com/health/developer/
+  note: code.cerner.com (the former Cerner Code Console) now 301s to https://www.oracle.com/health/developer/.

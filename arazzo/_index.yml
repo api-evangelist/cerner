@@ -1,0 +1,51 @@
+generated: '2026-08-14'
+method: derived
+source: arazzo/*.yml
+note: >-
+  Catalog of the Arazzo 1.0.1 workflows in this repository. Every sourceDescription was repaired this pass:
+  the three workflows pointed at ../openapi/cerner-oracle-health-fhir-r4-api-openapi.yml, which does not
+  exist at that path — the spec they reference lives in openapi/_original/. Every operationId referenced
+  below was grepped and exists verbatim in the referenced spec.
+workflows:
+  - file: cerner-conformance-discovery-workflow.yml
+    workflowId: conformance-discovery
+    title: Cerner Oracle Health Conformance Discovery
+    summary: >-
+      Read the server metadata and CapabilityStatement, then enumerate supported operations and structure
+      definitions. This is the right first workflow against any Millennium tenant, because the
+      CapabilityStatement — not the documentation — is the authoritative contract for that tenant.
+    source: ../openapi/_original/cerner-oracle-health-fhir-r4-api-openapi.yml
+    steps:
+      - getCapabilityStatement
+      - readCapabilityStatement
+      - searchOperationDefinition
+      - searchStructureDefinition
+  - file: cerner-smart-on-fhir-patient-data-retrieval-workflow.yml
+    workflowId: smart-patient-data-retrieval
+    title: Cerner Oracle Health SMART on FHIR Patient Retrieval
+    summary: >-
+      Discover server capabilities, locate a patient, then pull the patient's conditions, encounters and
+      procedures.
+    source: ../openapi/_original/cerner-oracle-health-fhir-r4-api-openapi.yml
+    steps:
+      - getCapabilityStatement
+      - searchPatient
+      - searchCondition
+      - searchEncounter
+      - searchProcedure
+  - file: cerner-clinical-resource-write-workflow.yml
+    workflowId: clinical-resource-write-back
+    title: Cerner Oracle Health Clinical Resource Write-Back
+    summary: >-
+      Locate a patient, create a FHIR resource against that patient, then update it by id. Read
+      skills/cerner-write-back-clinical-resource.md before running this against anything real — the
+      platform has no idempotency primitive, so a retried create makes a duplicate, and update requires
+      If-Match or it silently discards a concurrent edit.
+    source: ../openapi/_original/cerner-oracle-health-fhir-r4-api-openapi.yml
+    steps:
+      - searchPatient
+      - createResource
+      - updateResource
+summary:
+  workflow_files: 3
+  arazzo_version: 1.0.1

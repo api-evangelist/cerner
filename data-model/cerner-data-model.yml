@@ -1,0 +1,617 @@
+generated: '2026-08-14'
+method: derived
+source: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+model: HL7 FHIR R4 (4.0.1) — the entity model is the FHIR resource model, not a vendor model
+note: 'Entities and relationships are read out of the CapabilityStatement Oracle Health serves at /metadata. Relationships
+  are inferred from declared reference-type search parameters: a reference search parameter is the provider stating
+  that this resource can be filtered by that related resource, which is the traversable edge an agent actually has.
+  Element-level structure belongs to HL7 FHIR R4 and is intentionally not restated here. Patient is the hub of the
+  graph — nearly every clinical resource is reachable only by filtering on patient, and several resources REQUIRE
+  either _id or patient, so there is no unqualified list-all.'
+root_entity: Patient
+summary:
+  entities: 44
+  relationships: 39
+  writable_entities:
+  - AllergyIntolerance
+  - Appointment
+  - Basic
+  - Communication
+  - Condition
+  - Coverage
+  - DiagnosticReport
+  - DocumentReference
+  - Encounter
+  - FamilyMemberHistory
+  - Immunization
+  - MedicationRequest
+  - Observation
+  - Organization
+  - Patient
+  - Practitioner
+  - Procedure
+  - Provenance
+  - QuestionnaireResponse
+  - RelatedPerson
+  read_only_entities: 23
+entities:
+- name: CapabilityStatement
+  interactions:
+  - read
+  search_parameters: 0
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/capabilitystatement.html
+- name: Account
+  interactions:
+  - read
+  - search-type
+  search_parameters: 7
+  reference_parameters:
+  - patient
+  - -encounter
+  - -guarantor
+  fhir_definition: http://hl7.org/fhir/R4/account.html
+- name: AllergyIntolerance
+  interactions:
+  - create
+  - read
+  - search-type
+  - update
+  search_parameters: 4
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/allergyintolerance.html
+- name: Appointment
+  interactions:
+  - create
+  - patch
+  - read
+  - search-type
+  search_parameters: 8
+  reference_parameters:
+  - patient
+  - practitioner
+  - location
+  fhir_definition: http://hl7.org/fhir/R4/appointment.html
+- name: Basic
+  interactions:
+  - create
+  search_parameters: 0
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/basic.html
+- name: Binary
+  interactions:
+  - read
+  search_parameters: 0
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/binary.html
+- name: CarePlan
+  interactions:
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/careplan.html
+- name: CareTeam
+  interactions:
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - encounter
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/careteam.html
+- name: ChargeItem
+  interactions:
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - context
+  - account
+  fhir_definition: http://hl7.org/fhir/R4/chargeitem.html
+- name: Communication
+  interactions:
+  - create
+  - patch
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - recipient
+  fhir_definition: http://hl7.org/fhir/R4/communication.html
+- name: Condition
+  interactions:
+  - create
+  - read
+  - search-type
+  - update
+  search_parameters: 7
+  reference_parameters:
+  - patient
+  - encounter
+  - subject
+  fhir_definition: http://hl7.org/fhir/R4/condition.html
+- name: Consent
+  interactions:
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  - actor
+  fhir_definition: http://hl7.org/fhir/R4/consent.html
+- name: Coverage
+  interactions:
+  - create
+  - delete
+  - patch
+  - read
+  - search-type
+  search_parameters: 3
+  reference_parameters:
+  - patient
+  - -encounter
+  fhir_definition: http://hl7.org/fhir/R4/coverage.html
+- name: Device
+  interactions:
+  - read
+  - search-type
+  search_parameters: 2
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/device.html
+- name: DiagnosticReport
+  interactions:
+  - create
+  - read
+  - search-type
+  search_parameters: 8
+  reference_parameters:
+  - encounter
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/diagnosticreport.html
+- name: DocumentReference
+  interactions:
+  - create
+  - read
+  - search-type
+  - update
+  search_parameters: 9
+  reference_parameters:
+  - patient
+  - encounter
+  fhir_definition: http://hl7.org/fhir/R4/documentreference.html
+- name: Encounter
+  interactions:
+  - create
+  - patch
+  - read
+  - search-type
+  search_parameters: 9
+  reference_parameters:
+  - patient
+  - subject
+  - account
+  fhir_definition: http://hl7.org/fhir/R4/encounter.html
+- name: FamilyMemberHistory
+  interactions:
+  - create
+  - read
+  - search-type
+  - update
+  search_parameters: 3
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/familymemberhistory.html
+- name: Goal
+  interactions:
+  - read
+  - search-type
+  search_parameters: 3
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/goal.html
+- name: Group
+  interactions: []
+  search_parameters: 0
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/group.html
+- name: Immunization
+  interactions:
+  - create
+  - read
+  - search-type
+  - update
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/immunization.html
+- name: InsurancePlan
+  interactions:
+  - read
+  - search-type
+  search_parameters: 2
+  reference_parameters:
+  - owned-by
+  fhir_definition: http://hl7.org/fhir/R4/insuranceplan.html
+- name: Location
+  interactions:
+  - read
+  - search-type
+  search_parameters: 10
+  reference_parameters:
+  - organization
+  fhir_definition: http://hl7.org/fhir/R4/location.html
+- name: Media
+  interactions:
+  - read
+  search_parameters: 0
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/media.html
+- name: MedicationAdministration
+  interactions:
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  - performer
+  fhir_definition: http://hl7.org/fhir/R4/medicationadministration.html
+- name: MedicationDispense
+  interactions:
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/medicationdispense.html
+- name: MedicationRequest
+  interactions:
+  - create
+  - patch
+  - read
+  - search-type
+  search_parameters: 7
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/medicationrequest.html
+- name: NutritionOrder
+  interactions:
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/nutritionorder.html
+- name: Observation
+  interactions:
+  - create
+  - read
+  - search-type
+  - update
+  search_parameters: 8
+  reference_parameters:
+  - patient
+  - subject
+  fhir_definition: http://hl7.org/fhir/R4/observation.html
+- name: OperationDefinition
+  interactions:
+  - read
+  search_parameters: 0
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/operationdefinition.html
+- name: Organization
+  interactions:
+  - create
+  - read
+  - search-type
+  search_parameters: 6
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/organization.html
+- name: Patient
+  interactions:
+  - create
+  - patch
+  - read
+  - search-type
+  search_parameters: 11
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/patient.html
+- name: Person
+  interactions:
+  - read
+  - search-type
+  search_parameters: 2
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/person.html
+- name: Practitioner
+  interactions:
+  - create
+  - read
+  - search-type
+  search_parameters: 7
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/practitioner.html
+- name: Procedure
+  interactions:
+  - create
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  - subject
+  fhir_definition: http://hl7.org/fhir/R4/procedure.html
+- name: Provenance
+  interactions:
+  - create
+  - read
+  - search-type
+  search_parameters: 2
+  reference_parameters:
+  - target
+  fhir_definition: http://hl7.org/fhir/R4/provenance.html
+- name: Questionnaire
+  interactions:
+  - read
+  - search-type
+  search_parameters: 1
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/questionnaire.html
+- name: QuestionnaireResponse
+  interactions:
+  - read
+  - search-type
+  - update
+  search_parameters: 2
+  reference_parameters:
+  - patient
+  fhir_definition: http://hl7.org/fhir/R4/questionnaireresponse.html
+- name: RelatedPerson
+  interactions:
+  - create
+  - patch
+  - read
+  - search-type
+  search_parameters: 5
+  reference_parameters:
+  - patient
+  - -encounter
+  fhir_definition: http://hl7.org/fhir/R4/relatedperson.html
+- name: Schedule
+  interactions:
+  - read
+  - search-type
+  search_parameters: 1
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/schedule.html
+- name: ServiceRequest
+  interactions:
+  - read
+  - search-type
+  search_parameters: 6
+  reference_parameters:
+  - patient
+  - subject
+  fhir_definition: http://hl7.org/fhir/R4/servicerequest.html
+- name: Slot
+  interactions:
+  - patch
+  - read
+  - search-type
+  search_parameters: 6
+  reference_parameters:
+  - schedule.actor
+  - -location
+  fhir_definition: http://hl7.org/fhir/R4/slot.html
+- name: Specimen
+  interactions:
+  - read
+  - search-type
+  search_parameters: 1
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/specimen.html
+- name: StructureDefinition
+  interactions:
+  - read
+  search_parameters: 0
+  reference_parameters: []
+  fhir_definition: http://hl7.org/fhir/R4/structuredefinition.html
+relationships:
+- from: Account
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Account].searchParam[patient] type=reference
+- from: AllergyIntolerance
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[AllergyIntolerance].searchParam[patient] type=reference
+- from: Appointment
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Appointment].searchParam[patient] type=reference
+- from: Appointment
+  to: Practitioner
+  type: belongs_to
+  via: practitioner
+  evidence: CapabilityStatement.rest.resource[Appointment].searchParam[practitioner] type=reference
+- from: Appointment
+  to: Location
+  type: belongs_to
+  via: location
+  evidence: CapabilityStatement.rest.resource[Appointment].searchParam[location] type=reference
+- from: CarePlan
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[CarePlan].searchParam[patient] type=reference
+- from: CareTeam
+  to: Encounter
+  type: belongs_to
+  via: encounter
+  evidence: CapabilityStatement.rest.resource[CareTeam].searchParam[encounter] type=reference
+- from: CareTeam
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[CareTeam].searchParam[patient] type=reference
+- from: ChargeItem
+  to: Encounter
+  type: belongs_to
+  via: context
+  evidence: CapabilityStatement.rest.resource[ChargeItem].searchParam[context] type=reference
+- from: Condition
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Condition].searchParam[patient] type=reference
+- from: Condition
+  to: Encounter
+  type: belongs_to
+  via: encounter
+  evidence: CapabilityStatement.rest.resource[Condition].searchParam[encounter] type=reference
+- from: Condition
+  to: Patient
+  type: belongs_to
+  via: subject
+  evidence: CapabilityStatement.rest.resource[Condition].searchParam[subject] type=reference
+- from: Consent
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Consent].searchParam[patient] type=reference
+- from: Consent
+  to: Practitioner
+  type: belongs_to
+  via: actor
+  evidence: CapabilityStatement.rest.resource[Consent].searchParam[actor] type=reference
+- from: Coverage
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Coverage].searchParam[patient] type=reference
+- from: Device
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Device].searchParam[patient] type=reference
+- from: DiagnosticReport
+  to: Encounter
+  type: belongs_to
+  via: encounter
+  evidence: CapabilityStatement.rest.resource[DiagnosticReport].searchParam[encounter] type=reference
+- from: DiagnosticReport
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[DiagnosticReport].searchParam[patient] type=reference
+- from: DocumentReference
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[DocumentReference].searchParam[patient] type=reference
+- from: DocumentReference
+  to: Encounter
+  type: belongs_to
+  via: encounter
+  evidence: CapabilityStatement.rest.resource[DocumentReference].searchParam[encounter] type=reference
+- from: Encounter
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Encounter].searchParam[patient] type=reference
+- from: Encounter
+  to: Patient
+  type: belongs_to
+  via: subject
+  evidence: CapabilityStatement.rest.resource[Encounter].searchParam[subject] type=reference
+- from: FamilyMemberHistory
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[FamilyMemberHistory].searchParam[patient] type=reference
+- from: Goal
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Goal].searchParam[patient] type=reference
+- from: Immunization
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Immunization].searchParam[patient] type=reference
+- from: Location
+  to: Organization
+  type: belongs_to
+  via: organization
+  evidence: CapabilityStatement.rest.resource[Location].searchParam[organization] type=reference
+- from: MedicationAdministration
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[MedicationAdministration].searchParam[patient] type=reference
+- from: MedicationAdministration
+  to: Practitioner
+  type: belongs_to
+  via: performer
+  evidence: CapabilityStatement.rest.resource[MedicationAdministration].searchParam[performer] type=reference
+- from: MedicationDispense
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[MedicationDispense].searchParam[patient] type=reference
+- from: MedicationRequest
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[MedicationRequest].searchParam[patient] type=reference
+- from: NutritionOrder
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[NutritionOrder].searchParam[patient] type=reference
+- from: Observation
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Observation].searchParam[patient] type=reference
+- from: Observation
+  to: Patient
+  type: belongs_to
+  via: subject
+  evidence: CapabilityStatement.rest.resource[Observation].searchParam[subject] type=reference
+- from: Procedure
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[Procedure].searchParam[patient] type=reference
+- from: Procedure
+  to: Patient
+  type: belongs_to
+  via: subject
+  evidence: CapabilityStatement.rest.resource[Procedure].searchParam[subject] type=reference
+- from: QuestionnaireResponse
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[QuestionnaireResponse].searchParam[patient] type=reference
+- from: RelatedPerson
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[RelatedPerson].searchParam[patient] type=reference
+- from: ServiceRequest
+  to: Patient
+  type: belongs_to
+  via: patient
+  evidence: CapabilityStatement.rest.resource[ServiceRequest].searchParam[patient] type=reference
+- from: ServiceRequest
+  to: Patient
+  type: belongs_to
+  via: subject
+  evidence: CapabilityStatement.rest.resource[ServiceRequest].searchParam[subject] type=reference

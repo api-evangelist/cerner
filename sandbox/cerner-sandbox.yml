@@ -1,0 +1,80 @@
+generated: '2026-08-14'
+method: probed
+source: >-
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/srv_root_url.html
+  (documented), plus live probes of every endpoint below on 2026-08-14
+note: >-
+  Oracle Health runs a genuinely useful sandbox, and one part of it is unusual: the OPEN endpoint needs no
+  registration, no key and no token at all. Every value below is published by Oracle Health or observed on
+  a live unauthenticated request. No test value here was invented.
+sandbox_tenant:
+  id: ec2458f2-1e24-41c8-b71b-0e701af7583d
+  scope: shared public sandbox tenant used by all three sandbox service roots
+environments:
+  - name: Open Sandbox
+    url_template: https://fhir-open.cerner.com/r4/{tenant}/:resource[?:parameters]
+    example: https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+    auth: none
+    access: read-only
+    registration_required: false
+    probed:
+      url: https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+      status: 200
+      content_type: application/fhir+json
+      bytes: 59107
+    note: >-
+      No token, no client registration. 42 resource types with read and search-type. This is the fastest
+      path to a real Millennium response and the right target for a proof of concept.
+  - name: Secure Sandbox (provider / non-patient persona)
+    url_template: https://fhir-ehr-code.cerner.com/r4/{tenant}/:resource[?:parameters]
+    auth: SMART on FHIR OAuth 2.0
+    access: read + write (create on 19 resources, update on 7, patch on 8, delete on 1)
+    registration_required: true
+    probed:
+      url: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+      status: 200
+      content_type: application/fhir+json
+      bytes: 61782
+    note: >-
+      The CapabilityStatement and the SMART discovery document are BOTH served anonymously on this host
+      even though the resources are not — so the full 303-scope contract and the whole write surface can be
+      read before you ever register an app.
+  - name: Secure Sandbox (patient-access persona)
+    url_template: https://fhir-myrecord.cerner.com/r4/{tenant}/:resource[?:parameters]
+    auth: SMART on FHIR OAuth 2.0, patient persona
+    registration_required: true
+    probed:
+      url: https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+      status: 200
+      bytes: 5026
+    note: 145 advertised scopes — the patient-facing subset.
+production_vs_sandbox:
+  separation: host + tenant, not key prefix
+  detail: >-
+    There is no test-mode/live-mode key prefix. The separation is the HOST and the TENANT: sandbox traffic
+    goes to fhir-ehr-code / fhir-open / fhir-myrecord against the shared sandbox tenant; production goes to
+    fhir-ehr.cerner.com against the health system's own tenant id. The same client code differs only in
+    service root — which is also the failure mode to watch for, since nothing in a URL visually marks it as
+    production.
+  production_url_template: https://fhir-ehr.cerner.com/r4/{tenant}/:resource
+test_data:
+  fixtures_published: partial
+  detail: >-
+    The sandbox tenant is pre-populated with synthetic patients, encounters, observations and medications,
+    and they are queryable anonymously on the open endpoint. Oracle Health does not publish a canonical
+    table of sandbox patient ids, users or passwords on any anonymously readable page — the sandbox test
+    users for the secure/persona flows are documented on wiki.cerner.com, which returns 403 to an
+    anonymous client (see coverage note in lifecycle/cerner-lifecycle.yml). No credentials are recorded
+    here because none could be read without an account.
+  discovery_recipe: >-
+    Ids can be discovered without documentation: GET
+    https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/Patient?name=smart returns a real
+    searchset Bundle of sandbox patients, and every clinical resource then hangs off those patient ids.
+time_simulation:
+  supported: false
+  detail: No test clocks or time simulation. Sandbox data has fixed clinical dates.
+triggers_and_simulation:
+  supported: false
+  detail: >-
+    No fixture-trigger tooling, no simulated events, no failure injection. Error paths must be provoked
+    naturally — omit a required search parameter for 400, request XML for 406, send a stale version for 409.

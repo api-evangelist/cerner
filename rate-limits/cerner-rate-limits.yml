@@ -1,122 +1,72 @@
 specification: API Commons Rate Limits
 specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
-provider: Cerner (Oracle Health)
+provider: Oracle Health (Cerner)
 providerId: cerner
+generated: '2026-08-14'
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-08-14'
+method: probed
+source: >-
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html,
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/apis.html, plus live
+  unauthenticated responses from https://fhir-open.cerner.com/r4/{tenant} on 2026-08-14
+limit_count: 0
+limits_published: false
 tags:
-  - Cerner Millennium
-  - Code Console
-  - EHR
-  - Electronic Health Records
-  - FHIR
-  - HL7
-  - Healthcare
-  - Interoperability
-  - OAuth 2.0
   - Oracle Health
-  - Patient Access
-  - Provider Directory
-  - SMART on FHIR
+  - Cerner Millennium
+  - FHIR
   - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Cerner (Oracle Health) API surface. Captures
-  per-tier quotas, burst behavior, response signaling, and recovery semantics. Defaults are scaffold values
-  to be replaced with published provider limits.
+description: >-
+  Oracle Health publishes no rate limits for the Millennium Platform FHIR APIs, and the API returns no
+  rate-limit headers. An integrating agent gets neither a documented budget nor a runtime signal.
+note: >-
+  This artifact previously carried invented per-tier limits (10/min free, 100/min professional,
+  1000/min enterprise) and an invented X-RateLimit-* header set, written by a 2026-05-04 bulk sweep. None
+  of it came from Oracle Health and all of it has been removed.
+findings:
+  - fact: No rate limits are documented anywhere in the Millennium Platform API documentation.
+    evidence:
+      - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+        status: 200
+        note: >-
+          The R4 overview documents the full HTTP status table (400/401/403/404/406/409/422/500) and does
+          not mention 429, throttling, quotas or limits at all.
+  - fact: No rate-limit response headers are returned.
+    evidence:
+      - url: https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+        status: 200
+        note: >-
+          Live unauthenticated response carries no X-RateLimit-*, no RateLimit-* (RFC 9239 style) and no
+          Retry-After.
+  - fact: 429 is not in the documented status table.
+    note: >-
+      That does not mean the platform never throttles — an undocumented throttle is still a throttle. It
+      means a client cannot distinguish "throttled" from "broken" from the contract, and has no advertised
+      recovery window.
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  limit: null
+  remaining: null
+  reset: null
+  retryAfter: null
+  policy: null
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
+  throttled: null
   serviceUnavailable: 503
-limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Oracle Health Millennium Platform FHIR R4 API
-      - Oracle Health Millennium FHIR DSTU2 API
-      - Oracle Health Code Console (Developer Portal)
-      - Oracle Health Millennium Bulk FHIR API
-      - Cerner CareAware Integration APIs
-      - Oracle Health SMART on FHIR App Launch
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Oracle Health Millennium Platform FHIR R4 API
-      - Oracle Health Millennium FHIR DSTU2 API
-      - Oracle Health Code Console (Developer Portal)
-      - Oracle Health Millennium Bulk FHIR API
-      - Cerner CareAware Integration APIs
-      - Oracle Health SMART on FHIR App Launch
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Oracle Health Millennium Platform FHIR R4 API
-      - Oracle Health Millennium FHIR DSTU2 API
-      - Oracle Health Code Console (Developer Portal)
-      - Oracle Health Millennium Bulk FHIR API
-      - Cerner CareAware Integration APIs
-      - Oracle Health SMART on FHIR App Launch
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Oracle Health Millennium Platform FHIR R4 API
-      - Oracle Health Millennium FHIR DSTU2 API
-      - Oracle Health Code Console (Developer Portal)
-      - Oracle Health Millennium Bulk FHIR API
-      - Cerner CareAware Integration APIs
-      - Oracle Health SMART on FHIR App Launch
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Oracle Health Millennium Platform FHIR R4 API
-      - Oracle Health Millennium FHIR DSTU2 API
-      - Oracle Health Code Console (Developer Portal)
-      - Oracle Health Millennium Bulk FHIR API
-      - Cerner CareAware Integration APIs
-      - Oracle Health SMART on FHIR App Launch
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+limits: []
+agent_guidance:
+  - >-
+    Assume conservative concurrency. With no published ceiling and no header feedback, an agent cannot
+    tune against a budget; treat parallelism as a risk to the health system's shared tenant, not a
+    performance dial.
+  - >-
+    Back off exponentially with jitter on any 429 or 503 and honour Retry-After if it ever appears, even
+    though it is not currently advertised.
+  - >-
+    For population-scale work use the Bulk Data Access API rather than fanning out per-patient reads —
+    the export flow is the platform's supported path for volume and puts the throttling decision on the
+    server.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

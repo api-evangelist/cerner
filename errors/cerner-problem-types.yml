@@ -1,0 +1,129 @@
+generated: '2026-08-14'
+method: searched
+source: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+derived_from: openapi/cerner-millennium-fhir-r4-openapi.yml
+format: fhir-operationoutcome
+note: >-
+  Oracle Health does NOT use RFC 9457 problem+json. The error envelope across the whole Millennium FHIR
+  surface is the FHIR R4 OperationOutcome resource, returned as application/fhir+json. That is the correct
+  domain-native envelope, so this catalog is written against OperationOutcome rather than forced into
+  problem+json. Status codes and the OperationOutcome severity/code pairs below are published verbatim on
+  the R4 overview page; the per-operation bindings come from the OpenAPI this repo derived from the
+  provider's CapabilityStatement.
+envelope:
+  media_type: application/fhir+json
+  resource_type: OperationOutcome
+  fields:
+    - name: issue[].severity
+      values: [fatal, error, warning, information]
+    - name: issue[].code
+      values: [required, business-rule, extension, not-supported]
+      note: FHIR issue-type value set; the four above are the codes Oracle Health documents explicitly.
+    - name: issue[].location
+      description: FHIRPath/XPath location of the offending element, e.g. "/f:AllergyIntolerance/f:status".
+    - name: issue[].diagnostics
+      description: Human-readable detail.
+  example:
+    resourceType: OperationOutcome
+    issue:
+      - severity: fatal
+        code: required
+        location:
+          - /f:AllergyIntolerance/f:status
+problems:
+  - status: 400
+    title: No supported search parameters provided
+    detail: >-
+      A search was issued without a required query parameter. Many Millennium resources require either
+      `_id` or a qualifying reference parameter (`patient`, `practitioner`, `location`) — there is no
+      unqualified list-all.
+    remediation: >-
+      Read the resource's searchParam block in the CapabilityStatement and supply one of the required
+      parameters. The documentation for each parameter states which combinations are legal.
+    applies_to: every search operation
+    source: docs
+  - status: 401
+    title: Unauthorized
+    detail: No valid credentials were supplied to a secure endpoint.
+    remediation: >-
+      Obtain a SMART on FHIR token for the tenant. Note the open endpoint
+      (https://fhir-open.cerner.com/r4/{tenant}) needs no token at all — a 401 there means you are on a
+      secure host.
+    applies_to: every operation on fhir-ehr / fhir-ehr-code / fhir-myrecord
+    source: docs
+  - status: 403
+    title: Tenant not valid or accessible
+    detail: >-
+      The tenant id in the service root is unknown, or the caller's authorization does not cover it.
+      Because Millennium is multi-tenant and the tenant is a path segment, a wrong tenant fails here rather
+      than at the resource.
+    remediation: Confirm the tenant id with the health system and that the app is provisioned for that tenant.
+    applies_to: every operation
+    source: docs
+  - status: 404
+    title: Not Found
+    detail: The requested resource does not exist.
+    applies_to: every read / update / patch / delete operation
+    source: docs
+  - status: 406
+    title: Not Acceptable
+    detail: >-
+      A non-JSON media type was requested. The response carries `Content-Length: 0` and no body.
+    remediation: >-
+      Send `Accept: application/fhir+json`. XML is not served.
+    applies_to: every operation
+    source: docs
+  - status: 409
+    title: Conflict
+    detail: An update was attempted against an out-of-date version of the resource.
+    remediation: >-
+      Re-read the resource, take the current version from the ETag, and retry the update with `If-Match`.
+      This is the platform's concurrency contract and the closest thing it has to a safe-retry primitive.
+    applies_to: update, patch
+    source: docs
+  - status: 422
+    title: Unprocessable Entity
+    detail: >-
+      Syntactically valid JSON that fails a business rule. Three documented causes, each with its own
+      OperationOutcome code.
+    variants:
+      - cause: body contained unsupported fields
+        severity: error
+        code: business-rule
+      - cause: body contained modifier extensions
+        severity: error
+        code: extension
+      - cause: body contained implicit rules
+        severity: error
+        code: not-supported
+    remediation: >-
+      Send only the elements Millennium documents for the resource. Modifier extensions and
+      Resource.implicitRules are rejected outright rather than ignored.
+    applies_to: create, update, patch
+    source: docs
+  - status: 500
+    title: Internal Server Error
+    detail: >-
+      Includes the documented case where the server cannot render a field FHIR requires — returned as
+      OperationOutcome severity `fatal`, code `required`, with the missing element in `location`.
+    remediation: >-
+      A 500 here is not always transient: a persistently missing required element is a data-quality issue
+      in the underlying Millennium record and needs the health system, not a retry.
+    applies_to: read, search
+    source: docs
+data_absent_handling:
+  - condition: An HL7 profile (Argonaut / US Core) field is missing from the Millennium record
+    behaviour: >-
+      The resource is returned 200 with the DataAbsentReason extension and valueCode "unknown" rather
+      than failing.
+    reference: https://hl7.org/fhir/r4/extension-data-absent-reason.html
+  - condition: A resource has status "entered-in-error" and the consumer is a patient
+    behaviour: The element is returned with DataAbsentReason valueCode "masked".
+    note: >-
+      Agent-relevant: absence in a Millennium response can mean "not recorded", "not permitted to see", or
+      "retracted", and only the DataAbsentReason valueCode distinguishes them. Treating a missing field as
+      a clinical negative is a real safety error against this API.
+summary:
+  problem_count: 8
+  envelope: FHIR OperationOutcome
+  rfc9457: false

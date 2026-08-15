@@ -1,0 +1,770 @@
+generated: '2026-08-14'
+method: derived
+status: candidate
+source: openapi/cerner-millennium-fhir-r4-openapi.yml
+search:
+  performed: '2026-08-14'
+  result: no first-party MCP server
+  detail: Searched the Oracle Health developer program, docs.oracle.com, the npm @modelcontextprotocol and @oracle
+    scopes, and public MCP registries. Oracle Health publishes no MCP server for the Millennium FHIR API. mcp.oracle.com
+    does not resolve. Every Cerner/Oracle Health MCP server in circulation is third-party (AgentCare MCP, WSO2 FHIR
+    MCP, langcare-mcp-fhir and similar generic SMART-on-FHIR bridges) and is NOT counted here — a third-party bridge
+    is not a provider agent surface.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: oauth
+  verified: searched
+  note: 'mode: none — nobody at Oracle Health ships an MCP server, hosted or stdio. The tools below are a DERIVED
+    candidate surface computed from the OpenAPI this repo derived from the provider''s own CapabilityStatement;
+    they are not callable anywhere today. Any real server would have to carry SMART on FHIR OAuth 2.0 and bind a
+    tenant, because the tenant id is a path segment of the service root.'
+server:
+  name: oracle-health-millennium-fhir-r4
+  transport: null
+  url: null
+coverage:
+  tools: 123
+  rest_operations: 123
+  resources: 44
+tools:
+- name: search_account
+  description: Search Account
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchAccount
+  method: GET
+  path: /Account
+  category: Account
+- name: read_account
+  description: Read Account
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readAccount
+  method: GET
+  path: /Account/{id}
+  category: Account
+- name: search_allergy_intolerance
+  description: Search AllergyIntolerance
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchAllergyIntolerance
+  method: GET
+  path: /AllergyIntolerance
+  category: AllergyIntolerance
+- name: create_allergy_intolerance
+  description: Create AllergyIntolerance
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createAllergyIntolerance
+  method: POST
+  path: /AllergyIntolerance
+  category: AllergyIntolerance
+- name: read_allergy_intolerance
+  description: Read AllergyIntolerance
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readAllergyIntolerance
+  method: GET
+  path: /AllergyIntolerance/{id}
+  category: AllergyIntolerance
+- name: update_allergy_intolerance
+  description: Update AllergyIntolerance
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#updateAllergyIntolerance
+  method: PUT
+  path: /AllergyIntolerance/{id}
+  category: AllergyIntolerance
+- name: search_appointment
+  description: Search Appointment
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchAppointment
+  method: GET
+  path: /Appointment
+  category: Appointment
+- name: create_appointment
+  description: Create Appointment
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createAppointment
+  method: POST
+  path: /Appointment
+  category: Appointment
+- name: read_appointment
+  description: Read Appointment
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readAppointment
+  method: GET
+  path: /Appointment/{id}
+  category: Appointment
+- name: patch_appointment
+  description: Patch Appointment
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchAppointment
+  method: PATCH
+  path: /Appointment/{id}
+  category: Appointment
+- name: create_basic
+  description: Create Basic
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createBasic
+  method: POST
+  path: /Basic
+  category: Basic
+- name: read_binary
+  description: Read Binary
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readBinary
+  method: GET
+  path: /Binary/{id}
+  category: Binary
+- name: op_binary_autogen_ccd_if
+  description: $autogen-ccd-if on Binary
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#opBinaryAutogenCcdIf
+  method: GET
+  path: /Binary/$autogen-ccd-if
+  category: Binary
+- name: read_capability_statement
+  description: Read CapabilityStatement
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readCapabilityStatement
+  method: GET
+  path: /CapabilityStatement/{id}
+  category: CapabilityStatement
+- name: search_care_plan
+  description: Search CarePlan
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchCarePlan
+  method: GET
+  path: /CarePlan
+  category: CarePlan
+- name: read_care_plan
+  description: Read CarePlan
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readCarePlan
+  method: GET
+  path: /CarePlan/{id}
+  category: CarePlan
+- name: search_care_team
+  description: Search CareTeam
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchCareTeam
+  method: GET
+  path: /CareTeam
+  category: CareTeam
+- name: read_care_team
+  description: Read CareTeam
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readCareTeam
+  method: GET
+  path: /CareTeam/{id}
+  category: CareTeam
+- name: search_charge_item
+  description: Search ChargeItem
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchChargeItem
+  method: GET
+  path: /ChargeItem
+  category: ChargeItem
+- name: read_charge_item
+  description: Read ChargeItem
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readChargeItem
+  method: GET
+  path: /ChargeItem/{id}
+  category: ChargeItem
+- name: op_charge_item_credit
+  description: $credit on ChargeItem
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#opChargeItemCredit
+  method: GET
+  path: /ChargeItem/$credit
+  category: ChargeItem
+- name: op_charge_item_modify
+  description: $modify on ChargeItem
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#opChargeItemModify
+  method: GET
+  path: /ChargeItem/$modify
+  category: ChargeItem
+- name: op_charge_item_create
+  description: $create on ChargeItem
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#opChargeItemCreate
+  method: GET
+  path: /ChargeItem/$create
+  category: ChargeItem
+- name: search_communication
+  description: Search Communication
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchCommunication
+  method: GET
+  path: /Communication
+  category: Communication
+- name: create_communication
+  description: Create Communication
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createCommunication
+  method: POST
+  path: /Communication
+  category: Communication
+- name: read_communication
+  description: Read Communication
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readCommunication
+  method: GET
+  path: /Communication/{id}
+  category: Communication
+- name: patch_communication
+  description: Patch Communication
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchCommunication
+  method: PATCH
+  path: /Communication/{id}
+  category: Communication
+- name: search_condition
+  description: Search Condition
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchCondition
+  method: GET
+  path: /Condition
+  category: Condition
+- name: create_condition
+  description: Create Condition
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createCondition
+  method: POST
+  path: /Condition
+  category: Condition
+- name: read_condition
+  description: Read Condition
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readCondition
+  method: GET
+  path: /Condition/{id}
+  category: Condition
+- name: update_condition
+  description: Update Condition
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#updateCondition
+  method: PUT
+  path: /Condition/{id}
+  category: Condition
+- name: search_consent
+  description: Search Consent
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchConsent
+  method: GET
+  path: /Consent
+  category: Consent
+- name: read_consent
+  description: Read Consent
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readConsent
+  method: GET
+  path: /Consent/{id}
+  category: Consent
+- name: search_coverage
+  description: Search Coverage
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchCoverage
+  method: GET
+  path: /Coverage
+  category: Coverage
+- name: create_coverage
+  description: Create Coverage
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createCoverage
+  method: POST
+  path: /Coverage
+  category: Coverage
+- name: read_coverage
+  description: Read Coverage
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readCoverage
+  method: GET
+  path: /Coverage/{id}
+  category: Coverage
+- name: patch_coverage
+  description: Patch Coverage
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchCoverage
+  method: PATCH
+  path: /Coverage/{id}
+  category: Coverage
+- name: delete_coverage
+  description: Delete Coverage
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#deleteCoverage
+  method: DELETE
+  path: /Coverage/{id}
+  category: Coverage
+- name: search_device
+  description: Search Device
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchDevice
+  method: GET
+  path: /Device
+  category: Device
+- name: read_device
+  description: Read Device
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readDevice
+  method: GET
+  path: /Device/{id}
+  category: Device
+- name: search_diagnostic_report
+  description: Search DiagnosticReport
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchDiagnosticReport
+  method: GET
+  path: /DiagnosticReport
+  category: DiagnosticReport
+- name: create_diagnostic_report
+  description: Create DiagnosticReport
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createDiagnosticReport
+  method: POST
+  path: /DiagnosticReport
+  category: DiagnosticReport
+- name: read_diagnostic_report
+  description: Read DiagnosticReport
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readDiagnosticReport
+  method: GET
+  path: /DiagnosticReport/{id}
+  category: DiagnosticReport
+- name: search_document_reference
+  description: Search DocumentReference
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchDocumentReference
+  method: GET
+  path: /DocumentReference
+  category: DocumentReference
+- name: create_document_reference
+  description: Create DocumentReference
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createDocumentReference
+  method: POST
+  path: /DocumentReference
+  category: DocumentReference
+- name: read_document_reference
+  description: Read DocumentReference
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readDocumentReference
+  method: GET
+  path: /DocumentReference/{id}
+  category: DocumentReference
+- name: update_document_reference
+  description: Update DocumentReference
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#updateDocumentReference
+  method: PUT
+  path: /DocumentReference/{id}
+  category: DocumentReference
+- name: op_document_reference_uscorefetchdocumentreferences
+  description: $USCoreFetchDocumentReferences on DocumentReference
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#opDocumentReferenceUscorefetchdocumentreferences
+  method: GET
+  path: /DocumentReference/$USCoreFetchDocumentReferences
+  category: DocumentReference
+- name: search_encounter
+  description: Search Encounter
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchEncounter
+  method: GET
+  path: /Encounter
+  category: Encounter
+- name: create_encounter
+  description: Create Encounter
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createEncounter
+  method: POST
+  path: /Encounter
+  category: Encounter
+- name: read_encounter
+  description: Read Encounter
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readEncounter
+  method: GET
+  path: /Encounter/{id}
+  category: Encounter
+- name: patch_encounter
+  description: Patch Encounter
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchEncounter
+  method: PATCH
+  path: /Encounter/{id}
+  category: Encounter
+- name: search_family_member_history
+  description: Search FamilyMemberHistory
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchFamilyMemberHistory
+  method: GET
+  path: /FamilyMemberHistory
+  category: FamilyMemberHistory
+- name: create_family_member_history
+  description: Create FamilyMemberHistory
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createFamilyMemberHistory
+  method: POST
+  path: /FamilyMemberHistory
+  category: FamilyMemberHistory
+- name: read_family_member_history
+  description: Read FamilyMemberHistory
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readFamilyMemberHistory
+  method: GET
+  path: /FamilyMemberHistory/{id}
+  category: FamilyMemberHistory
+- name: update_family_member_history
+  description: Update FamilyMemberHistory
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#updateFamilyMemberHistory
+  method: PUT
+  path: /FamilyMemberHistory/{id}
+  category: FamilyMemberHistory
+- name: search_goal
+  description: Search Goal
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchGoal
+  method: GET
+  path: /Goal
+  category: Goal
+- name: read_goal
+  description: Read Goal
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readGoal
+  method: GET
+  path: /Goal/{id}
+  category: Goal
+- name: search_immunization
+  description: Search Immunization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchImmunization
+  method: GET
+  path: /Immunization
+  category: Immunization
+- name: create_immunization
+  description: Create Immunization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createImmunization
+  method: POST
+  path: /Immunization
+  category: Immunization
+- name: read_immunization
+  description: Read Immunization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readImmunization
+  method: GET
+  path: /Immunization/{id}
+  category: Immunization
+- name: update_immunization
+  description: Update Immunization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#updateImmunization
+  method: PUT
+  path: /Immunization/{id}
+  category: Immunization
+- name: search_insurance_plan
+  description: Search InsurancePlan
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchInsurancePlan
+  method: GET
+  path: /InsurancePlan
+  category: InsurancePlan
+- name: read_insurance_plan
+  description: Read InsurancePlan
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readInsurancePlan
+  method: GET
+  path: /InsurancePlan/{id}
+  category: InsurancePlan
+- name: search_location
+  description: Search Location
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchLocation
+  method: GET
+  path: /Location
+  category: Location
+- name: read_location
+  description: Read Location
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readLocation
+  method: GET
+  path: /Location/{id}
+  category: Location
+- name: read_media
+  description: Read Media
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readMedia
+  method: GET
+  path: /Media/{id}
+  category: Media
+- name: search_medication_administration
+  description: Search MedicationAdministration
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchMedicationAdministration
+  method: GET
+  path: /MedicationAdministration
+  category: MedicationAdministration
+- name: read_medication_administration
+  description: Read MedicationAdministration
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readMedicationAdministration
+  method: GET
+  path: /MedicationAdministration/{id}
+  category: MedicationAdministration
+- name: search_medication_dispense
+  description: Search MedicationDispense
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchMedicationDispense
+  method: GET
+  path: /MedicationDispense
+  category: MedicationDispense
+- name: read_medication_dispense
+  description: Read MedicationDispense
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readMedicationDispense
+  method: GET
+  path: /MedicationDispense/{id}
+  category: MedicationDispense
+- name: search_medication_request
+  description: Search MedicationRequest
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchMedicationRequest
+  method: GET
+  path: /MedicationRequest
+  category: MedicationRequest
+- name: create_medication_request
+  description: Create MedicationRequest
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createMedicationRequest
+  method: POST
+  path: /MedicationRequest
+  category: MedicationRequest
+- name: read_medication_request
+  description: Read MedicationRequest
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readMedicationRequest
+  method: GET
+  path: /MedicationRequest/{id}
+  category: MedicationRequest
+- name: patch_medication_request
+  description: Patch MedicationRequest
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchMedicationRequest
+  method: PATCH
+  path: /MedicationRequest/{id}
+  category: MedicationRequest
+- name: search_nutrition_order
+  description: Search NutritionOrder
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchNutritionOrder
+  method: GET
+  path: /NutritionOrder
+  category: NutritionOrder
+- name: read_nutrition_order
+  description: Read NutritionOrder
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readNutritionOrder
+  method: GET
+  path: /NutritionOrder/{id}
+  category: NutritionOrder
+- name: search_observation
+  description: Search Observation
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchObservation
+  method: GET
+  path: /Observation
+  category: Observation
+- name: create_observation
+  description: Create Observation
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createObservation
+  method: POST
+  path: /Observation
+  category: Observation
+- name: read_observation
+  description: Read Observation
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readObservation
+  method: GET
+  path: /Observation/{id}
+  category: Observation
+- name: update_observation
+  description: Update Observation
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#updateObservation
+  method: PUT
+  path: /Observation/{id}
+  category: Observation
+- name: read_operation_definition
+  description: Read OperationDefinition
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readOperationDefinition
+  method: GET
+  path: /OperationDefinition/{id}
+  category: OperationDefinition
+- name: search_organization
+  description: Search Organization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchOrganization
+  method: GET
+  path: /Organization
+  category: Organization
+- name: create_organization
+  description: Create Organization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createOrganization
+  method: POST
+  path: /Organization
+  category: Organization
+- name: read_organization
+  description: Read Organization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readOrganization
+  method: GET
+  path: /Organization/{id}
+  category: Organization
+- name: op_organization_get_cg_for_mrcu
+  description: $get-cg-for-mrcu on Organization
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#opOrganizationGetCgForMrcu
+  method: GET
+  path: /Organization/$get-cg-for-mrcu
+  category: Organization
+- name: search_patient
+  description: Search Patient
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchPatient
+  method: GET
+  path: /Patient
+  category: Patient
+- name: create_patient
+  description: Create Patient
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createPatient
+  method: POST
+  path: /Patient
+  category: Patient
+- name: read_patient
+  description: Read Patient
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readPatient
+  method: GET
+  path: /Patient/{id}
+  category: Patient
+- name: patch_patient
+  description: Patch Patient
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchPatient
+  method: PATCH
+  path: /Patient/{id}
+  category: Patient
+- name: op_patient_health_cards_issue
+  description: $health-cards-issue on Patient
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#opPatientHealthCardsIssue
+  method: GET
+  path: /Patient/$health-cards-issue
+  category: Patient
+- name: search_person
+  description: Search Person
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchPerson
+  method: GET
+  path: /Person
+  category: Person
+- name: read_person
+  description: Read Person
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readPerson
+  method: GET
+  path: /Person/{id}
+  category: Person
+- name: search_practitioner
+  description: Search Practitioner
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchPractitioner
+  method: GET
+  path: /Practitioner
+  category: Practitioner
+- name: create_practitioner
+  description: Create Practitioner
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createPractitioner
+  method: POST
+  path: /Practitioner
+  category: Practitioner
+- name: read_practitioner
+  description: Read Practitioner
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readPractitioner
+  method: GET
+  path: /Practitioner/{id}
+  category: Practitioner
+- name: search_procedure
+  description: Search Procedure
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchProcedure
+  method: GET
+  path: /Procedure
+  category: Procedure
+- name: create_procedure
+  description: Create Procedure
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createProcedure
+  method: POST
+  path: /Procedure
+  category: Procedure
+- name: read_procedure
+  description: Read Procedure
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readProcedure
+  method: GET
+  path: /Procedure/{id}
+  category: Procedure
+- name: search_provenance
+  description: Search Provenance
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchProvenance
+  method: GET
+  path: /Provenance
+  category: Provenance
+- name: create_provenance
+  description: Create Provenance
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createProvenance
+  method: POST
+  path: /Provenance
+  category: Provenance
+- name: read_provenance
+  description: Read Provenance
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readProvenance
+  method: GET
+  path: /Provenance/{id}
+  category: Provenance
+- name: search_questionnaire
+  description: Search Questionnaire
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchQuestionnaire
+  method: GET
+  path: /Questionnaire
+  category: Questionnaire
+- name: read_questionnaire
+  description: Read Questionnaire
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readQuestionnaire
+  method: GET
+  path: /Questionnaire/{id}
+  category: Questionnaire
+- name: search_questionnaire_response
+  description: Search QuestionnaireResponse
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchQuestionnaireResponse
+  method: GET
+  path: /QuestionnaireResponse
+  category: QuestionnaireResponse
+- name: read_questionnaire_response
+  description: Read QuestionnaireResponse
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readQuestionnaireResponse
+  method: GET
+  path: /QuestionnaireResponse/{id}
+  category: QuestionnaireResponse
+- name: update_questionnaire_response
+  description: Update QuestionnaireResponse
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#updateQuestionnaireResponse
+  method: PUT
+  path: /QuestionnaireResponse/{id}
+  category: QuestionnaireResponse
+- name: search_related_person
+  description: Search RelatedPerson
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchRelatedPerson
+  method: GET
+  path: /RelatedPerson
+  category: RelatedPerson
+- name: create_related_person
+  description: Create RelatedPerson
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#createRelatedPerson
+  method: POST
+  path: /RelatedPerson
+  category: RelatedPerson
+- name: read_related_person
+  description: Read RelatedPerson
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readRelatedPerson
+  method: GET
+  path: /RelatedPerson/{id}
+  category: RelatedPerson
+- name: patch_related_person
+  description: Patch RelatedPerson
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchRelatedPerson
+  method: PATCH
+  path: /RelatedPerson/{id}
+  category: RelatedPerson
+- name: search_schedule
+  description: Search Schedule
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchSchedule
+  method: GET
+  path: /Schedule
+  category: Schedule
+- name: read_schedule
+  description: Read Schedule
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readSchedule
+  method: GET
+  path: /Schedule/{id}
+  category: Schedule
+- name: search_service_request
+  description: Search ServiceRequest
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchServiceRequest
+  method: GET
+  path: /ServiceRequest
+  category: ServiceRequest
+- name: read_service_request
+  description: Read ServiceRequest
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readServiceRequest
+  method: GET
+  path: /ServiceRequest/{id}
+  category: ServiceRequest
+- name: search_slot
+  description: Search Slot
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchSlot
+  method: GET
+  path: /Slot
+  category: Slot
+- name: read_slot
+  description: Read Slot
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readSlot
+  method: GET
+  path: /Slot/{id}
+  category: Slot
+- name: patch_slot
+  description: Patch Slot
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#patchSlot
+  method: PATCH
+  path: /Slot/{id}
+  category: Slot
+- name: search_specimen
+  description: Search Specimen
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#searchSpecimen
+  method: GET
+  path: /Specimen
+  category: Specimen
+- name: read_specimen
+  description: Read Specimen
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readSpecimen
+  method: GET
+  path: /Specimen/{id}
+  category: Specimen
+- name: read_structure_definition
+  description: Read StructureDefinition
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#readStructureDefinition
+  method: GET
+  path: /StructureDefinition/{id}
+  category: StructureDefinition
+- name: submit_batch
+  description: Submit a batch Bundle
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#submitBatch
+  method: POST
+  path: /
+  category: System
+- name: get_capability_statement
+  description: Get the CapabilityStatement
+  source_operation: openapi/cerner-millennium-fhir-r4-openapi.yml#getCapabilityStatement
+  method: GET
+  path: /metadata
+  category: System

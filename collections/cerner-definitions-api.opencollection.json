@@ -1,0 +1,51 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Oracle Health Millennium Platform FHIR R4 Capability Definitions API",
+    "version": "R4"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Definitions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search OperationDefinition",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://fhir-ehr.cerner.com/r4/OperationDefinition"
+          },
+          "docs": "Returns OperationDefinition resources defined for the server."
+        },
+        {
+          "info": {
+            "name": "Search StructureDefinition",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://fhir-ehr.cerner.com/r4/StructureDefinition"
+          },
+          "docs": "Returns StructureDefinition resources defined for the server."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

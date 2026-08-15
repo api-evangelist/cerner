@@ -1,0 +1,109 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/apis.html,
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html,
+  https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata,
+  https://github.com/orgs/cerner/repositories
+versioning:
+  scheme: standard-version
+  detail: >-
+    Versioning follows the HL7 FHIR release train rather than a vendor version. The version identifier is
+    the FHIR release in the path — /r4/ and, historically, /dstu2/ — and the CapabilityStatement reports
+    fhirVersion 4.0.1. There is no vendor-specific version header, date-pinning or version query parameter.
+  current: R4 (FHIR 4.0.1)
+  in_path: true
+  docs: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+deprecation:
+  policy_url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/apis.html
+  sunset_header: false
+  deprecation_header: false
+  formal_policy: false
+  detail: >-
+    Oracle Health publishes deprecation ANNOUNCEMENTS but not a deprecation POLICY. There is no stated
+    notice period, no support window, no Sunset or Deprecation response header, and no machine-readable
+    signal of any kind on a deprecated endpoint. The one live deprecation is announced in prose on the
+    APIs index page, and the announcement that carries the actual dates is on the Oracle Health Developer
+    Forums, which returns 403 to an anonymous client.
+  announcements:
+    - subject: FHIR DSTU 2 APIs
+      status: end-of-support
+      statement: >-
+        "Oracle no longer supports DSTU 2 FHIR APIs. For more information, see the FHIR DSTU2 End of
+        Support announcement on the Oracle Health Developer Forums. This functionality is replaced by the
+        R4 version. Update your applications to use R4 as soon as possible to prevent interruptions to
+        service."
+      source: https://docs.oracle.com/en/industries/health/millennium-platform-apis/apis.html
+      end_of_life_date: null
+      note: >-
+        No date is published on any anonymously readable page. The DSTU 2 reference documentation is still
+        served, which is the confusing part: the docs are live, the support is not.
+    - subject: Proprietary (non-FHIR) Millennium APIs
+      status: at-risk
+      statement: >-
+        As the platform moves toward Oracle Health Cloud, proprietary APIs may be deprecated,
+        restructured or replaced.
+      end_of_life_date: null
+deprecated_operations:
+  - spec: openapi/cerner-millennium-fhir-r4-openapi.yml
+    operations: []
+    note: >-
+      No operation in the R4 CapabilityStatement carries a deprecation marker. The deprecation in force is
+      at the API-family level (all of DSTU 2), which FHIR conformance has no way to express.
+status_page:
+  url: null
+  detail: >-
+    No status page for the Oracle Health Millennium Platform APIs. https://www.oracle.com/health/status/
+    returns 404 and status.oracle.com does not resolve. Oracle operates https://ocistatus.oraclecloud.com/
+    for Oracle Cloud Infrastructure, but it does not cover the Millennium FHIR endpoints, so it is NOT
+    recorded here as this API's status page. Health-system customers get availability information through
+    their Oracle Health account channel instead.
+  probed:
+    - url: https://www.oracle.com/health/status/
+      status: 404
+    - url: https://status.oracle.com/
+      status: 0
+      note: does not resolve
+    - url: https://ocistatus.oraclecloud.com/
+      status: 200
+      note: OCI-wide, not Oracle Health Millennium — not this API's status page.
+sla:
+  url: null
+  uptime_target: null
+  detail: >-
+    No public SLA. Availability commitments are contractual between Oracle Health and the health system
+    that operates the tenant; an app developer integrating against a customer's tenant inherits that
+    customer's contract and has no first-party SLA of their own.
+support:
+  forums: https://forums.oracle.com/ords/apexds/domain/open-developer-experience
+  forums_anonymous_status: 403
+  developer_program: https://www.oracle.com/health/developer/
+  note: >-
+    The developer forums — named by Oracle as the place the DSTU 2 end-of-support dates live — return 403
+    to an anonymous client, as does wiki.cerner.com, which hosts the FAQ, the Authorization Framework
+    guide, SMART Application Provisioning, Multi-Tenant Domains, and the "API Access and Fees" page.
+open_source_lifecycle:
+  org: https://github.com/cerner
+  status: archived
+  archived_on: '2026-01-06'
+  detail: >-
+    The github.com/cerner organization — which hosts fhir.cerner.com (the API documentation source),
+    smart-on-fhir-tutorial, cds-services-tutorial, Terra, Bunsen and cerner-oauth1a — was archived on
+    2026-01-06 and is marked no longer maintained. Every first-party package in
+    packages/cerner-packages.yml has its source in that org. The newest first-party release on any public
+    registry is 2024-09-10.
+domain_migration:
+  detail: >-
+    The Cerner-branded developer estate has been folded into Oracle. fhir.cerner.com now 301s to
+    docs.oracle.com/en/industries/health/, and code.cerner.com — the Cerner Code Console — 301s to
+    www.oracle.com/health/developer/. The API HOSTS have not moved: fhir-ehr.cerner.com,
+    fhir-ehr-code.cerner.com, fhir-myrecord.cerner.com, fhir-open.cerner.com and authorization.cerner.com
+    all still serve live traffic on cerner.com. Documentation migrated; the runtime did not.
+  observed: '2026-08-14'
+summary:
+  versioning_documented: true
+  deprecation_policy_published: false
+  deprecation_announcements: 2
+  sunset_header_support: false
+  status_page: false
+  public_sla: false

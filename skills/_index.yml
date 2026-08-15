@@ -1,0 +1,57 @@
+generated: '2026-08-14'
+method: generated
+source: >-
+  openapi/cerner-millennium-fhir-r4-openapi.yml and openapi/cerner-millennium-bulk-data-openapi.yml —
+  every operationId referenced by a skill was grepped out of those specs, which are themselves derived
+  from the CapabilityStatement Oracle Health serves at /metadata.
+note: >-
+  Four skills covering the flows that actually matter on this platform: read a patient, learn the contract
+  with no credentials, pull a population as a backend service, and write back without creating duplicates.
+  Each one is grounded in real operationIds and carries the Millennium-specific hazards — tenancy in the
+  path, required search parameters, opaque paging that can repeat a resource, DataAbsentReason ambiguity,
+  and the total absence of an idempotency primitive.
+skills:
+  - file: cerner-patient-clinical-summary.md
+    name: Build a patient clinical summary
+    api: openapi/cerner-millennium-fhir-r4-openapi.yml
+    operations:
+      - searchPatient
+      - readPatient
+      - searchCondition
+      - searchAllergyIntolerance
+      - searchMedicationRequest
+      - searchObservation
+      - searchEncounter
+      - searchProvenance
+  - file: cerner-open-sandbox-exploration.md
+    name: Explore Millennium with no credentials
+    api: openapi/cerner-millennium-fhir-r4-openapi.yml
+    operations:
+      - getCapabilityStatement
+      - searchPatient
+      - readPatient
+      - searchCondition
+      - searchObservation
+  - file: cerner-backend-bulk-export.md
+    name: Run a bulk export as a backend service
+    api: openapi/cerner-millennium-bulk-data-openapi.yml
+    operations:
+      - kickOffGroupExport
+      - kickOffPatientListExport
+      - getBulkExportJob
+      - getBulkExportFileUrls
+      - deleteBulkExportJob
+  - file: cerner-write-back-clinical-resource.md
+    name: Write back a clinical resource safely
+    api: openapi/cerner-millennium-fhir-r4-openapi.yml
+    operations:
+      - createCondition
+      - updateCondition
+      - createAllergyIntolerance
+      - updateAllergyIntolerance
+      - createObservation
+      - updateObservation
+      - createDocumentReference
+      - updateDocumentReference
+      - patchPatient
+      - readCondition

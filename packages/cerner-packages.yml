@@ -1,0 +1,119 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  npm registry (registry.npmjs.org), RubyGems API (rubygems.org/api/v1), Maven Central
+  (search.maven.org/solrsearch), PyPI (pypi.org/pypi), plus the Oracle Health developer program
+  and the (now archived) github.com/cerner organization.
+headline: >-
+  Oracle Health publishes NO first-party client SDK for the Millennium FHIR R4 API. Every first-party
+  library found on a public registry is adjacent to the API rather than a client for it, and every one of
+  them is stale: the newest first-party release on any registry is 2024-09-10, and the github.com/cerner
+  organization that hosts all of them was archived on 2026-01-06 and is explicitly no longer maintained.
+  Integrators are expected to use a generic third-party FHIR client (the SMART on FHIR community's
+  fhirclient / fhir-kit-client / HAPI FHIR) against the R4 endpoints.
+packages:
+  - language: javascript
+    registry: npm
+    name: cerner-smart-embeddable-lib
+    url: https://www.npmjs.com/package/cerner-smart-embeddable-lib
+    install: npm install cerner-smart-embeddable-lib
+    official: true
+    version: 1.7.0
+    published: '2024-09-10'
+    repo: https://github.com/cerner/cerner-smart-embeddable-lib
+    role: >-
+      Client library for embedding a SMART on FHIR application inside Millennium (PowerChart) — the
+      embeddable/launch side of the platform, not a FHIR REST client.
+    note: >-
+      Published from an Oracle npm account (msurya_oracle), so first-party is unambiguous. Nearly two years
+      without a release; source repository is inside the archived cerner GitHub org.
+  - language: ruby
+    registry: rubygems
+    name: cerner-oauth1a
+    url: https://rubygems.org/gems/cerner-oauth1a
+    install: gem install cerner-oauth1a
+    official: true
+    version: 2.5.4
+    published: '2021-06-28'
+    repo: https://github.com/cerner/cerner-oauth1a
+    role: >-
+      Minimal-dependency client for the Cerner OAuth 1.0a Access Token service, used by the legacy
+      proprietary Millennium APIs (not by SMART on FHIR / OAuth 2.0).
+    note: >-
+      The strongest decay signal in this repo: five years without a release, for an auth scheme the current
+      FHIR R4 surface does not use. Retained here because it is a genuine first-party API client library,
+      but it should not be read as SDK coverage for the R4 API.
+  - language: java
+    registry: maven
+    name: com.cerner.bunsen:bunsen-core-stu3
+    url: https://central.sonatype.com/artifact/com.cerner.bunsen/bunsen-core-stu3
+    install: 'maven: com.cerner.bunsen:bunsen-core-stu3:0.6.0'
+    official: true
+    version: 0.6.0
+    published: '2023-11-09'
+    repo: https://github.com/cerner/bunsen
+    role: >-
+      Apache Spark library for exploring, transforming and analysing FHIR data at rest. A data-engineering
+      tool that consumes FHIR, not a client for the Millennium API.
+    note: >-
+      Fourteen artifacts published under com.cerner.bunsen; STU3 and R4 variants track the same 0.6.0 line.
+      Bunsen was donated onward to the Google/OpenHIE FHIR Data Pipes effort; the Cerner coordinates are
+      frozen.
+  - language: javascript
+    registry: npm
+    name: '@cerner/carbon-graphs'
+    url: https://www.npmjs.com/package/@cerner/carbon-graphs
+    install: npm install @cerner/carbon-graphs
+    official: true
+    version: 2.25.0
+    published: '2024-04-09'
+    repo: https://github.com/cerner/terra-graphs
+    role: d3 charting library built to Cerner design standards — front-end, part of the Terra design system.
+    note: Not an API client. Catalogued because it is first-party and appears in Millennium app tooling.
+  - language: javascript
+    registry: npm
+    name: terra-application
+    url: https://www.npmjs.com/package/terra-application
+    install: npm install terra-application
+    official: true
+    version: 1.58.1
+    published: '2024-05-23'
+    repo: https://github.com/cerner/terra-framework
+    role: >-
+      Terra — Cerner's open-source React design system and application framework, the UI layer SMART apps
+      embedded in Millennium are built with.
+    note: >-
+      See components/cerner-components.yml for the wider Terra surface. Terra remains the largest volume of
+      first-party open source, and its whole npm surface stopped publishing in mid-2024.
+not_found:
+  - registry: pypi
+    queried: [cerner, cerner-fhir, oracle-health-fhir]
+    result: no first-party package
+  - registry: npm
+    queried: ['@cerner/smart-on-fhir', 'cerner-fhir-client', '@oracle/oracle-health']
+    result: no first-party FHIR client
+  - registry: nuget
+    result: not searched — no .NET presence advertised in the developer program
+  - registry: pkg.go.dev
+    result: no first-party module
+  - registry: crates.io
+    result: no first-party crate
+  - registry: packagist
+    result: no first-party package
+third_party_clients_in_common_use:
+  - name: fhirclient (SMART on FHIR JS client)
+    registry: npm
+    version: 2.6.3
+    published: '2025-09-26'
+    url: https://www.npmjs.com/package/fhirclient
+    official: false
+    note: >-
+      Maintained by the SMART Health IT project (smart-on-fhir/client-js), not by Oracle. Listed only to
+      record what integrators actually use; it does not count toward first-party SDK coverage.
+currency:
+  newest_first_party_release: '2024-09-10'
+  oldest_first_party_release: '2021-06-28'
+  first_party_sdk_for_fhir_r4: false
+  source_org_status: >-
+    github.com/cerner was archived 2026-01-06 and is marked no longer maintained; all first-party package
+    sources listed above live in that org.

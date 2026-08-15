@@ -1,0 +1,209 @@
+{
+  "item": [
+    {
+      "id": "660e2ea0-d1a4-45dd-9b15-617f1e57b85f",
+      "name": "Definitions",
+      "description": {
+        "content": "FHIR conformance definitions and operations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "595a8d63-e83b-4680-bdb6-414ade9f684d",
+          "name": "Search OperationDefinition",
+          "request": {
+            "name": "Search OperationDefinition",
+            "description": {
+              "content": "Returns OperationDefinition resources defined for the server.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "OperationDefinition"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "87b3fa87-b0b8-4398-8190-39b27fb90dc9",
+              "name": "A FHIR Bundle of OperationDefinition resources",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "OperationDefinition"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/fhir+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/fhir+json"
+                }
+              ],
+              "body": "{\n  \"resourceType\": \"string\",\n  \"type\": \"string\",\n  \"total\": 5854,\n  \"entry\": [\n    {\n      \"key_0\": 4528,\n      \"key_1\": 1449,\n      \"key_2\": \"string\",\n      \"key_3\": \"string\"\n    },\n    {\n      \"key_0\": 6303.096881657395,\n      \"key_1\": true,\n      \"key_2\": \"string\",\n      \"key_3\": 209,\n      \"key_4\": true\n    }\n  ],\n  \"key_0\": 5064,\n  \"key_1\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "69048ddc-71d8-49ef-81ad-49e363c0217e",
+          "name": "Search StructureDefinition",
+          "request": {
+            "name": "Search StructureDefinition",
+            "description": {
+              "content": "Returns StructureDefinition resources defined for the server.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "StructureDefinition"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "423d74ce-b700-49be-91b4-3f6de941bfa2",
+              "name": "A FHIR Bundle of StructureDefinition resources",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "StructureDefinition"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/fhir+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/fhir+json"
+                }
+              ],
+              "body": "{\n  \"resourceType\": \"string\",\n  \"type\": \"string\",\n  \"total\": 5854,\n  \"entry\": [\n    {\n      \"key_0\": 4528,\n      \"key_1\": 1449,\n      \"key_2\": \"string\",\n      \"key_3\": \"string\"\n    },\n    {\n      \"key_0\": 6303.096881657395,\n      \"key_1\": true,\n      \"key_2\": \"string\",\n      \"key_3\": 209,\n      \"key_4\": true\n    }\n  ],\n  \"key_0\": 5064,\n  \"key_1\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://fhir-ehr.cerner.com/r4",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "patient/*.read user/*.read system/*.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f00286aa-c004-42f8-9ed8-11006b796ca1",
+    "name": "Oracle Health Millennium Platform FHIR R4 Capability Definitions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Oracle Health (Cerner Millennium) FHIR R4 API provides OAuth 2.0-secured access to EHR data in the HL7 FHIR R4 format. It exposes USCDI-aligned resources such as Patient, Practitioner, Observation, Condition, MedicationRequest, DocumentReference, and Encounter for patient-access apps, provider apps, and interoperability partners. The API supports SMART on FHIR app launching and is the successor to the Cerner Millennium DSTU2 FHIR API.\n\nContact Support:\n Name: Oracle Health Developer Program",
+      "type": "text/plain"
+    }
+  }
+}

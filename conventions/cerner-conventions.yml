@@ -1,0 +1,137 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html,
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/srv_root_url.html,
+  https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata,
+  https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+note: >-
+  The cross-cutting semantics of the Oracle Health Millennium Platform FHIR API are HL7 FHIR R4's, not a
+  vendor's. That is the single most useful thing to know about integrating with it: an agent that already
+  speaks FHIR needs almost no Millennium-specific knowledge except tenancy, the required-parameter rule on
+  search, and the absence of any idempotency primitive.
+tenancy:
+  model: multi-tenant, tenant in the path
+  detail: >-
+    The tenant id is a required path segment of the service root — https://fhir-ehr.cerner.com/r4/{tenant}/
+    — not a header, not a subdomain, not a token claim. Nothing can be called before the tenant is
+    resolved, and the authorization server, scope set and SMART discovery document are all tenant-scoped
+    too. A wrong tenant fails with 403 "Tenant not valid or accessible", not 404.
+  sandbox_tenant: ec2458f2-1e24-41c8-b71b-0e701af7583d
+  discovery_per_tenant: /.well-known/smart-configuration at the tenant service root
+authentication:
+  style: SMART on FHIR OAuth 2.0 (bearer)
+  flows: [authorizationCode, clientCredentials]
+  pkce: S256
+  client_auth: [client_secret_basic, private_key_jwt]
+  anonymous_surface: >-
+    https://fhir-open.cerner.com/r4/{tenant} serves read-only data with no token at all — the ONC-mandated
+    open endpoint. Everything else requires a token.
+  detail: See authentication/cerner-authentication.yml and scopes/cerner-scopes.yml (303 advertised scopes).
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    There is no idempotency contract on this API. No Idempotency-Key header is documented or advertised;
+    the CapabilityStatement declares no conditionalCreate and no conditionalUpdate on any resource, and
+    seven resources explicitly declare updateCreate: false so PUT will not upsert. A retried POST creates a
+    second resource. What the platform gives instead is optimistic concurrency on UPDATE: read the
+    resource, take the version from the ETag, and send it back as If-Match — an out-of-date version is
+    rejected with a documented 409 Conflict. That protects against lost updates; it does not make a
+    create safe to retry.
+  agent_guidance: >-
+    An agent writing to Millennium must de-duplicate on its own side. Before retrying a create, search for
+    the resource it would have created; treat a network timeout on POST as UNKNOWN, not as failed.
+pagination:
+  style: link-relation (server-driven, opaque cursor)
+  request_params:
+    - name: _count
+      description: Maximum results per page. Explicitly NOT honored when `_id` is supplied.
+  response_fields:
+    - Bundle.link[relation=self]
+    - Bundle.link[relation=next]
+    - Bundle.link[relation=previous]
+    - Bundle.total
+  cursor: >-
+    The next link carries an opaque `pageContext` UUID and `direction=NEXT`. Oracle Health instructs
+    clients to follow the provided link URLs rather than construct their own page URLs.
+  hazard: >-
+    Documented: while paging you may see the SAME resource id on more than one page, because the
+    underlying record can change mid-traversal. Oracle's guidance is to de-duplicate by resource id and
+    keep only the latest version. An agent that appends pages blindly will double-count clinical facts.
+search_semantics:
+  required_parameters: >-
+    Most resources cannot be listed unqualified. The CapabilityStatement documents per-resource rules such
+    as "either the '_id' parameter or one of the 'patient', 'practitioner' or 'location' parameters must be
+    set". Omitting them returns 400 "No supported search parameters provided".
+  date_ranges: >-
+    Date parameters may be supplied once bare (implying a range or an instant) or twice with `ge`/`le`/`gt`
+    prefixes to bound a closed range. Open-ended prefix pairs are rejected.
+  chaining_and_includes:
+    searchInclude: declared on Consent and Slot
+    searchRevInclude: "'Provenance:target' declared on 19 resources"
+  detail: >-
+    _revinclude=Provenance:target is the audit trail: it is how a caller gets who-recorded-what alongside
+    the clinical resource, and it is available on nearly every US Core resource here.
+field_selection:
+  expansion: null
+  sparse_fieldsets: null
+  detail: >-
+    No vendor expansion or sparse-fieldset mechanism. FHIR's `_elements` is not declared in the
+    CapabilityStatement. Responses are whole resources.
+metadata:
+  custom_metadata: false
+  detail: >-
+    No arbitrary key/value metadata bag. FHIR extensions are the extension point, and modifier extensions
+    are REJECTED on write with 422 (OperationOutcome code `extension`).
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id or correlation header is documented. Provenance resources, not response headers, are the
+    platform's traceability mechanism.
+versioning:
+  style: FHIR release in the path (/r4/)
+  header: null
+  detail: See lifecycle/cerner-lifecycle.yml. No version header, no date pinning, no version negotiation.
+concurrency:
+  etag: true
+  if_match: true
+  conflict_status: 409
+  detail: >-
+    Version-aware update is the one runtime-semantics guarantee the platform documents: "409 Conflict —
+    update with out-of-date version". ETag/If-Match is the mechanism.
+content_negotiation:
+  request: 'Accept: application/fhir+json'
+  response: application/fhir+json
+  patch: application/json-patch+json
+  xml: false
+  detail: >-
+    JSON only. A non-JSON media type is answered 406 with Content-Length 0 and no body — a silent-looking
+    failure that is easy to misread as an empty result.
+error_envelope:
+  media_type: application/fhir+json
+  shape: FHIR OperationOutcome
+  rfc9457: false
+  detail: See errors/cerner-problem-types.yml.
+rate_limit_signaling:
+  headers: []
+  documented: false
+  detail: >-
+    No rate-limit headers and no published limits. See rate-limits/cerner-rate-limits.yml — an agent gets
+    no runtime signal and must fall back to conservative backoff on 429/503.
+cors:
+  enabled: true
+  evidence: CapabilityStatement.rest.security.cors = true on both open and secure endpoints.
+batch:
+  supported: true
+  detail: >-
+    System-level `batch` is declared "Implemented per the specification" — POST a Bundle of type batch to
+    the service root. `transaction` is NOT declared, so there is no all-or-nothing multi-write.
+cross_links:
+  authentication: authentication/cerner-authentication.yml
+  scopes: scopes/cerner-scopes.yml
+  errors: errors/cerner-problem-types.yml
+  lifecycle: lifecycle/cerner-lifecycle.yml
+  rate_limits: rate-limits/cerner-rate-limits.yml
+  data_model: data-model/cerner-data-model.yml
+  conformance: conformance/cerner-conformance.yml

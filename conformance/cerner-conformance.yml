@@ -1,0 +1,223 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata,
+  https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration,
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/,
+  https://www.oracle.com/corporate/acquisitions/cerner/security/
+note: >-
+  Oracle Health is one of the few providers in this catalog whose conformance can be verified rather than
+  claimed: the platform serves a live FHIR CapabilityStatement and a live SMART discovery document, and
+  both are captured in this directory. Every `conforms: true` below cites one of those two machine-readable
+  resources or an Oracle-published page — never a marketing claim.
+artifacts:
+  capability_statement_secure: conformance/cerner-capability-statement-r4-secure.json
+  capability_statement_open: conformance/cerner-capability-statement-r4-open.json
+  smart_configuration: well-known/cerner-smart-configuration.json
+  smart_configuration_patient: well-known/cerner-smart-configuration-patient.json
+standards:
+  - id: fhir-r4
+    name: HL7 FHIR R4 (4.0.1)
+    conforms: true
+    evidence: >-
+      CapabilityStatement.fhirVersion = 4.0.1, status = active, publisher = Oracle Health, kind =
+      instance. 44 resource types with declared interactions; wire format application/fhir+json.
+  - id: fhir-rest-api
+    name: FHIR RESTful API (read / search-type / create / update / patch / delete / batch)
+    conforms: true
+    evidence: >-
+      CapabilityStatement.rest.resource declares read on 42 types, search-type on 37, create on 19,
+      patch on 8, update on 7, delete on 1; rest.interaction declares system-level batch
+      ("Implemented per the specification").
+  - id: fhir-bulk-data-access
+    name: HL7 FHIR Bulk Data Access (Flat FHIR) IG
+    conforms: true
+    evidence: >-
+      CapabilityStatement.instantiates includes
+      http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data, and Group declares the named
+      operation $export (OperationDefinition
+      https://fhir-ehr.cerner.com/r4/OperationDefinition/group-export). Published REST endpoints
+      /Group/{id}/$export, POST /Patient/$export, /bulk-export/jobs/{id}, /bulk-export/files/{id} —
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfbda/rest-endpoints.html
+  - id: smart-app-launch
+    name: SMART App Launch (SMART on FHIR)
+    conforms: true
+    evidence: >-
+      /.well-known/smart-configuration served at the tenant service root; CapabilityStatement.rest.security
+      declares service code SMART-on-FHIR and the SMART oauth-uris extension
+      (http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris). Advertised capabilities
+      include launch-ehr, launch-standalone, context-ehr-patient, context-ehr-encounter, context-banner,
+      context-style.
+  - id: smart-app-launch-v2
+    name: SMART App Launch 2.0 granular scopes
+    conforms: true
+    evidence: >-
+      smart-configuration capabilities include BOTH permission-v1 and permission-v2; the advertised scope
+      set carries v2 granular forms (e.g. patient/AllergyIntolerance.crus, patient/Account.rs) alongside
+      v1 .read/.write forms. 303 scopes advertised on the provider persona, 145 on the patient persona.
+  - id: oauth2
+    name: OAuth 2.0
+    conforms: true
+    evidence: >-
+      grant_types_supported = [authorization_code, client_credentials]; response_types_supported = [code];
+      token, authorize, revoke and introspection endpoints all published in smart-configuration.
+  - id: oauth2-pkce
+    name: OAuth 2.0 PKCE (RFC 7636)
+    conforms: true
+    evidence: code_challenge_methods_supported = [S256] in smart-configuration.
+  - id: oidc
+    name: OpenID Connect
+    conforms: true
+    evidence: >-
+      smart-configuration capabilities include sso-openid-connect; `openid` and `fhirUser` scopes are
+      advertised; jwks_uri https://authorization.cerner.com/jwk serves 9 signing keys.
+  - id: rfc7523-private-key-jwt
+    name: JWT client authentication (RFC 7523 / private_key_jwt)
+    conforms: true
+    evidence: >-
+      token_endpoint_auth_methods_supported = [client_secret_basic, private_key_jwt];
+      token_endpoint_auth_signing_alg_values_supported = [RS384, ES384] — the asymmetric algorithms
+      SMART Backend Services requires.
+  - id: smart-backend-services
+    name: SMART Backend Services Authorization
+    conforms: true
+    evidence: >-
+      client_credentials grant + private_key_jwt with RS384/ES384 + 103 system/ scopes advertised — the
+      complete SMART Backend Services profile.
+  - id: rfc7009-token-revocation
+    name: OAuth 2.0 Token Revocation (RFC 7009)
+    conforms: true
+    evidence: revocation_endpoint published in smart-configuration.
+  - id: rfc7662-token-introspection
+    name: OAuth 2.0 Token Introspection (RFC 7662)
+    conforms: true
+    evidence: introspection_endpoint https://authorization.cerner.com/tokeninfo published in smart-configuration.
+  - id: rfc8615-well-known
+    name: Well-Known URIs (RFC 8615)
+    conforms: partial
+    evidence: >-
+      /.well-known/smart-configuration is served — but only relative to the per-tenant FHIR service root,
+      not at the host root, which answers 502. No security.txt, api-catalog or ai-plugin.json anywhere on
+      the estate. See well-known/cerner-well-known.yml.
+  - id: rfc8414-oauth-metadata
+    name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+    conforms: false
+    evidence: >-
+      /.well-known/oauth-authorization-server returns 404 on authorization.cerner.com and on the FHIR
+      service roots. The equivalent metadata is only reachable through the SMART discovery document.
+  - id: us-core
+    name: HL7 US Core Implementation Guide
+    conforms: true
+    evidence: >-
+      CapabilityStatement.instantiates includes
+      http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server — the server declares itself an
+      instance of the US Core server capability statement. 23 resource types additionally carry
+      supportedProfile pointing at us-core-* StructureDefinitions (us-core-patient, us-core-condition,
+      us-core-observation-lab, us-core-medicationrequest, us-core-documentreference and others).
+  - id: uscdi
+    name: USCDI data classes
+    conforms: true
+    evidence: >-
+      Delivered through the US Core profiles above. Oracle Health returns DataAbsentReason (valueCode
+      "unknown") when an HL7 profile field is missing rather than omitting it —
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - id: smart-health-cards
+    name: SMART Health Cards
+    conforms: true
+    evidence: >-
+      smart-configuration capabilities include "health-cards"; Patient declares the named operation
+      $health-cards-issue with OperationDefinition
+      https://spec.smarthealth.cards/artifacts/operation-patient-i-health-cards-issue.json
+  - id: fhir-named-operations
+    name: FHIR named operations ($-operations)
+    conforms: true
+    evidence: >-
+      Six named operations declared in the CapabilityStatement: Group $export, ChargeItem $credit and
+      $modify, DocumentReference $docref (USCoreFetchDocumentReferences), Patient $health-cards-issue,
+      Binary autogen-ccd-if (CCD generation), Organization get-cg-for-mrcu. Each carries a resolvable
+      OperationDefinition URL.
+  - id: onc-cehrt
+    name: ONC Certified EHR Technology (CEHRT) certified API criteria
+    conforms: true
+    evidence: >-
+      Millennium is ONC-certified health IT; the open, unauthenticated read-only endpoint at
+      fhir-open.cerner.com and the published service base URLs exist to satisfy the ONC Cures Act API
+      certification and CMS Patient Access requirements.
+  - id: rfc9457-problem-details
+    name: RFC 9457 Problem Details for HTTP APIs
+    conforms: false
+    evidence: >-
+      Errors are returned as FHIR OperationOutcome in application/fhir+json, not application/problem+json.
+      OperationOutcome is the correct, domain-native envelope here — this is a deliberate non-use, not a gap.
+  - id: cors
+    name: Cross-Origin Resource Sharing
+    conforms: true
+    evidence: CapabilityStatement.rest.security.cors = true on both open and secure endpoints.
+  - id: json-patch
+    name: JSON Patch (RFC 6902)
+    conforms: true
+    evidence: CapabilityStatement declares patchFormat and 8 resource types support the FHIR patch interaction.
+  - id: idempotency-key
+    name: HTTP Idempotency-Key header (draft-ietf-httpapi-idempotency-key)
+    conforms: false
+    evidence: >-
+      No Idempotency-Key header is documented or advertised. Safe retry on writes is handled the FHIR way
+      instead — version-aware update with If-Match/ETag, which the docs back with a documented 409 Conflict
+      on an out-of-date version. See conventions/cerner-conventions.yml.
+  - id: graphql
+    name: GraphQL
+    conforms: false
+    evidence: >-
+      No GraphQL endpoint is offered by Oracle Health or Millennium. The FHIR GraphQL capability is not
+      declared in the CapabilityStatement.
+  - id: asyncapi
+    name: AsyncAPI / published event surface
+    conforms: false
+    evidence: >-
+      No webhooks, FHIR Subscription resource or event catalog is declared in the CapabilityStatement or
+      published in the Millennium Platform API documentation. The event-driven surface Oracle Health does
+      operate is HL7 v2 messaging through Cerner Open Interface and CareAware, which is an interface-engine
+      integration rather than a public developer event API.
+  - id: mcp
+    name: Model Context Protocol
+    conforms: false
+    evidence: No first-party MCP server. See mcp/cerner-mcp.yml.
+  - id: a2a
+    name: A2A Agent Card
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and /.well-known/agent.json probed on every cerner.com and oracle.com
+      host in this profile — 404, 502, 403, or a soft-200 HTML page in every case. No card is served.
+compliance_programs:
+  - name: HIPAA
+    published: true
+    url: https://www.oracle.com/corporate/acquisitions/cerner/security/
+  - name: SOC 2
+    published: true
+    url: https://www.oracle.com/corporate/acquisitions/cerner/security/
+  - name: ISO 27001
+    published: true
+    url: https://www.oracle.com/corporate/acquisitions/cerner/security/
+  - name: PCI DSS
+    published: true
+    url: https://www.oracle.com/corporate/acquisitions/cerner/security/
+  - name: FIPS 140
+    published: true
+    url: https://www.oracle.com/corporate/acquisitions/cerner/security/
+  - name: FedRAMP
+    published: true
+    url: https://www.oracle.com/corporate/security-practices/corporate/governance/fedramp.html
+    note: Oracle holds FedRAMP authorizations at the corporate/cloud level; verify scope for a specific Oracle Health service.
+  - id: fhir-conditional-interactions
+    name: FHIR conditional create / update (If-None-Exist)
+    conforms: false
+    evidence: >-
+      No resource in the CapabilityStatement declares conditionalCreate, conditionalUpdate,
+      conditionalRead or conditionalDelete. Seven resources explicitly declare updateCreate: false, so
+      PUT will not upsert. There is therefore no conditional-write primitive on this API.
+summary:
+  standards_asserted: 28
+  conforms_true: 20
+  conforms_partial: 1
+  conforms_false: 8
+  verified_from_machine_readable_source: 18

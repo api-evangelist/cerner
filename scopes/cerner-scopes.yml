@@ -1,39 +1,1939 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+generated: '2026-08-14'
+method: probed
+source: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+docs: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+note: 'The full scope set is read live from the SMART on FHIR discovery document Oracle Health serves at the tenant
+  service root. It is tenant-scoped: this capture is the public sandbox tenant (ec2458f2-1e24-41c8-b71b-0e701af7583d),
+  and a production tenant advertises its own — always re-read /.well-known/smart-configuration for the tenant you
+  are integrating with. Scope prefixes follow SMART App Launch: patient/ and user/ scopes are only obtainable through
+  the authorization-code flow, system/ scopes only through client-credentials (backend services). The tenant advertises
+  both SMART v1 (.read/.write) and SMART v2 (.crus granular) permission forms.'
+capabilities:
+- authorize-post
+- launch-ehr
+- launch-standalone
+- client-public
+- client-confidential-asymmetric
+- client-confidential-symmetric
+- sso-openid-connect
+- context-banner
+- context-style
+- context-ehr-patient
+- context-ehr-encounter
+- permission-patient
+- permission-user
+- permission-offline
+- permission-online
+- permission-v1
+- permission-v2
+- health-cards
+summary:
+  scope_count: 303
+  by_persona:
+    context: 6
+    patient: 93
+    system: 103
+    user: 101
+  smart_version: SMART App Launch v1 and v2 (permission-v1, permission-v2 both advertised)
 schemes:
-- name: oauth2
-  source: openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+- name: smartOnFhir
+  source: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+  issuer: https://authorization.cerner.com/tenants/{tenant}
   flows:
   - flow: authorizationCode
-    authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
-    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+    authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/provider/authorize
+    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+    revocationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token/revoke
   - flow: clientCredentials
-    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-  description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
+    tokenUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+  description: SMART on FHIR OAuth 2.0 as implemented by Oracle Health Millennium Platform.
 scopes:
-- scope: patient/*.read
-  description: Read all patient-scoped resources.
+- scope: fhirUser
+  description: Returns the FHIR resource (Practitioner/Patient/RelatedPerson) representing the authorizing user.
   flows:
   - authorizationCode
   sources:
-  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
-- scope: system/*.read
-  description: System-level read access.
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: launch
+  description: EHR launch context — the app is launched from inside PowerChart and inherits patient/encounter context.
   flows:
   - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: offline_access
+  description: Issues a refresh token that outlives the user session.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: online_access
+  description: Issues a refresh token bound to the user session.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: openid
+  description: OpenID Connect authentication; returns an id_token identifying the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Account.read
+  description: Allows read (search + read) on the Account resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Account.rs
+  description: 'Allows SMART v2 permissions: read, search on the Account resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/AllergyIntolerance.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the AllergyIntolerance resource for
+    the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/AllergyIntolerance.read
+  description: Allows read (search + read) on the AllergyIntolerance resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/AllergyIntolerance.write
+  description: Allows write (create + update) on the AllergyIntolerance resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Appointment.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Appointment resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Appointment.read
+  description: Allows read (search + read) on the Appointment resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Appointment.write
+  description: Allows write (create + update) on the Appointment resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Basic.c
+  description: 'Allows SMART v2 permissions: create on the Basic resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Basic.write
+  description: Allows write (create + update) on the Basic resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Binary.r
+  description: 'Allows SMART v2 permissions: read on the Binary resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Binary.read
+  description: Allows read (search + read) on the Binary resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/CarePlan.read
+  description: Allows read (search + read) on the CarePlan resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/CarePlan.rs
+  description: 'Allows SMART v2 permissions: read, search on the CarePlan resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/CareTeam.read
+  description: Allows read (search + read) on the CareTeam resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/CareTeam.rs
+  description: 'Allows SMART v2 permissions: read, search on the CareTeam resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/ChargeItem.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the ChargeItem resource for the patient in
+    context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/ChargeItem.read
+  description: Allows read (search + read) on the ChargeItem resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/ChargeItem.write
+  description: Allows write (create + update) on the ChargeItem resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Communication.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Communication resource for the
+    patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Communication.read
+  description: Allows read (search + read) on the Communication resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Communication.write
+  description: Allows write (create + update) on the Communication resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Condition.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Condition resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Condition.read
+  description: Allows read (search + read) on the Condition resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Condition.write
+  description: Allows write (create + update) on the Condition resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Consent.read
+  description: Allows read (search + read) on the Consent resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Consent.rs
+  description: 'Allows SMART v2 permissions: read, search on the Consent resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Coverage.cruds
+  description: 'Allows SMART v2 permissions: create, read, update, delete, search on the Coverage resource for the
+    patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Coverage.read
+  description: Allows read (search + read) on the Coverage resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Coverage.write
+  description: Allows write (create + update) on the Coverage resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Device.read
+  description: Allows read (search + read) on the Device resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Device.rs
+  description: 'Allows SMART v2 permissions: read, search on the Device resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/DiagnosticReport.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the DiagnosticReport resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/DiagnosticReport.read
+  description: Allows read (search + read) on the DiagnosticReport resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/DiagnosticReport.write
+  description: Allows write (create + update) on the DiagnosticReport resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/DocumentReference.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the DocumentReference resource for
+    the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/DocumentReference.read
+  description: Allows read (search + read) on the DocumentReference resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/DocumentReference.write
+  description: Allows write (create + update) on the DocumentReference resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Encounter.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Encounter resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Encounter.read
+  description: Allows read (search + read) on the Encounter resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Encounter.write
+  description: Allows write (create + update) on the Encounter resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/FamilyMemberHistory.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the FamilyMemberHistory resource for
+    the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/FamilyMemberHistory.read
+  description: Allows read (search + read) on the FamilyMemberHistory resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/FamilyMemberHistory.write
+  description: Allows write (create + update) on the FamilyMemberHistory resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Goal.read
+  description: Allows read (search + read) on the Goal resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Goal.rs
+  description: 'Allows SMART v2 permissions: read, search on the Goal resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Immunization.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Immunization resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Immunization.read
+  description: Allows read (search + read) on the Immunization resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Immunization.write
+  description: Allows write (create + update) on the Immunization resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/InsurancePlan.read
+  description: Allows read (search + read) on the InsurancePlan resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/InsurancePlan.rs
+  description: 'Allows SMART v2 permissions: read, search on the InsurancePlan resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Media.r
+  description: 'Allows SMART v2 permissions: read on the Media resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Media.read
+  description: Allows read (search + read) on the Media resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/MedicationAdministration.read
+  description: Allows read (search + read) on the MedicationAdministration resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/MedicationAdministration.rs
+  description: 'Allows SMART v2 permissions: read, search on the MedicationAdministration resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/MedicationDispense.read
+  description: Allows read (search + read) on the MedicationDispense resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/MedicationDispense.rs
+  description: 'Allows SMART v2 permissions: read, search on the MedicationDispense resource for the patient in
+    context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/MedicationRequest.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the MedicationRequest resource for
+    the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/MedicationRequest.read
+  description: Allows read (search + read) on the MedicationRequest resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/MedicationRequest.write
+  description: Allows write (create + update) on the MedicationRequest resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/NutritionOrder.read
+  description: Allows read (search + read) on the NutritionOrder resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/NutritionOrder.rs
+  description: 'Allows SMART v2 permissions: read, search on the NutritionOrder resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Observation.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Observation resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Observation.read
+  description: Allows read (search + read) on the Observation resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Observation.write
+  description: Allows write (create + update) on the Observation resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Patient.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Patient resource for the patient
+    in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Patient.read
+  description: Allows read (search + read) on the Patient resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Patient.write
+  description: Allows write (create + update) on the Patient resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Person.read
+  description: Allows read (search + read) on the Person resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Person.rs
+  description: 'Allows SMART v2 permissions: read, search on the Person resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Procedure.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Procedure resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Procedure.read
+  description: Allows read (search + read) on the Procedure resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Procedure.write
+  description: Allows write (create + update) on the Procedure resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Provenance.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Provenance resource for the patient in
+    context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Provenance.read
+  description: Allows read (search + read) on the Provenance resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Provenance.write
+  description: Allows write (create + update) on the Provenance resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Questionnaire.read
+  description: Allows read (search + read) on the Questionnaire resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Questionnaire.rs
+  description: 'Allows SMART v2 permissions: read, search on the Questionnaire resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/QuestionnaireResponse.read
+  description: Allows read (search + read) on the QuestionnaireResponse resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/QuestionnaireResponse.rus
+  description: 'Allows SMART v2 permissions: read, update, search on the QuestionnaireResponse resource for the
+    patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/QuestionnaireResponse.write
+  description: Allows write (create + update) on the QuestionnaireResponse resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/RelatedPerson.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the RelatedPerson resource for the
+    patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/RelatedPerson.read
+  description: Allows read (search + read) on the RelatedPerson resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/RelatedPerson.write
+  description: Allows write (create + update) on the RelatedPerson resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Schedule.read
+  description: Allows read (search + read) on the Schedule resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Schedule.rs
+  description: 'Allows SMART v2 permissions: read, search on the Schedule resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/ServiceRequest.read
+  description: Allows read (search + read) on the ServiceRequest resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/ServiceRequest.rs
+  description: 'Allows SMART v2 permissions: read, search on the ServiceRequest resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Slot.read
+  description: Allows read (search + read) on the Slot resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Slot.rus
+  description: 'Allows SMART v2 permissions: read, update, search on the Slot resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Slot.write
+  description: Allows write (create + update) on the Slot resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Specimen.read
+  description: Allows read (search + read) on the Specimen resource for the patient in context.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: patient/Specimen.rs
+  description: 'Allows SMART v2 permissions: read, search on the Specimen resource for the patient in context.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: profile
+  description: 'SMART on FHIR scope advertised by the tenant: profile'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Account.read
+  description: Allows read (search + read) on the Account resource for the backend service (no user).
+  flows:
   - clientCredentials
   sources:
-  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
-- scope: system/*.write
-  description: System-level write access.
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Account.rs
+  description: 'Allows SMART v2 permissions: read, search on the Account resource for the backend service (no user).'
   flows:
   - clientCredentials
   sources:
-  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
-- scope: user/*.read
-  description: Read all user-scoped resources.
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/AllergyIntolerance.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the AllergyIntolerance resource for
+    the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/AllergyIntolerance.read
+  description: Allows read (search + read) on the AllergyIntolerance resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/AllergyIntolerance.write
+  description: Allows write (create + update) on the AllergyIntolerance resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Appointment.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Appointment resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Appointment.read
+  description: Allows read (search + read) on the Appointment resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Appointment.write
+  description: Allows write (create + update) on the Appointment resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Basic.c
+  description: 'Allows SMART v2 permissions: create on the Basic resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Basic.write
+  description: Allows write (create + update) on the Basic resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Binary.r
+  description: 'Allows SMART v2 permissions: read on the Binary resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Binary.read
+  description: Allows read (search + read) on the Binary resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/CarePlan.read
+  description: Allows read (search + read) on the CarePlan resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/CarePlan.rs
+  description: 'Allows SMART v2 permissions: read, search on the CarePlan resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/CareTeam.read
+  description: Allows read (search + read) on the CareTeam resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/CareTeam.rs
+  description: 'Allows SMART v2 permissions: read, search on the CareTeam resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/ChargeItem.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the ChargeItem resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/ChargeItem.read
+  description: Allows read (search + read) on the ChargeItem resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/ChargeItem.write
+  description: Allows write (create + update) on the ChargeItem resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Communication.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Communication resource for the
+    backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Communication.read
+  description: Allows read (search + read) on the Communication resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Communication.write
+  description: Allows write (create + update) on the Communication resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Condition.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Condition resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Condition.read
+  description: Allows read (search + read) on the Condition resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Condition.write
+  description: Allows write (create + update) on the Condition resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Consent.read
+  description: Allows read (search + read) on the Consent resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Consent.rs
+  description: 'Allows SMART v2 permissions: read, search on the Consent resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Coverage.cruds
+  description: 'Allows SMART v2 permissions: create, read, update, delete, search on the Coverage resource for the
+    backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Coverage.read
+  description: Allows read (search + read) on the Coverage resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Coverage.write
+  description: Allows write (create + update) on the Coverage resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Device.read
+  description: Allows read (search + read) on the Device resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Device.rs
+  description: 'Allows SMART v2 permissions: read, search on the Device resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/DiagnosticReport.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the DiagnosticReport resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/DiagnosticReport.read
+  description: Allows read (search + read) on the DiagnosticReport resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/DiagnosticReport.write
+  description: Allows write (create + update) on the DiagnosticReport resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/DocumentReference.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the DocumentReference resource for
+    the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/DocumentReference.read
+  description: Allows read (search + read) on the DocumentReference resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/DocumentReference.write
+  description: Allows write (create + update) on the DocumentReference resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Encounter.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Encounter resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Encounter.read
+  description: Allows read (search + read) on the Encounter resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Encounter.write
+  description: Allows write (create + update) on the Encounter resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/FamilyMemberHistory.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the FamilyMemberHistory resource for
+    the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/FamilyMemberHistory.read
+  description: Allows read (search + read) on the FamilyMemberHistory resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/FamilyMemberHistory.write
+  description: Allows write (create + update) on the FamilyMemberHistory resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/FinancialTransaction.c
+  description: 'Allows SMART v2 permissions: create on the FinancialTransaction resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/FinancialTransaction.write
+  description: Allows write (create + update) on the FinancialTransaction resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Goal.read
+  description: Allows read (search + read) on the Goal resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Goal.rs
+  description: 'Allows SMART v2 permissions: read, search on the Goal resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Immunization.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Immunization resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Immunization.read
+  description: Allows read (search + read) on the Immunization resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Immunization.write
+  description: Allows write (create + update) on the Immunization resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/InsurancePlan.read
+  description: Allows read (search + read) on the InsurancePlan resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/InsurancePlan.rs
+  description: 'Allows SMART v2 permissions: read, search on the InsurancePlan resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Location.read
+  description: Allows read (search + read) on the Location resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Location.rs
+  description: 'Allows SMART v2 permissions: read, search on the Location resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Media.r
+  description: 'Allows SMART v2 permissions: read on the Media resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Media.read
+  description: Allows read (search + read) on the Media resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/MedicationAdministration.read
+  description: Allows read (search + read) on the MedicationAdministration resource for the backend service (no
+    user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/MedicationAdministration.rs
+  description: 'Allows SMART v2 permissions: read, search on the MedicationAdministration resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/MedicationDispense.read
+  description: Allows read (search + read) on the MedicationDispense resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/MedicationDispense.rs
+  description: 'Allows SMART v2 permissions: read, search on the MedicationDispense resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/MedicationRequest.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the MedicationRequest resource for
+    the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/MedicationRequest.read
+  description: Allows read (search + read) on the MedicationRequest resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/MedicationRequest.write
+  description: Allows write (create + update) on the MedicationRequest resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/NutritionOrder.read
+  description: Allows read (search + read) on the NutritionOrder resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/NutritionOrder.rs
+  description: 'Allows SMART v2 permissions: read, search on the NutritionOrder resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Observation.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Observation resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Observation.read
+  description: Allows read (search + read) on the Observation resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Observation.write
+  description: Allows write (create + update) on the Observation resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Organization.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Organization resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Organization.read
+  description: Allows read (search + read) on the Organization resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Organization.write
+  description: Allows write (create + update) on the Organization resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Patient.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Patient resource for the backend
+    service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Patient.read
+  description: Allows read (search + read) on the Patient resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Patient.write
+  description: Allows write (create + update) on the Patient resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Person.read
+  description: Allows read (search + read) on the Person resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Person.rs
+  description: 'Allows SMART v2 permissions: read, search on the Person resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Practitioner.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Practitioner resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Practitioner.read
+  description: Allows read (search + read) on the Practitioner resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Practitioner.write
+  description: Allows write (create + update) on the Practitioner resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Procedure.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Procedure resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Procedure.read
+  description: Allows read (search + read) on the Procedure resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Procedure.write
+  description: Allows write (create + update) on the Procedure resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Provenance.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Provenance resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Provenance.read
+  description: Allows read (search + read) on the Provenance resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Provenance.write
+  description: Allows write (create + update) on the Provenance resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Questionnaire.read
+  description: Allows read (search + read) on the Questionnaire resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Questionnaire.rs
+  description: 'Allows SMART v2 permissions: read, search on the Questionnaire resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/QuestionnaireResponse.read
+  description: Allows read (search + read) on the QuestionnaireResponse resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/QuestionnaireResponse.rus
+  description: 'Allows SMART v2 permissions: read, update, search on the QuestionnaireResponse resource for the
+    backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/QuestionnaireResponse.write
+  description: Allows write (create + update) on the QuestionnaireResponse resource for the backend service (no
+    user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/RelatedPerson.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the RelatedPerson resource for the
+    backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/RelatedPerson.read
+  description: Allows read (search + read) on the RelatedPerson resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/RelatedPerson.write
+  description: Allows write (create + update) on the RelatedPerson resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Schedule.read
+  description: Allows read (search + read) on the Schedule resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Schedule.rs
+  description: 'Allows SMART v2 permissions: read, search on the Schedule resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/ServiceRequest.read
+  description: Allows read (search + read) on the ServiceRequest resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/ServiceRequest.rs
+  description: 'Allows SMART v2 permissions: read, search on the ServiceRequest resource for the backend service
+    (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Slot.read
+  description: Allows read (search + read) on the Slot resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Slot.rus
+  description: 'Allows SMART v2 permissions: read, update, search on the Slot resource for the backend service (no
+    user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Slot.write
+  description: Allows write (create + update) on the Slot resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Specimen.read
+  description: Allows read (search + read) on the Specimen resource for the backend service (no user).
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: system/Specimen.rs
+  description: 'Allows SMART v2 permissions: read, search on the Specimen resource for the backend service (no user).'
+  flows:
+  - clientCredentials
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Account.read
+  description: Allows read (search + read) on the Account resource for the authorizing user.
   flows:
   - authorizationCode
   sources:
-  - openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Account.rs
+  description: 'Allows SMART v2 permissions: read, search on the Account resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/AllergyIntolerance.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the AllergyIntolerance resource for
+    the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/AllergyIntolerance.read
+  description: Allows read (search + read) on the AllergyIntolerance resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/AllergyIntolerance.write
+  description: Allows write (create + update) on the AllergyIntolerance resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Appointment.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Appointment resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Appointment.read
+  description: Allows read (search + read) on the Appointment resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Appointment.write
+  description: Allows write (create + update) on the Appointment resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Basic.c
+  description: 'Allows SMART v2 permissions: create on the Basic resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Basic.write
+  description: Allows write (create + update) on the Basic resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Binary.r
+  description: 'Allows SMART v2 permissions: read on the Binary resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Binary.read
+  description: Allows read (search + read) on the Binary resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/CarePlan.read
+  description: Allows read (search + read) on the CarePlan resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/CarePlan.rs
+  description: 'Allows SMART v2 permissions: read, search on the CarePlan resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/CareTeam.read
+  description: Allows read (search + read) on the CareTeam resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/CareTeam.rs
+  description: 'Allows SMART v2 permissions: read, search on the CareTeam resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/ChargeItem.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the ChargeItem resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/ChargeItem.read
+  description: Allows read (search + read) on the ChargeItem resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/ChargeItem.write
+  description: Allows write (create + update) on the ChargeItem resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Communication.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Communication resource for the
+    authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Communication.read
+  description: Allows read (search + read) on the Communication resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Communication.write
+  description: Allows write (create + update) on the Communication resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Condition.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Condition resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Condition.read
+  description: Allows read (search + read) on the Condition resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Condition.write
+  description: Allows write (create + update) on the Condition resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Consent.read
+  description: Allows read (search + read) on the Consent resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Consent.rs
+  description: 'Allows SMART v2 permissions: read, search on the Consent resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Coverage.cruds
+  description: 'Allows SMART v2 permissions: create, read, update, delete, search on the Coverage resource for the
+    authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Coverage.read
+  description: Allows read (search + read) on the Coverage resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Coverage.write
+  description: Allows write (create + update) on the Coverage resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Device.read
+  description: Allows read (search + read) on the Device resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Device.rs
+  description: 'Allows SMART v2 permissions: read, search on the Device resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/DiagnosticReport.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the DiagnosticReport resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/DiagnosticReport.read
+  description: Allows read (search + read) on the DiagnosticReport resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/DiagnosticReport.write
+  description: Allows write (create + update) on the DiagnosticReport resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/DocumentReference.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the DocumentReference resource for
+    the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/DocumentReference.read
+  description: Allows read (search + read) on the DocumentReference resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/DocumentReference.write
+  description: Allows write (create + update) on the DocumentReference resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Encounter.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Encounter resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Encounter.read
+  description: Allows read (search + read) on the Encounter resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Encounter.write
+  description: Allows write (create + update) on the Encounter resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/FamilyMemberHistory.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the FamilyMemberHistory resource for
+    the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/FamilyMemberHistory.read
+  description: Allows read (search + read) on the FamilyMemberHistory resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/FamilyMemberHistory.write
+  description: Allows write (create + update) on the FamilyMemberHistory resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Goal.read
+  description: Allows read (search + read) on the Goal resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Goal.rs
+  description: 'Allows SMART v2 permissions: read, search on the Goal resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Immunization.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Immunization resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Immunization.read
+  description: Allows read (search + read) on the Immunization resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Immunization.write
+  description: Allows write (create + update) on the Immunization resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/InsurancePlan.read
+  description: Allows read (search + read) on the InsurancePlan resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/InsurancePlan.rs
+  description: 'Allows SMART v2 permissions: read, search on the InsurancePlan resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Location.read
+  description: Allows read (search + read) on the Location resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Location.rs
+  description: 'Allows SMART v2 permissions: read, search on the Location resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Media.r
+  description: 'Allows SMART v2 permissions: read on the Media resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Media.read
+  description: Allows read (search + read) on the Media resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/MedicationAdministration.read
+  description: Allows read (search + read) on the MedicationAdministration resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/MedicationAdministration.rs
+  description: 'Allows SMART v2 permissions: read, search on the MedicationAdministration resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/MedicationDispense.read
+  description: Allows read (search + read) on the MedicationDispense resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/MedicationDispense.rs
+  description: 'Allows SMART v2 permissions: read, search on the MedicationDispense resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/MedicationRequest.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the MedicationRequest resource for
+    the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/MedicationRequest.read
+  description: Allows read (search + read) on the MedicationRequest resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/MedicationRequest.write
+  description: Allows write (create + update) on the MedicationRequest resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/NutritionOrder.read
+  description: Allows read (search + read) on the NutritionOrder resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/NutritionOrder.rs
+  description: 'Allows SMART v2 permissions: read, search on the NutritionOrder resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Observation.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Observation resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Observation.read
+  description: Allows read (search + read) on the Observation resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Observation.write
+  description: Allows write (create + update) on the Observation resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Organization.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Organization resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Organization.read
+  description: Allows read (search + read) on the Organization resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Organization.write
+  description: Allows write (create + update) on the Organization resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Patient.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the Patient resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Patient.read
+  description: Allows read (search + read) on the Patient resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Patient.write
+  description: Allows write (create + update) on the Patient resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Person.read
+  description: Allows read (search + read) on the Person resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Person.rs
+  description: 'Allows SMART v2 permissions: read, search on the Person resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Practitioner.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Practitioner resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Practitioner.read
+  description: Allows read (search + read) on the Practitioner resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Practitioner.write
+  description: Allows write (create + update) on the Practitioner resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Procedure.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Procedure resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Procedure.read
+  description: Allows read (search + read) on the Procedure resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Procedure.write
+  description: Allows write (create + update) on the Procedure resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Provenance.crs
+  description: 'Allows SMART v2 permissions: create, read, search on the Provenance resource for the authorizing
+    user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Provenance.read
+  description: Allows read (search + read) on the Provenance resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Provenance.write
+  description: Allows write (create + update) on the Provenance resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Questionnaire.read
+  description: Allows read (search + read) on the Questionnaire resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Questionnaire.rs
+  description: 'Allows SMART v2 permissions: read, search on the Questionnaire resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/QuestionnaireResponse.read
+  description: Allows read (search + read) on the QuestionnaireResponse resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/QuestionnaireResponse.rus
+  description: 'Allows SMART v2 permissions: read, update, search on the QuestionnaireResponse resource for the
+    authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/QuestionnaireResponse.write
+  description: Allows write (create + update) on the QuestionnaireResponse resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/RelatedPerson.crus
+  description: 'Allows SMART v2 permissions: create, read, update, search on the RelatedPerson resource for the
+    authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/RelatedPerson.read
+  description: Allows read (search + read) on the RelatedPerson resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/RelatedPerson.write
+  description: Allows write (create + update) on the RelatedPerson resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Schedule.read
+  description: Allows read (search + read) on the Schedule resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Schedule.rs
+  description: 'Allows SMART v2 permissions: read, search on the Schedule resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/ServiceRequest.read
+  description: Allows read (search + read) on the ServiceRequest resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/ServiceRequest.rs
+  description: 'Allows SMART v2 permissions: read, search on the ServiceRequest resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Slot.read
+  description: Allows read (search + read) on the Slot resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Slot.rus
+  description: 'Allows SMART v2 permissions: read, update, search on the Slot resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Slot.write
+  description: Allows write (create + update) on the Slot resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Specimen.read
+  description: Allows read (search + read) on the Specimen resource for the authorizing user.
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+- scope: user/Specimen.rs
+  description: 'Allows SMART v2 permissions: read, search on the Specimen resource for the authorizing user.'
+  flows:
+  - authorizationCode
+  sources:
+  - https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration

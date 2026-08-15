@@ -1,0 +1,72 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  https://engineering.cerner.com/terra-ui/, https://github.com/cerner (archived 2026-01-06),
+  npm registry (registry.npmjs.org)
+note: >-
+  Cerner shipped a substantial first-party client-side component surface — Terra, an open-source React
+  design system, plus the SMART embeddable library that hosts a third-party app inside PowerChart. Both are
+  genuinely embeddable client-side code and belong here rather than in packages/. Both are also frozen: the
+  whole npm surface stopped publishing in mid-2024 and the source organization was archived on 2026-01-06.
+families:
+  - name: Terra UI
+    kind: React design system / component library
+    docs: https://engineering.cerner.com/terra-ui/
+    repos:
+      - https://github.com/cerner/terra-core
+      - https://github.com/cerner/terra-framework
+      - https://github.com/cerner/terra-application
+      - https://github.com/cerner/terra-graphs
+    loaders:
+      - registry: npm
+        name: terra-application
+        version: 1.58.1
+        published: '2024-05-23'
+      - registry: npm
+        name: '@cerner/terra-docs'
+        version: 1.12.0
+        published: '2024-05-24'
+      - registry: npm
+        name: terra-icon
+        version: 3.62.0
+        published: '2024-05-24'
+      - registry: npm
+        name: '@cerner/carbon-graphs'
+        version: 2.25.0
+        published: '2024-04-09'
+      - registry: npm
+        name: terra-mixins
+        version: 1.41.0
+        published: '2023-11-14'
+    role: >-
+      The UI layer SMART apps embedded in Millennium are expected to be built with, so that a third-party
+      app looks and behaves like the EHR it launches inside. Accessibility and clinical-workflow patterns
+      are the point of it.
+    status: unmaintained
+  - name: SMART embeddable library
+    kind: JavaScript embedding/launch library
+    loaders:
+      - registry: npm
+        name: cerner-smart-embeddable-lib
+        version: 1.7.0
+        published: '2024-09-10'
+    repo: https://github.com/cerner/cerner-smart-embeddable-lib
+    role: >-
+      Embeds a SMART on FHIR application inside Millennium and brokers the launch context (patient,
+      encounter, banner, style) between the host EHR and the embedded app. The client-side half of the
+      SMART capabilities the tenant advertises (context-ehr-patient, context-ehr-encounter, context-banner,
+      context-style).
+    status: unmaintained
+hosted_surfaces:
+  - name: SMART on FHIR app launch inside PowerChart
+    kind: host-provided embedding surface, not a downloadable component
+    detail: >-
+      The EHR itself is the prebuilt surface: a registered SMART app is launched inside PowerChart and
+      inherits patient/encounter context. Provisioning is documented on wiki.cerner.com (403 anonymous).
+    docs: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
+summary:
+  families: 2
+  loader_packages: 6
+  all_first_party: true
+  newest_release: '2024-09-10'
+  maintained: false

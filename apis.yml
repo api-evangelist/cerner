@@ -1,21 +1,31 @@
 aid: cerner
 url: https://raw.githubusercontent.com/api-evangelist/cerner/refs/heads/main/apis.yml
-name: Cerner (Oracle Health)
+name: Oracle Health (Cerner)
 tags:
+- Bulk FHIR
+- CapabilityStatement
+- CareAware
 - Cerner Millennium
+- Clinical Data
 - Code Console
 - EHR
 - Electronic Health Records
 - FHIR
+- Fortune 1000
 - HL7
+- HL7 v2
 - Healthcare
 - Interoperability
+- Millennium Platform
+- Multi-Tenant
 - OAuth 2.0
+- Oracle
 - Oracle Health
 - Patient Access
 - Provider Directory
+- SMART Backend Services
 - SMART on FHIR
-- Fortune 1000
+- US Core
 type: Index
 accessModel:
   pricing: freemium
@@ -33,18 +43,43 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cerner.png
 access: 3rd-Party
 created: '2026-03-23'
-modified: '2026-05-30'
+modified: '2026-08-14'
 position: Consumer
 specificationVersion: '0.19'
-description: Cerner is a global healthcare technology company that designs and develops
-  electronic health record (EHR) and health information technology solutions for hospitals,
-  clinics, and integrated delivery networks. Cerner was acquired by Oracle in June
-  2022 and is now branded as Oracle Health, with the Cerner Millennium EHR platform's
-  developer program operating as the Oracle Health Developer Program. Millennium exposes
-  HL7 FHIR R4 and DSTU2 APIs, SMART on FHIR app launching, Bulk FHIR, the CareAware
-  device and integration APIs, and the Code Console developer portal for registering
-  applications and obtaining sandbox and production credentials.
+description: 'Oracle Health, formerly Cerner, builds and operates Millennium — one of the two dominant electronic health record platforms in United States hospitals and health systems. Cerner was acquired by Oracle in June 2022 and its developer program now runs as the Oracle Health Developer Program. The public developer surface is HL7 FHIR R4: a multi-tenant, US Core-conformant FHIR server that serves a live CapabilityStatement at /metadata and a live SMART on FHIR discovery document at /.well-known/smart-configuration, advertising 303 OAuth scopes across patient, user and system personas in both SMART v1 and SMART v2 granular forms. It supports SMART App Launch (EHR and standalone), SMART Backend Services with private_key_jwt, FHIR Bulk Data Access export, and — unusually — an open, unauthenticated, read-only endpoint that serves real sandbox data with no registration at all. Alongside FHIR it operates proprietary Millennium EHR APIs, HL7 v2 messaging through Cerner Open Interface, and the CareAware device and integration platform. There is no OpenAPI, no GraphQL endpoint, no MCP server, no agent card, no published pricing, no published rate limits, no status page and no first-party SDK for the FHIR API.'
 apis:
+- aid: cerner:oracle-health-millennium-fhir-r4-api
+  name: Oracle Health Millennium Platform FHIR R4 API
+  description: 'The full HL7 FHIR R4 REST surface of Oracle Health Millennium — 44 resource types, 123 operations, derived operation-for-operation from the CapabilityStatement Oracle Health serves at /metadata and the SMART discovery document it serves at /.well-known/smart-configuration. Multi-tenant: the tenant id is a required path segment of the service root. Read on 42 resource types, search on 37, create on 19, patch on 8, update on 7, delete on 1, plus system-level batch and six named FHIR operations.'
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - FHIR
+  - R4
+  - US Core
+  - USCDI
+  - SMART on FHIR
+  - Patient Access
+  - CMS Interoperability
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-millennium-fhir-r4-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Overlay
+    url: overlays/cerner-millennium-fhir-r4-overlay.yaml
 - aid: cerner:oracle-health-fhir-dstu2-api
   name: Oracle Health Millennium FHIR DSTU2 API
   tags:
@@ -62,6 +97,7 @@ apis:
     The Cerner Millennium DSTU2 FHIR API supports legacy SMART on FHIR applications and integrations with
     Meaningful Use 2015 CEHRT certification criteria, and remains available alongside the newer R4 implementation
     for backward compatibility.
+  baseURL: https://fhir-ehr.cerner.com/dstu2/{tenant}
 - aid: cerner:oracle-health-code-console
   name: Oracle Health Code Console (Developer Portal)
   tags:
@@ -82,6 +118,7 @@ apis:
     The Oracle Health Code Console (formerly Cerner Code) is the developer portal used to register SMART
     on FHIR and system-level applications, configure redirect URIs and launch parameters, manage OAuth
     2.0 client credentials, and access the Millennium sandbox for initial testing.
+  baseURL: https://www.oracle.com/health/developer/
 - aid: cerner:oracle-health-bulk-fhir-api
   name: Oracle Health Millennium Bulk FHIR API
   tags:
@@ -91,6 +128,8 @@ apis:
   - Population Health
   humanURL: https://fhir.cerner.com/millennium/r4/
   properties:
+  - type: OpenAPI
+    url: openapi/cerner-millennium-bulk-data-openapi.yml
   - url: https://fhir.cerner.com/millennium/r4/
     type: Documentation
   - url: >-
@@ -100,6 +139,7 @@ apis:
     Oracle Health Millennium supports the HL7 Bulk Data Access (Flat FHIR) specification for exporting
     group-level patient data in NDJSON format for population health, research, and payer-provider data
     exchange scenarios.
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-careaware
   name: Cerner CareAware Integration APIs
   tags:
@@ -115,6 +155,7 @@ apis:
     Cerner CareAware provides device and third-party application integration APIs for medical device data
     capture, bi-directional HL7 v2 messaging, and workflow embedding into Millennium, supporting medical
     device manufacturers and hospital biomedical teams.
+  baseURL: https://www.cerner.com/solutions/careaware-interoperability
 - aid: cerner:oracle-health-smart-on-fhir
   name: Oracle Health SMART on FHIR App Launch
   tags:
@@ -128,10 +169,17 @@ apis:
     type: Documentation
   - url: https://fhir.cerner.com/
     type: Portal
+  - type: Authentication
+    url: authentication/cerner-authentication.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: WellKnown
+    url: well-known/cerner-well-known.yml
   description: >-
     Oracle Health implements the SMART on FHIR App Launch framework (standalone and EHR-launch) with OpenID
     Connect identity tokens, enabling third-party clinician and patient-facing applications to embed inside
     Millennium PowerChart and Oracle Health portals.
+  baseURL: https://authorization.cerner.com/tenants/{tenant}
 - aid: cerner:cerner-capability-api
   name: Cerner (Oracle Health) Capability API
   description: FHIR server metadata and capability statements.
@@ -149,8 +197,7 @@ apis:
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
-  - type: GraphQL
-    url: graphql/cerner-graphql.md
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-condition-api
   name: Cerner (Oracle Health) Condition API
   description: Patient conditions and problem-list entries.
@@ -168,8 +215,7 @@ apis:
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
-  - type: GraphQL
-    url: graphql/cerner-graphql.md
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-definitions-api
   name: Cerner (Oracle Health) Definitions API
   description: FHIR conformance definitions and operations.
@@ -187,8 +233,7 @@ apis:
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
-  - type: GraphQL
-    url: graphql/cerner-graphql.md
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-encounter-api
   name: Cerner (Oracle Health) Encounter API
   description: Patient encounter records.
@@ -206,8 +251,7 @@ apis:
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
-  - type: GraphQL
-    url: graphql/cerner-graphql.md
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-generic-api
   name: Cerner (Oracle Health) Generic API
   description: Generic FHIR resource read/write operations.
@@ -225,8 +269,7 @@ apis:
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
-  - type: GraphQL
-    url: graphql/cerner-graphql.md
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-patient-api
   name: Cerner (Oracle Health) Patient API
   description: Patient demographics and identifiers.
@@ -244,8 +287,7 @@ apis:
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
-  - type: GraphQL
-    url: graphql/cerner-graphql.md
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-procedure-api
   name: Cerner (Oracle Health) Procedure API
   description: Patient procedures.
@@ -263,8 +305,7 @@ apis:
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
-  - type: GraphQL
-    url: graphql/cerner-graphql.md
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 common:
 - type: AgenticAccess
   url: agentic-access/cerner-agentic-access.yml
@@ -305,6 +346,68 @@ common:
   - url: arazzo/cerner-smart-on-fhir-patient-data-retrieval-workflow.yml
     name: Cerner Oracle Health SMART on FHIR Patient Retrieval
     summary: "Discover server capabilities, locate a patient, then pull the patient's conditions, encounters, and procedures."
+- type: OpenAPI
+  url: openapi/cerner-millennium-fhir-r4-openapi.yml
+- type: WellKnown
+  url: well-known/cerner-well-known.yml
+- type: Packages
+  url: packages/cerner-packages.yml
+- type: SDKs
+  url: packages/cerner-packages.yml
+- type: MCPServer
+  url: mcp/cerner-mcp.yml
+- type: LLMsTxt
+  url: llms/cerner-llms.txt
+- type: Overlay
+  url: overlays/cerner-millennium-fhir-r4-overlay.yaml
+- type: Conformance
+  url: conformance/cerner-conformance.yml
+- type: Compliance
+  url: https://www.oracle.com/corporate/acquisitions/cerner/security/
+- type: ErrorCatalog
+  url: errors/cerner-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/cerner-lifecycle.yml
+- type: Conventions
+  url: conventions/cerner-conventions.yml
+- type: DataModel
+  url: data-model/cerner-data-model.yml
+- type: Sandbox
+  url: sandbox/cerner-sandbox.yml
+- type: ChangeLog
+  url: changelog/cerner-changelog.yml
+- type: Components
+  url: components/cerner-components.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Plans
+  url: plans/cerner-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/cerner-rate-limits.yml
+- type: FinOps
+  url: finops/cerner-finops.yml
+- type: DeveloperPortal
+  url: https://www.oracle.com/health/developer/
+- type: Documentation
+  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
+- type: GettingStarted
+  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
+- type: Support
+  url: https://forums.oracle.com/ords/apexds/domain/open-developer-experience
+- type: GitHubOrganization
+  url: https://github.com/cerner
+- type: TermsOfService
+  url: https://www.oracle.com/legal/terms/
+- type: Collections
+  url: collections/cerner-oracle-health-fhir-r4-api.postman_collection.json
+- type: Arazzo
+  url: arazzo/_index.yml
+  name: Cerner Oracle Health Arazzo workflow catalog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-14'
+  status: enriched
+  artifacts_added: 34
+  pass: local-v1

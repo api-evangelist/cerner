@@ -1,0 +1,158 @@
+generated: '2026-08-14'
+method: probed
+source: live GET of /.well-known/* on every apis.yml host, every OpenAPI servers[] host, and every FHIR service root
+note: >-
+  Oracle Health serves a real, machine-readable discovery surface — but NOT at the host root. Millennium
+  is multi-tenant, so the tenant id is a path segment of the FHIR service root, and RFC 8615 discovery is
+  served relative to that service root (per SMART App Launch), e.g.
+  https://fhir-ehr.cerner.com/r4/{tenant}/.well-known/smart-configuration. The host roots
+  (fhir-ehr.cerner.com, fhir-open.cerner.com, fhir-ehr-code.cerner.com) answer 502 for every /.well-known/*
+  path because they cannot route without a tenant, and www.cerner.com / code.cerner.com / fhir.cerner.com
+  answer a soft 200 (an HTML 404 page or a redirect to an Oracle marketing page) for every path — those are
+  recorded below as misses, not hits. No security.txt, api-catalog, ai-plugin.json or agent card is served
+  anywhere on the estate.
+hosts:
+  - host: https://fhir-ehr.cerner.com/r4/{tenant}
+    role: production FHIR service root, provider persona
+  - host: https://fhir-ehr-code.cerner.com/r4/{tenant}
+    role: secure sandbox FHIR service root, provider persona
+  - host: https://fhir-myrecord.cerner.com/r4/{tenant}
+    role: secure FHIR service root, patient-access persona
+  - host: https://fhir-open.cerner.com/r4/{tenant}
+    role: open, unauthenticated, read-only FHIR service root
+  - host: https://authorization.cerner.com
+    role: SMART on FHIR authorization server
+documents:
+  # --- real hits ---
+  - path: /r4/{tenant}/.well-known/smart-configuration
+    host: https://fhir-ehr-code.cerner.com
+    status: 200
+    content_type: application/json
+    bytes: 9236
+    file: cerner-smart-configuration.json
+    kind: SMART App Launch discovery (SMART on FHIR 2.0)
+    note: 303 advertised scopes; 18 SMART capabilities including permission-v1, permission-v2, health-cards.
+  - path: /r4/{tenant}/.well-known/smart-configuration
+    host: https://fhir-myrecord.cerner.com
+    status: 200
+    content_type: application/json
+    bytes: 5026
+    file: cerner-smart-configuration-patient.json
+    kind: SMART App Launch discovery, patient persona
+    note: 145 advertised scopes — the patient-facing subset of the provider persona document.
+  - path: /r4/{tenant}/.well-known/smart-configuration
+    host: https://fhir-ehr.cerner.com
+    status: 200
+    content_type: application/json
+    bytes: 9231
+    file: null
+    kind: SMART App Launch discovery, production host
+    note: >-
+      Byte-identical in shape to the secure-sandbox document; not saved separately because the sandbox
+      capture in cerner-smart-configuration.json is the same document for the same tenant.
+  - path: /jwk
+    host: https://authorization.cerner.com
+    status: 200
+    content_type: application/json
+    bytes: 2374
+    file: cerner-authorization-jwks.json
+    kind: JWKS (referenced by jwks_uri in the SMART configuration)
+    note: 9 signing keys.
+  # --- host-root probes: all miss ---
+  - path: /.well-known/security.txt
+    host: https://fhir-ehr-code.cerner.com
+    status: 502
+  - path: /.well-known/openid-configuration
+    host: https://fhir-ehr-code.cerner.com
+    status: 502
+  - path: /.well-known/oauth-authorization-server
+    host: https://fhir-ehr-code.cerner.com
+    status: 502
+  - path: /.well-known/api-catalog
+    host: https://fhir-ehr-code.cerner.com
+    status: 502
+  - path: /.well-known/ai-plugin.json
+    host: https://fhir-ehr-code.cerner.com
+    status: 502
+  - path: /.well-known/agent-card.json
+    host: https://fhir-ehr-code.cerner.com
+    status: 502
+  - path: /.well-known/agent.json
+    host: https://fhir-ehr-code.cerner.com
+    status: 502
+  # --- service-root probes for non-SMART paths: all 404 ---
+  - path: /r4/{tenant}/.well-known/openid-configuration
+    host: https://fhir-ehr-code.cerner.com
+    status: 404
+  - path: /r4/{tenant}/.well-known/oauth-authorization-server
+    host: https://fhir-ehr-code.cerner.com
+    status: 404
+  - path: /r4/{tenant}/.well-known/api-catalog
+    host: https://fhir-ehr-code.cerner.com
+    status: 404
+  - path: /r4/{tenant}/.well-known/agent-card.json
+    host: https://fhir-ehr-code.cerner.com
+    status: 404
+  - path: /r4/{tenant}/.well-known/smart-configuration
+    host: https://fhir-open.cerner.com
+    status: 404
+    note: The open endpoint is unauthenticated, so it advertises no authorization server.
+  # --- authorization server ---
+  - path: /.well-known/openid-configuration
+    host: https://authorization.cerner.com
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    host: https://authorization.cerner.com
+    status: 404
+    note: >-
+      RFC 8414 metadata is not served at the authorization-server root. The equivalent metadata is published
+      per tenant in the FHIR smart-configuration document instead.
+  - path: /.well-known/security.txt
+    host: https://authorization.cerner.com
+    status: 404
+  # --- marketing / docs hosts: soft 200s, not documents ---
+  - path: /.well-known/security.txt
+    host: https://www.cerner.com
+    status: 200
+    soft_404: true
+    note: Returns the 30KB HTML page at https://www.cerner.com/404 for every /.well-known/* path.
+  - path: /.well-known/agent-card.json
+    host: https://www.cerner.com
+    status: 200
+    soft_404: true
+    note: Same HTML 404 page. Not an agent card.
+  - path: /.well-known/security.txt
+    host: https://code.cerner.com
+    status: 200
+    soft_404: true
+    note: 301s to https://www.oracle.com/health/developer/ and serves that marketing page for every path.
+  - path: /.well-known/agent-card.json
+    host: https://code.cerner.com
+    status: 200
+    soft_404: true
+  - path: /.well-known/security.txt
+    host: https://fhir.cerner.com
+    status: 200
+    soft_404: true
+    note: 301s to https://docs.oracle.com/en/industries/health/index.html for every path.
+  - path: /.well-known/security.txt
+    host: https://www.oracle.com
+    status: 403
+    note: Oracle's edge answers 403 and redirects to the site root for every /.well-known/* path.
+  - path: /.well-known/security.txt
+    host: https://docs.oracle.com
+    status: 404
+  - path: /.well-known/agent-card.json
+    host: https://docs.oracle.com
+    status: 404
+  - path: /.well-known/agent.json
+    host: https://docs.oracle.com
+    status: 404
+summary:
+  paths_probed: 80
+  real_documents: 4
+  security_txt: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false
+  smart_configuration: true

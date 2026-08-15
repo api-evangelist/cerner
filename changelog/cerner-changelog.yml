@@ -1,0 +1,40 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  https://docs.oracle.com/en/industries/health/millennium-platform-apis/ (index, apis.html, guides.html,
+  mfrap/index.html), https://www.oracle.com/health/developer/, probes of whats-new.html and
+  release-notes.html under the millennium-platform-apis doc tree
+status: not-published
+scheme: null
+current_version: FHIR R4 (4.0.1)
+entry_count: 0
+note: >-
+  Oracle Health publishes no dated changelog for the Millennium Platform APIs on any anonymously readable
+  page. /whats-new.html and /release-notes.html both 404 under the millennium-platform-apis doc tree, and
+  the doc index offers no changelog, release-notes or "what's new" section. Sibling Oracle Health products
+  (Connection Hub, Patient Portal) DO publish dated release notes in the same Help Center, which makes the
+  absence here a choice rather than a platform limitation. Change announcements that do exist — the FHIR
+  DSTU 2 end-of-support notice is the live example — are posted to the Oracle Health Developer Forums,
+  which returns 403 to an anonymous client, so an integrator cannot subscribe to platform change without
+  an account.
+entries: []
+machine_readable_change_signal:
+  available: true
+  source: https://fhir-ehr-code.cerner.com/r4/{tenant}/metadata
+  field: CapabilityStatement.date
+  observed: '2026-08-14'
+  detail: >-
+    The one change signal an integrator CAN read without an account is the CapabilityStatement itself. It
+    carries a `date`, and the served document is regenerated — the value observed on 2026-08-14 was that
+    day's date. Diffing /metadata between runs is the only reliable way to detect that a resource,
+    interaction, search parameter, profile or named operation changed on a tenant. This repo keeps a dated
+    capture at conformance/cerner-capability-statement-r4-secure.json to make that diff possible.
+probed:
+  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/whats-new.html
+    status: 404
+  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/release-notes.html
+    status: 404
+  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/whats-new.html
+    status: 404
+  - url: https://forums.oracle.com/ords/apexds/domain/open-developer-experience
+    status: 403

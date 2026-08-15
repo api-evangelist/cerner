@@ -1,0 +1,37 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Oracle Health Millennium Platform FHIR R4 Capability Condition API
+  version: 1.0.0
+extends: openapi/cerner-condition-api-openapi.yml
+x-generated: '2026-08-14'
+x-method: generated
+x-source: API Evangelist enrichment pipeline — cross-links this repo's derived artifacts back onto the spec without
+  mutating it.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: cerner
+    x-apievangelist-enriched: '2026-08-14'
+    x-apievangelist-artifacts:
+      authentication: authentication/cerner-authentication.yml
+      scopes: scopes/cerner-scopes.yml
+      conventions: conventions/cerner-conventions.yml
+      errors: errors/cerner-problem-types.yml
+      lifecycle: lifecycle/cerner-lifecycle.yml
+      conformance: conformance/cerner-conformance.yml
+      data_model: data-model/cerner-data-model.yml
+      sandbox: sandbox/cerner-sandbox.yml
+    x-standards:
+    - HL7 FHIR R4 (4.0.1)
+    - SMART App Launch 2.0
+    - OAuth 2.0
+    - OpenID Connect
+- target: $.info
+  update:
+    x-tenancy:
+      model: multi-tenant
+      binding: tenant id is a required path segment of the service root
+      discovery: /.well-known/smart-configuration at the tenant service root
+- target: $.paths.*.*
+  update:
+    x-error-envelope: FHIR OperationOutcome (application/fhir+json)

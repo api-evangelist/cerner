@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Oracle Health Millennium Platform FHIR R4 Capability Generic API",
+    "version": "R4"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Generic",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create FHIR Resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://fhir-ehr.cerner.com/r4/:resource",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "path",
+                "description": "The FHIR resource type (e.g., Observation, Condition)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new instance of the named FHIR resource type."
+        },
+        {
+          "info": {
+            "name": "Update FHIR Resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://fhir-ehr.cerner.com/r4/:resource/:id",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "path",
+                "description": "The FHIR resource type."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The FHIR resource ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing FHIR resource by ID."
+        },
+        {
+          "info": {
+            "name": "Patch FHIR Resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://fhir-ehr.cerner.com/r4/:resource/:id",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "path",
+                "description": "The FHIR resource type."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The FHIR resource ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partially updates an existing FHIR resource by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

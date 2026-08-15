@@ -11,7 +11,7 @@ info:
   version: 1.0.0
 sourceDescriptions:
 - name: cernerFhir
-  url: ../openapi/cerner-oracle-health-fhir-r4-api-openapi.yml
+  url: ../openapi/_original/cerner-oracle-health-fhir-r4-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: conformance-discovery

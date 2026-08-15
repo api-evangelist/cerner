@@ -1,4 +1,4 @@
-generated: '2026-07-11'
+generated: '2026-08-14'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
@@ -18,6 +18,50 @@ hosts:
   tls_version: TLSv1.3
   cert_expires: Feb  7 23:59:59 2027 GMT
   hsts: false
+  note: 301s to docs.oracle.com — documentation host only, no longer serves the API.
+# The five hosts below are the LIVE API and authorization hosts. They are not reachable from the
+# apis.yml Website/Portal fields the automated probe reads, so they were probed by hand on 2026-08-14
+# (openssl s_client for TLS and cert expiry, curl -I for HSTS).
+- host: fhir-ehr.cerner.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Feb 16 23:59:59 2027 GMT
+  hsts: false
+  role: production FHIR R4 service root (provider persona)
+- host: fhir-ehr-code.cerner.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Feb 16 23:59:59 2027 GMT
+  hsts: false
+  role: secure sandbox FHIR R4 service root
+- host: fhir-open.cerner.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Feb 16 23:59:59 2027 GMT
+  hsts: false
+  role: open, unauthenticated, read-only FHIR R4 service root
+- host: fhir-myrecord.cerner.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Feb 16 23:59:59 2027 GMT
+  hsts: false
+  role: patient-access FHIR R4 service root
+- host: authorization.cerner.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov  5 23:59:59 2026 GMT
+  hsts: false
+  role: SMART on FHIR authorization server (token, authorize, revoke, introspect, JWKS)
+findings:
+- >-
+  No HSTS on any of the five live API/authorization hosts, including the OAuth 2.0 authorization server
+  that issues tokens carrying PHI scopes. Only the marketing host www.cerner.com sets
+  Strict-Transport-Security. This is the most notable gap in this profile.
+- >-
+  cerner.com publishes no CAA record, so no certificate authority is pinned for the domain that hosts
+  every live API endpoint. oracle.com does pin three (digicert, pki.goog, letsencrypt).
+- No DNSSEC on either registrable domain.
+- SPF and DMARC are present on both domains with DMARC policy p=reject.
 domains:
 - domain: cerner.com
   dnssec: false
@@ -28,9 +72,9 @@ domains:
 - domain: oracle.com
   dnssec: false
   caa:
+  - 0 issue "digicert.com"
   - 0 issue "pki.goog"
   - 0 issue "letsencrypt.org"
-  - 0 issue "digicert.com"
   spf: true
   dmarc: true
   dmarc_policy: reject
