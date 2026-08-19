@@ -45,7 +45,7 @@ access: 3rd-Party
 created: '2026-03-23'
 modified: '2026-08-14'
 position: Consumer
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 description: 'Oracle Health, formerly Cerner, builds and operates Millennium — one of the two dominant electronic health record platforms in United States hospitals and health systems. Cerner was acquired by Oracle in June 2022 and its developer program now runs as the Oracle Health Developer Program. The public developer surface is HL7 FHIR R4: a multi-tenant, US Core-conformant FHIR server that serves a live CapabilityStatement at /metadata and a live SMART on FHIR discovery document at /.well-known/smart-configuration, advertising 303 OAuth scopes across patient, user and system personas in both SMART v1 and SMART v2 granular forms. It supports SMART App Launch (EHR and standalone), SMART Backend Services with private_key_jwt, FHIR Bulk Data Access export, and — unusually — an open, unauthenticated, read-only endpoint that serves real sandbox data with no registration at all. Alongside FHIR it operates proprietary Millennium EHR APIs, HL7 v2 messaging through Cerner Open Interface, and the CareAware device and integration platform. There is no OpenAPI, no GraphQL endpoint, no MCP server, no agent card, no published pricing, no published rate limits, no status page and no first-party SDK for the FHIR API.'
 apis:
 - aid: cerner:oracle-health-millennium-fhir-r4-api
