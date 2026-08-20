@@ -13,6 +13,31 @@ tags:
 - FHIR
 - Fortune 1000
 - HL7
+- HL7v2
+- Healthcare
+- Interoperability
+- Millennium Platform
+- Multi-Tenant
+- Authentication
+- Oracle
+- Oracle Health
+- Patient Access
+- Provider Directory
+- SMART Backend Services
+- SMART on FHIR
+- US Core
+tags_raw:
+- Bulk FHIR
+- CapabilityStatement
+- CareAware
+- Cerner Millennium
+- Clinical Data
+- Code Console
+- EHR
+- Electronic Health Records
+- FHIR
+- Fortune 1000
+- HL7
 - HL7 v2
 - Healthcare
 - Interoperability
@@ -103,6 +128,12 @@ apis:
   tags:
   - Code Console
   - Developer Portal
+  - Authentication
+  - Registration
+  - Sandbox
+  tags_raw:
+  - Code Console
+  - Developer Portal
   - OAuth 2.0
   - Registration
   - Sandbox
@@ -143,6 +174,11 @@ apis:
 - aid: cerner:cerner-careaware
   name: Cerner CareAware Integration APIs
   tags:
+  - CareAware
+  - Device Integration
+  - HL7v2
+  - Medical Device
+  tags_raw:
   - CareAware
   - Device Integration
   - HL7 v2
@@ -186,6 +222,8 @@ apis:
   humanURL: >-
     https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
+  - Capabilities
+  tags_raw:
   - Capability
   properties:
   - type: OpenAPI
