@@ -83,42 +83,6 @@ description: 'Oracle Health, formerly Cerner, builds and operates Millennium —
   device and integration platform. There is no OpenAPI, no GraphQL endpoint, no MCP server, no agent card, no published
   pricing, no published rate limits, no status page and no first-party SDK for the FHIR API.'
 apis:
-- aid: cerner:oracle-health-millennium-fhir-r4-api
-  name: Oracle Health Millennium Platform FHIR R4 API
-  description: 'The full HL7 FHIR R4 REST surface of Oracle Health Millennium — 44 resource types, 123 operations,
-    derived operation-for-operation from the CapabilityStatement Oracle Health serves at /metadata and the SMART
-    discovery document it serves at /.well-known/smart-configuration. Multi-tenant: the tenant id is a required
-    path segment of the service root. Read on 42 resource types, search on 37, create on 19, patch on 8, update
-    on 7, delete on 1, plus system-level batch and six named FHIR operations.'
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
-  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-  tags:
-  - FHIR
-  - R4
-  - US Core
-  - USCDI
-  - SMART on FHIR
-  - Patient Access
-  - CMS Interoperability
-  properties:
-  - type: OpenAPI
-    url: openapi/cerner-millennium-fhir-r4-openapi.yml
-  - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
-  - type: APIReference
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-  - type: DeveloperPortal
-    url: https://www.oracle.com/health/developer/
-  - type: Sandbox
-    url: sandbox/cerner-sandbox.yml
-  - type: OAuthScopes
-    url: scopes/cerner-scopes.yml
-  - type: Conformance
-    url: conformance/cerner-conformance.yml
-  - type: DataModel
-    url: data-model/cerner-data-model.yml
-  - type: Overlay
-    url: overlays/cerner-millennium-fhir-r4-overlay.yaml
 - aid: cerner:oracle-health-fhir-dstu2-api
   name: Oracle Health Millennium FHIR DSTU2 API
   tags:
@@ -132,8 +96,9 @@ apis:
     type: Documentation
   - url: https://fhir.cerner.com/
     type: Portal
-  description: The Cerner Millennium DSTU2 FHIR API supports legacy SMART on FHIR applications and integrations
-    with Meaningful Use 2015 CEHRT certification criteria, and remains available alongside the newer R4 implementation
+  description: >-
+    The Cerner Millennium DSTU2 FHIR API supports legacy SMART on FHIR applications and integrations with
+    Meaningful Use 2015 CEHRT certification criteria, and remains available alongside the newer R4 implementation
     for backward compatibility.
   baseURL: https://fhir-ehr.cerner.com/dstu2/{tenant}
 - aid: cerner:oracle-health-code-console
@@ -158,29 +123,11 @@ apis:
     type: APIAccess
   - url: https://fhir.cerner.com/authorization/
     type: Authorization
-  description: The Oracle Health Code Console (formerly Cerner Code) is the developer portal used to register SMART
-    on FHIR and system-level applications, configure redirect URIs and launch parameters, manage OAuth 2.0 client
-    credentials, and access the Millennium sandbox for initial testing.
+  description: >-
+    The Oracle Health Code Console (formerly Cerner Code) is the developer portal used to register SMART
+    on FHIR and system-level applications, configure redirect URIs and launch parameters, manage OAuth
+    2.0 client credentials, and access the Millennium sandbox for initial testing.
   baseURL: https://www.oracle.com/health/developer/
-- aid: cerner:oracle-health-bulk-fhir-api
-  name: Oracle Health Millennium Bulk FHIR API
-  tags:
-  - Bulk Data
-  - FHIR
-  - Flat FHIR
-  - Population Health
-  humanURL: https://fhir.cerner.com/millennium/r4/
-  properties:
-  - type: OpenAPI
-    url: openapi/cerner-millennium-bulk-data-openapi.yml
-  - url: https://fhir.cerner.com/millennium/r4/
-    type: Documentation
-  - url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-    type: Reference
-  description: Oracle Health Millennium supports the HL7 Bulk Data Access (Flat FHIR) specification for exporting
-    group-level patient data in NDJSON format for population health, research, and payer-provider data exchange
-    scenarios.
-  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
 - aid: cerner:cerner-careaware
   name: Cerner CareAware Integration APIs
   tags:
@@ -197,9 +144,10 @@ apis:
   properties:
   - url: https://www.cerner.com/solutions/careaware-interoperability
     type: Website
-  description: Cerner CareAware provides device and third-party application integration APIs for medical device
-    data capture, bi-directional HL7 v2 messaging, and workflow embedding into Millennium, supporting medical device
-    manufacturers and hospital biomedical teams.
+  description: >-
+    Cerner CareAware provides device and third-party application integration APIs for medical device data
+    capture, bi-directional HL7 v2 messaging, and workflow embedding into Millennium, supporting medical
+    device manufacturers and hospital biomedical teams.
   baseURL: https://www.cerner.com/solutions/careaware-interoperability
 - aid: cerner:oracle-health-smart-on-fhir
   name: Oracle Health SMART on FHIR App Launch
@@ -220,14 +168,16 @@ apis:
     url: scopes/cerner-scopes.yml
   - type: WellKnown
     url: well-known/cerner-well-known.yml
-  description: Oracle Health implements the SMART on FHIR App Launch framework (standalone and EHR-launch) with
-    OpenID Connect identity tokens, enabling third-party clinician and patient-facing applications to embed inside
+  description: >-
+    Oracle Health implements the SMART on FHIR App Launch framework (standalone and EHR-launch) with OpenID
+    Connect identity tokens, enabling third-party clinician and patient-facing applications to embed inside
     Millennium PowerChart and Oracle Health portals.
   baseURL: https://authorization.cerner.com/tenants/{tenant}
 - aid: cerner:cerner-capability-api
   name: Cerner (Oracle Health) Capability API
   description: FHIR server metadata and capability statements.
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  humanURL: >-
+    https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
   - Capabilities
   tags_raw:
@@ -236,7 +186,8 @@ apis:
   - type: OpenAPI
     url: openapi/cerner-capability-api-openapi.yml
   - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   - type: Portal
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
@@ -245,14 +196,16 @@ apis:
 - aid: cerner:cerner-condition-api
   name: Cerner (Oracle Health) Condition API
   description: Patient conditions and problem-list entries.
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  humanURL: >-
+    https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
   - Condition
   properties:
   - type: OpenAPI
     url: openapi/cerner-condition-api-openapi.yml
   - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   - type: Portal
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
@@ -261,14 +214,16 @@ apis:
 - aid: cerner:cerner-definitions-api
   name: Cerner (Oracle Health) Definitions API
   description: FHIR conformance definitions and operations.
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  humanURL: >-
+    https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
   - Definitions
   properties:
   - type: OpenAPI
     url: openapi/cerner-definitions-api-openapi.yml
   - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   - type: Portal
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
@@ -277,14 +232,16 @@ apis:
 - aid: cerner:cerner-encounter-api
   name: Cerner (Oracle Health) Encounter API
   description: Patient encounter records.
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  humanURL: >-
+    https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
   - Encounter
   properties:
   - type: OpenAPI
     url: openapi/cerner-encounter-api-openapi.yml
   - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   - type: Portal
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
@@ -293,14 +250,16 @@ apis:
 - aid: cerner:cerner-generic-api
   name: Cerner (Oracle Health) Generic API
   description: Generic FHIR resource read/write operations.
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  humanURL: >-
+    https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
   - Generic
   properties:
   - type: OpenAPI
     url: openapi/cerner-generic-api-openapi.yml
   - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   - type: Portal
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
@@ -309,14 +268,16 @@ apis:
 - aid: cerner:cerner-patient-api
   name: Cerner (Oracle Health) Patient API
   description: Patient demographics and identifiers.
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  humanURL: >-
+    https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
   - Patient
   properties:
   - type: OpenAPI
     url: openapi/cerner-patient-api-openapi.yml
   - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   - type: Portal
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
@@ -325,19 +286,1317 @@ apis:
 - aid: cerner:cerner-procedure-api
   name: Cerner (Oracle Health) Procedure API
   description: Patient procedures.
-  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  humanURL: >-
+    https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
   - Procedure
   properties:
   - type: OpenAPI
     url: openapi/cerner-procedure-api-openapi.yml
   - type: Documentation
-    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   - type: Portal
     url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/index.html
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+- aid: cerner:cerner-account-api
+  name: Oracle Health (Cerner) Account API
+  description: FHIR R4 Account resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-account-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-allergyintolerance-api
+  name: Oracle Health (Cerner) Allergy Intolerance API
+  description: FHIR R4 AllergyIntolerance resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - AllergyIntolerance
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-allergyintolerance-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-appointment-api
+  name: Oracle Health (Cerner) Appointment API
+  description: FHIR R4 Appointment resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Appointment
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-appointment-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-basic-api
+  name: Oracle Health (Cerner) Basic API
+  description: FHIR R4 Basic resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Basic
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-basic-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-binary-api
+  name: Oracle Health (Cerner) Binary API
+  description: FHIR R4 Binary resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Binary
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-binary-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-capabilitystatement-api
+  name: Oracle Health (Cerner) Capability Statement API
+  description: >-
+    FHIR R4 CapabilityStatement resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - CapabilityStatement
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-capabilitystatement-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-careplan-api
+  name: Oracle Health (Cerner) Care Plan API
+  description: FHIR R4 CarePlan resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - CarePlan
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-careplan-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-careteam-api
+  name: Oracle Health (Cerner) Care Team API
+  description: FHIR R4 CareTeam resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - CareTeam
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-careteam-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-chargeitem-api
+  name: Oracle Health (Cerner) Charge Item API
+  description: FHIR R4 ChargeItem resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - ChargeItem
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-chargeitem-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-communication-api
+  name: Oracle Health (Cerner) Communication API
+  description: FHIR R4 Communication resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Communication
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-communication-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-consent-api
+  name: Oracle Health (Cerner) Consent API
+  description: FHIR R4 Consent resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Consent
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-consent-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-coverage-api
+  name: Oracle Health (Cerner) Coverage API
+  description: FHIR R4 Coverage resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Coverage
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-coverage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-device-api
+  name: Oracle Health (Cerner) Device API
+  description: FHIR R4 Device resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Device
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-device-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-diagnosticreport-api
+  name: Oracle Health (Cerner) Diagnostic Report API
+  description: FHIR R4 DiagnosticReport resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - DiagnosticReport
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-diagnosticreport-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-documentreference-api
+  name: Oracle Health (Cerner) Document Reference API
+  description: FHIR R4 DocumentReference resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - DocumentReference
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-documentreference-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-export-api
+  name: Oracle Health (Cerner) Export API
+  description: Kick off a bulk export job.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Export
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-export-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-familymemberhistory-api
+  name: Oracle Health (Cerner) Family Member History API
+  description: >-
+    FHIR R4 FamilyMemberHistory resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - FamilyMemberHistory
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-familymemberhistory-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-files-api
+  name: Oracle Health (Cerner) Files API
+  description: Retrieve the download URLs for completed export files.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-files-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-goal-api
+  name: Oracle Health (Cerner) Goal API
+  description: FHIR R4 Goal resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Goal
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-goal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-immunization-api
+  name: Oracle Health (Cerner) Immunization API
+  description: FHIR R4 Immunization resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Immunization
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-immunization-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-insuranceplan-api
+  name: Oracle Health (Cerner) Insurance Plan API
+  description: FHIR R4 InsurancePlan resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - InsurancePlan
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-insuranceplan-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-jobs-api
+  name: Oracle Health (Cerner) Jobs API
+  description: Poll and cancel bulk export jobs.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-jobs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-location-api
+  name: Oracle Health (Cerner) Location API
+  description: FHIR R4 Location resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Location
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-location-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-media-api
+  name: Oracle Health (Cerner) Media API
+  description: FHIR R4 Media resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-media-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-medicationadministration-api
+  name: Oracle Health (Cerner) Medication Administration API
+  description: >-
+    FHIR R4 MedicationAdministration resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - MedicationAdministration
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-medicationadministration-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-medicationdispense-api
+  name: Oracle Health (Cerner) Medication Dispense API
+  description: FHIR R4 MedicationDispense resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - MedicationDispense
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-medicationdispense-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-medicationrequest-api
+  name: Oracle Health (Cerner) Medication Request API
+  description: FHIR R4 MedicationRequest resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - MedicationRequest
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-medicationrequest-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-nutritionorder-api
+  name: Oracle Health (Cerner) Nutrition Order API
+  description: FHIR R4 NutritionOrder resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - NutritionOrder
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-nutritionorder-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-observation-api
+  name: Oracle Health (Cerner) Observation API
+  description: FHIR R4 Observation resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Observation
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-observation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-operationdefinition-api
+  name: Oracle Health (Cerner) Operation Definition API
+  description: >-
+    FHIR R4 OperationDefinition resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - OperationDefinition
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-operationdefinition-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-organization-api
+  name: Oracle Health (Cerner) Organization API
+  description: FHIR R4 Organization resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Organization
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-organization-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-person-api
+  name: Oracle Health (Cerner) Person API
+  description: FHIR R4 Person resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Person
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-person-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-practitioner-api
+  name: Oracle Health (Cerner) Practitioner API
+  description: FHIR R4 Practitioner resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Practitioner
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-practitioner-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-provenance-api
+  name: Oracle Health (Cerner) Provenance API
+  description: FHIR R4 Provenance resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Provenance
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-provenance-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-questionnaire-api
+  name: Oracle Health (Cerner) Questionnaire API
+  description: FHIR R4 Questionnaire resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Questionnaire
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-questionnaire-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-questionnaireresponse-api
+  name: Oracle Health (Cerner) Questionnaire Response API
+  description: >-
+    FHIR R4 QuestionnaireResponse resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - QuestionnaireResponse
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-questionnaireresponse-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-relatedperson-api
+  name: Oracle Health (Cerner) Related Person API
+  description: FHIR R4 RelatedPerson resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - RelatedPerson
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-relatedperson-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-schedule-api
+  name: Oracle Health (Cerner) Schedule API
+  description: FHIR R4 Schedule resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Schedule
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-schedule-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-servicerequest-api
+  name: Oracle Health (Cerner) Service Request API
+  description: FHIR R4 ServiceRequest resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - ServiceRequest
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-servicerequest-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-slot-api
+  name: Oracle Health (Cerner) Slot API
+  description: FHIR R4 Slot resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Slot
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-slot-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-specimen-api
+  name: Oracle Health (Cerner) Specimen API
+  description: FHIR R4 Specimen resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - Specimen
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-specimen-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-structuredefinition-api
+  name: Oracle Health (Cerner) Structure Definition API
+  description: >-
+    FHIR R4 StructureDefinition resource as implemented by Oracle Health Millennium Platform.
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - StructureDefinition
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-structuredefinition-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+- aid: cerner:cerner-system-api
+  name: Oracle Health (Cerner) System API
+  description: 'System-level FHIR interactions: conformance metadata and batch.'
+  humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
+  tags:
+  - System
+  properties:
+  - type: OpenAPI
+    url: openapi/cerner-system-api-openapi.yml
+  - type: Documentation
+    url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
+  - type: APIReference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+  - type: DeveloperPortal
+    url: https://www.oracle.com/health/developer/
+  - type: Sandbox
+    url: sandbox/cerner-sandbox.yml
+  - type: OAuthScopes
+    url: scopes/cerner-scopes.yml
+  - type: Conformance
+    url: conformance/cerner-conformance.yml
+  - type: DataModel
+    url: data-model/cerner-data-model.yml
+  - type: Documentation
+    url: https://fhir.cerner.com/millennium/r4/
+  - type: Reference
+    url: >-
+      https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
 common:
 - type: ParentCompany
   url: https://apis.io/providers/oracle/
