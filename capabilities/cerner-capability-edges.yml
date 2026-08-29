@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 14
+edge_count: 11
 edges:
 - tag: Appointment
   spec_file: cerner-appointment-api-openapi.yml
@@ -19,57 +19,56 @@ edges:
   capability_id_l1: BC-2800
   capability_name: Scheduling & Appointment Management
   confidence: 0.9
-  evidence: POST /Appointment  createAppointment; GET /Appointment  searchAppointment
-  reason: Creating, searching and patching FHIR Appointment resources on a hospital EHR is appointment
-    booking and scheduling — squarely Scheduling & Appointment Management within Patient Access.
+  evidence: POST /Appointment createAppointment Create Appointment; PATCH /Appointment/{id} patchAppointment
+  reason: Booking and amending patient appointments in the EHR is directly appointment/scheduling management
+    within patient access.
 - tag: Schedule
   spec_file: cerner-schedule-api-openapi.yml
   capability_id: BC-2800.10
   capability_id_l1: BC-2800
   capability_name: Scheduling & Appointment Management
-  confidence: 0.9
-  evidence: GET /Schedule  searchSchedule  Search Schedule
-  reason: FHIR Schedule represents provider/resource availability containers used for appointment booking,
-    squarely Scheduling & Appointment Management in a provider EHR.
+  confidence: 0.88
+  evidence: GET /Schedule searchSchedule Search Schedule
+  reason: FHIR Schedule exposes provider and resource schedules underpinning appointment booking, which
+    is scheduling and appointment management.
 - tag: ChargeItem
   spec_file: cerner-chargeitem-api-openapi.yml
   capability_id: BC-2870.10
   capability_id_l1: BC-2870
   capability_name: Charge Capture & Chargemaster Management
   confidence: 0.85
-  evidence: GET /ChargeItem/$create opChargeItemCreate  $create on ChargeItem; GET /ChargeItem/$credit
-    opChargeItemCredit
-  reason: ChargeItem with $create, $modify and $credit operations is provider-side charge capture against
-    an encounter — the entry point of the healthcare revenue cycle, specifically charge capture.
-- tag: Specimen
-  spec_file: cerner-specimen-api-openapi.yml
-  capability_id: BC-2860.10
-  capability_id_l1: BC-2860
-  capability_name: Laboratory Services Management
-  confidence: 0.85
-  evidence: GET /Specimen  searchSpecimen  Search Specimen
-  reason: FHIR Specimen represents collected laboratory samples; reading and searching specimens is laboratory
-    services / specimen collection data in the diagnostic workflow.
+  evidence: GET /ChargeItem/$credit opChargeItemCredit; GET /ChargeItem/$modify; GET /ChargeItem/$create
+    on ChargeItem
+  reason: Create, modify and credit of clinical charge items is charge capture within provider revenue
+    cycle management.
 - tag: MedicationAdministration
   spec_file: cerner-medicationadministration-api-openapi.yml
   capability_id: BC-2850.40
   capability_id_l1: BC-2850
   capability_name: Medication Administration & Reconciliation
-  confidence: 0.82
+  confidence: 0.85
   evidence: GET /MedicationAdministration  searchMedicationAdministration  Search MedicationAdministration
-  reason: FHIR MedicationAdministration records document doses actually given to a patient — the bedside
-    medication administration record. Maps to provider-side pharmacy/medication management, administration
-    sub-capability. Read-only search/read, so evidence is the resource semantics rather than rich operations.
+  reason: The resource records medication actually administered to a patient, which is precisely bedside
+    Medication Administration & Reconciliation in the provider pharmacy domain.
 - tag: DiagnosticReport
   spec_file: cerner-diagnosticreport-api-openapi.yml
   capability_id: BC-2860.60
   capability_id_l1: BC-2860
   capability_name: Diagnostic Results Management
   confidence: 0.8
-  evidence: POST /DiagnosticReport createDiagnosticReport Create DiagnosticReport
-  reason: DiagnosticReport carries lab, pathology and imaging results with their interpretation — diagnostic
-    services, specifically the management and distribution of diagnostic results. Modality-specific sub-capability
-    is not distinguished, but results management fits the resource directly.
+  evidence: GET /DiagnosticReport  searchDiagnosticReport  Search DiagnosticReport
+  reason: DiagnosticReport carries finalised laboratory, pathology and imaging results with interpretations;
+    search/create/read of these reports is diagnostic results management. Some ambiguity over whether
+    lab or imaging sub-capability dominates.
+- tag: Specimen
+  spec_file: cerner-specimen-api-openapi.yml
+  capability_id: BC-2860.10
+  capability_id_l1: BC-2860
+  capability_name: Laboratory Services Management
+  confidence: 0.78
+  evidence: GET /Specimen searchSpecimen Search Specimen
+  reason: FHIR Specimen tracks collected laboratory specimens, which falls under laboratory services management
+    (specimen collection); read-only surface is thin but the resource semantics are unambiguous.
 - tag: MedicationDispense
   spec_file: cerner-medicationdispense-api-openapi.yml
   capability_id: BC-2850
@@ -77,76 +76,45 @@ edges:
   capability_name: Pharmacy & Medication Management
   confidence: 0.75
   evidence: GET /MedicationDispense  searchMedicationDispense  Search MedicationDispense
-  reason: MedicationDispense represents pharmacy dispensing events, clearly Pharmacy & Medication Management;
-    but the surface does not distinguish inpatient vs outpatient/specialty dispensing operations, so no
-    L2 asserted.
-- tag: ServiceRequest
-  spec_file: cerner-servicerequest-api-openapi.yml
-  capability_id: BC-2830.20
-  capability_id_l1: BC-2830
-  capability_name: Computerised Provider Order Entry
-  confidence: 0.75
-  evidence: GET /ServiceRequest  searchServiceRequest  Search ServiceRequest
-  reason: FHIR ServiceRequest is the order resource for diagnostics, procedures and referrals placed by
-    providers, i.e. computerised provider order entry content in the EHR. Some ambiguity because ServiceRequest
-    also underpins referral management.
-- tag: Coverage
-  spec_file: cerner-coverage-api-openapi.yml
-  capability_id: BC-2800.30
-  capability_id_l1: BC-2800
-  capability_name: Eligibility & Benefits Verification
-  confidence: 0.72
-  evidence: POST /Coverage createCoverage Create Coverage
-  reason: Coverage records the patient's insurance plan/payer relationship used to establish benefits
-    before service — eligibility and benefits verification within patient access. Some risk it is used
-    purely for revenue-cycle billing, hence moderate confidence.
-- tag: MedicationRequest
-  spec_file: cerner-medicationrequest-api-openapi.yml
-  capability_id: BC-2830.20
-  capability_id_l1: BC-2830
-  capability_name: Computerised Provider Order Entry
-  confidence: 0.72
-  evidence: POST /MedicationRequest  createMedicationRequest  Create MedicationRequest
-  reason: MedicationRequest is the prescription/medication order resource and this surface can create
-    and patch them, i.e. provider order entry for medications. Some ambiguity because the same resource
-    is also read for medication-list/reconciliation use, hence moderate confidence.
-- tag: AllergyIntolerance
-  spec_file: cerner-allergyintolerance-api-openapi.yml
-  capability_id: BC-2830
-  capability_id_l1: BC-2830
-  capability_name: Clinical Documentation Management
-  confidence: 0.7
-  evidence: POST /AllergyIntolerance  createAllergyIntolerance; PUT /AllergyIntolerance/{id}  updateAllergyIntolerance
-  reason: Create/update of allergy and intolerance entries is clinician documentation of the active patient
-    record in the EHR. Which sub-capability (note documentation vs decision support input) is not determinable,
-    so L1 only.
-- tag: CarePlan
-  spec_file: cerner-careplan-api-openapi.yml
-  capability_id: BC-2820
-  capability_id_l1: BC-2820
-  capability_name: Care Coordination Management
-  confidence: 0.7
-  evidence: GET /CarePlan searchCarePlan Search CarePlan
-  reason: FHIR CarePlan holds the patient's planned care activities and goals, which sits in care coordination/care
-    planning. Read-only search/read surface gives no signal on which sub-capability (case management vs
-    discharge planning), so only the L1 is asserted.
-- tag: Condition
-  spec_file: cerner-condition-api-openapi.yml
-  capability_id: BC-2830
-  capability_id_l1: BC-2830
-  capability_name: Clinical Documentation Management
-  confidence: 0.7
-  evidence: POST /Condition createCondition Create Condition
-  reason: Condition is the problem-list/diagnosis element of the active clinical record, created and updated
-    by clinicians — clinical documentation. Which sub-capability (note documentation vs decision support)
-    is not evidenced.
+  reason: MedicationDispense records pharmacy dispensing events, clearly Pharmacy & Medication Management;
+    no L2 asserted because the surface does not distinguish inpatient dispensing from outpatient/retail
+    dispensing.
 - tag: Patient
   spec_file: cerner-patient-api-openapi.yml
   capability_id: BC-2800.20
   capability_id_l1: BC-2800
   capability_name: Patient Registration Management
+  confidence: 0.72
+  evidence: POST /Patient createPatient Create Patient; PATCH /Patient/{id} patchPatient
+  reason: FHIR Patient resource create/read/search/patch is the capture and stewardship of patient demographic
+    and identity data — patient registration. Some ambiguity with master patient index stewardship, hence
+    moderate confidence.
+- tag: Coverage
+  spec_file: cerner-coverage-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
   confidence: 0.7
-  evidence: POST /Patient  createPatient  Create Patient
-  reason: Create/patch/search of Patient records is capture and stewardship of patient demographic and
-    identity data, i.e. patient registration. Could alternatively be read as MPI stewardship under Health
-    Information Management, hence 0.7 rather than higher.
+  evidence: POST /Coverage  createCoverage  Create Coverage
+  reason: The FHIR Coverage resource carries the patient's insurance plan, payer and beneficiary details
+    used to verify coverage and benefits before service. Revenue-cycle claim production is an adjacent
+    alternative reading, hence 0.7.
+- tag: MedicationRequest
+  spec_file: cerner-medicationrequest-api-openapi.yml
+  capability_id: BC-2830.20
+  capability_id_l1: BC-2830
+  capability_name: Computerised Provider Order Entry
+  confidence: 0.7
+  evidence: POST /MedicationRequest  createMedicationRequest  Create MedicationRequest
+  reason: Creating and patching MedicationRequest is provider entry of a medication order/prescription,
+    matching Computerised Provider Order Entry ('Provider order entry for medications'). Some overlap
+    with pharmacy order verification keeps confidence moderate.
+- tag: ServiceRequest
+  spec_file: cerner-servicerequest-api-openapi.yml
+  capability_id: BC-2830.20
+  capability_id_l1: BC-2830
+  capability_name: Computerised Provider Order Entry
+  confidence: 0.7
+  evidence: GET /ServiceRequest searchServiceRequest Search ServiceRequest
+  reason: ServiceRequest represents provider orders for diagnostics, procedures and referrals, i.e. computerised
+    provider order entry data; read-only surface and possible referral overlap reduce confidence.
