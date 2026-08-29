@@ -10,6 +10,17 @@ info:
     (for example creating an Observation or DocumentReference). Every step inlines
     its request so the flow is self-contained.
   version: 1.0.0
+  x-realizes-capability-ids:
+  - BC-2800.20
+  x-capability-derivation:
+    method: 'deterministic join: sourceDescriptions -> per-tag OpenAPI -> tag/capability edge. No classification at this step.'
+    min_confidence: 0.7
+    sources:
+    - capability_id: BC-2800.20
+      capability_name: Patient Registration Management
+      spec: cerner-patient-api-openapi.yml
+      confidence: 0.7
+    model: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities, CC BY 4.0
 sourceDescriptions:
 - name: genericApi
   url: ../openapi/cerner-generic-api-openapi.yml
