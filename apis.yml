@@ -1610,6 +1610,9 @@ apis:
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
 common:
+- type: CapabilityMap
+  url: capabilities/cerner-capability-edges.yml
+  name: Oracle Health (Cerner) Business Capability Map
 - type: ParentCompany
   url: https://apis.io/providers/oracle/
   name: Oracle
