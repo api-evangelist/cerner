@@ -1,20 +1,22 @@
 openapi: 3.2.0
 info:
-  title: Cerner Condition API
+  title: Oracle Health Millennium Platform FHIR R4 Charge Item API
+  version: 4.0.1
+  summary: HL7 FHIR R4 API for Oracle Health Millennium Platform (formerly Cerner Millennium).
+  description: 'REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`. Every path, interaction, search parameter and OAuth scope in this document is present in one of those two provider-served resources; nothing was authored by hand. Millennium is multi-tenant: the tenant id is a required path segment of the service root, so the server variable `{tenant}` must be bound before any call. The open endpoint (`fhir-open.cerner.com`) is read-only and unauthenticated; the secure endpoints require SMART on FHIR OAuth 2.0.'
   contact:
     name: Oracle Health Developer Program
     url: https://www.oracle.com/health/developer/
-  x-refined-note:
-  - x-derived-from differs across the merged source definitions and was not carried
-  - x-fhir-instantiates differs across the merged source definitions and was not carried
-  - x-fhir-patch-formats differs across the merged source definitions and was not carried
-  version: '1.0'
-  description: 'Operations tagged Condition across 2 of this provider''s published API definitions: cerner-condition-api-openapi.yml, cerner-millennium-fhir-r4-openapi.yml. Each path carries the servers of the definition it was published in.'
+  x-derived-from:
+    capability_statement: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+    smart_configuration: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+    fetched: '2026-08-14'
+  x-fhir-instantiates:
+  - http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server
+  - http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data
+  x-fhir-patch-formats:
+  - application/json-patch+json
 servers:
-- url: https://fhir-ehr.cerner.com/r4
-  description: Cerner Millennium FHIR R4 production endpoint
-- url: https://fhir-open.cerner.com/r4
-  description: Cerner Millennium FHIR R4 sandbox endpoint
 - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
   description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
   variables:
@@ -33,58 +35,64 @@ servers:
     tenant:
       default: ec2458f2-1e24-41c8-b71b-0e701af7583d
       description: Millennium tenant id.
+security:
+- smartOnFhir: []
 tags:
-- name: Condition
-  description: Patient conditions and problem-list entries.
+- name: ChargeItem
+  description: FHIR R4 ChargeItem resource as implemented by Oracle Health Millennium Platform.
 paths:
-  /Condition:
+  /ChargeItem:
     get:
-      operationId: searchCondition
-      summary: Search or Read Condition
-      description: Search or read Condition resources for a patient.
+      operationId: searchChargeItem
+      summary: Search ChargeItem
+      description: FHIR R4 `search-type` interaction for ChargeItem. Returns a searchset Bundle. Follow `Bundle.link[relation=next]` for pagination rather than constructing page URLs.
       tags:
-      - Condition
+      - ChargeItem
       parameters:
-      - name: patient
+      - name: _id
         in: query
-        description: Patient resource reference.
+        required: false
         schema:
           type: string
+        description: ChargeItem id supports only the single id. It is a required field if the account or context fields are not given.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-id
+        x-fhir-search-type: token
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Encounter associated with the ChargeItem. If provided, the '-status' parameter must also be provided. It is a required field if the _id or account fields are not given.
+        x-fhir-search-type: reference
+      - name: account
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Account associated with the ChargeItem. If provided, the '-status' parameter must also be provided. It is a required field if the _id or context fields are not given.
+        x-fhir-search-type: reference
+      - name: -status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The status of the ChargeItem. Must be set to 'billable'. Must be provided with the context and account parameter.
+        x-fhir-search-type: token
+      - name: _count
+        in: query
+        required: false
+        schema:
+          type: number
+        description: The maximum number of results to return in a page. Not honored when '_id' is set.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-count
+        x-fhir-search-type: number
       responses:
         '200':
-          description: A FHIR Bundle of Condition resources
+          description: A FHIR searchset Bundle of ChargeItem resources.
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRBundle'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-      security:
-      - oauth2: []
-    post:
-      operationId: createCondition
-      summary: Create Condition
-      description: FHIR R4 `create` interaction for Condition.
-      tags:
-      - Condition
-      requestBody:
-        required: true
-        content:
-          application/fhir+json:
-            schema:
-              $ref: '#/components/schemas/Resource'
-      responses:
-        '201':
-          description: Condition created. The `Location` header carries the new resource URL.
-          headers:
-            Location:
-              description: URL of the created resource.
-              schema:
-                type: string
-            ETag:
-              description: Version identifier of the created resource.
-              schema:
-                type: string
+                $ref: '#/components/schemas/Bundle'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -99,35 +107,23 @@ paths:
           $ref: '#/components/responses/Error422'
         '500':
           $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns
-      x-fhir-update-create: false
-      security:
-      - oauth2: []
-    servers:
-    - url: https://fhir-ehr.cerner.com/r4
-      description: Cerner Millennium FHIR R4 production endpoint
-    - url: https://fhir-open.cerner.com/r4
-      description: Cerner Millennium FHIR R4 sandbox endpoint
-  /Condition/{id}:
+  /ChargeItem/{id}:
     parameters:
     - name: id
       in: path
       required: true
-      description: Logical id of the Condition resource.
+      description: Logical id of the ChargeItem resource.
       schema:
         type: string
     get:
-      operationId: readCondition
-      summary: Read Condition
-      description: FHIR R4 `read` interaction for Condition.
+      operationId: readChargeItem
+      summary: Read ChargeItem
+      description: FHIR R4 `read` interaction for ChargeItem.
       tags:
-      - Condition
+      - ChargeItem
       responses:
         '200':
-          description: The requested Condition resource.
+          description: The requested ChargeItem resource.
           content:
             application/fhir+json:
               schema:
@@ -146,37 +142,21 @@ paths:
           $ref: '#/components/responses/Error422'
         '500':
           $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns
-      x-fhir-update-create: false
-      security:
-      - smartOnFhir: []
-    put:
-      operationId: updateCondition
-      summary: Update Condition
-      description: FHIR R4 `update` interaction for Condition. Supply `If-Match` with the current version to avoid a 409 Conflict on a stale write.
+  /ChargeItem/$credit:
+    get:
+      operationId: opChargeItemCredit
+      summary: $credit on ChargeItem
+      description: 'Creates an offsetting ChargeItem for an existing debit ChargeItem. OperationDefinition: https://fhir-ehr.cerner.com/r4/OperationDefinition/charge-item-credit'
       tags:
-      - Condition
-      parameters:
-      - name: If-Match
-        in: header
-        required: false
-        description: Version ETag the client last read; the server rejects an out-of-date update with 409 Conflict.
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/fhir+json:
-            schema:
-              $ref: '#/components/schemas/Resource'
+      - ChargeItem
+      x-fhir-operation-definition: https://fhir-ehr.cerner.com/r4/OperationDefinition/charge-item-credit
       responses:
         '200':
-          description: Condition updated.
-        '409':
-          $ref: '#/components/responses/Error409'
+          description: Operation result.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Resource'
         '400':
           $ref: '#/components/responses/Error400'
         '401':
@@ -191,60 +171,66 @@ paths:
           $ref: '#/components/responses/Error422'
         '500':
           $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns
-      x-fhir-update-create: false
-      security:
-      - smartOnFhir: []
-    servers:
-    - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
-      description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
-      variables:
-        tenant:
-          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
-          description: Millennium tenant id. The sandbox default is the Oracle Health public sandbox tenant.
-    - url: https://fhir-myrecord.cerner.com/r4/{tenant}
-      description: Secure endpoint for patient-access personas.
-      variables:
-        tenant:
-          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
-          description: Millennium tenant id.
-    - url: https://fhir-open.cerner.com/r4/{tenant}
-      description: Open, unauthenticated, read-only endpoint.
-      variables:
-        tenant:
-          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
-          description: Millennium tenant id.
+  /ChargeItem/$modify:
+    get:
+      operationId: opChargeItemModify
+      summary: $modify on ChargeItem
+      description: 'Modifies an existing ChargeItem resulting in a newly created ChargeItem. OperationDefinition: https://fhir-ehr.cerner.com/r4/OperationDefinition/charge-item-modify'
+      tags:
+      - ChargeItem
+      x-fhir-operation-definition: https://fhir-ehr.cerner.com/r4/OperationDefinition/charge-item-modify
+      responses:
+        '200':
+          description: Operation result.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
+  /ChargeItem/$create:
+    get:
+      operationId: opChargeItemCreate
+      summary: $create on ChargeItem
+      description: 'Creates a charge event which can result in the creation of one or more ChargeItems. OperationDefinition: https://fhir-ehr.cerner.com/r4/OperationDefinition/charge-item-create'
+      tags:
+      - ChargeItem
+      x-fhir-operation-definition: https://fhir-ehr.cerner.com/r4/OperationDefinition/charge-item-create
+      responses:
+        '200':
+          description: Operation result.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
 components:
   schemas:
-    FHIRBundle:
-      type: object
-      description: A FHIR R4 Bundle resource wrapping a collection of resources.
-      properties:
-        resourceType:
-          type: string
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      additionalProperties: true
-    FHIRResource:
-      type: object
-      description: A generic FHIR R4 resource.
-      properties:
-        resourceType:
-          type: string
-        id:
-          type: string
-      additionalProperties: true
     Bundle:
       type: object
       description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
@@ -328,20 +314,8 @@ components:
       - resourceType
       additionalProperties: true
   responses:
-    Unauthorized:
-      description: Authentication credentials are missing or invalid.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/FHIRResource'
     Error422:
       description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error409:
-      description: Conflict — an update was attempted against an out-of-date version.
       content:
         application/fhir+json:
           schema:
@@ -379,22 +353,6 @@ components:
           schema:
             $ref: '#/components/schemas/OperationOutcome'
   securitySchemes:
-    oauth2:
-      type: oauth2
-      description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
-      flows:
-        authorizationCode:
-          authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
-          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-          scopes:
-            patient/*.read: Read all patient-scoped resources.
-            user/*.read: Read all user-scoped resources.
-            system/*.read: System-level read access.
-        clientCredentials:
-          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-          scopes:
-            system/*.read: System-level read access.
-            system/*.write: System-level write access.
     smartOnFhir:
       type: oauth2
       description: 'SMART on FHIR OAuth 2.0. Endpoints are tenant-scoped and are discovered per tenant from `/.well-known/smart-configuration`. Client authentication methods advertised by the server: client_secret_basic, private_key_jwt. PKCE methods: S256.'
@@ -710,8 +668,6 @@ components:
             system/Slot.write: 'System-level access: Slot.write'
             system/Specimen.read: 'System-level access: Specimen.read'
             system/Specimen.rs: 'System-level access: Specimen.rs'
-x-refined-from:
-- cerner-condition-api-openapi.yml
-- cerner-millennium-fhir-r4-openapi.yml
-x-generated-from: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-x-generated-by: claude-crawl-2026-05-08
+externalDocs:
+  description: Oracle Health Millennium Platform FHIR R4 API documentation
+  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html

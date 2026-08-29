@@ -1,20 +1,22 @@
 openapi: 3.2.0
 info:
-  title: Cerner Condition API
+  title: Oracle Health Millennium Platform FHIR R4 Basic API
+  version: 4.0.1
+  summary: HL7 FHIR R4 API for Oracle Health Millennium Platform (formerly Cerner Millennium).
+  description: 'REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`. Every path, interaction, search parameter and OAuth scope in this document is present in one of those two provider-served resources; nothing was authored by hand. Millennium is multi-tenant: the tenant id is a required path segment of the service root, so the server variable `{tenant}` must be bound before any call. The open endpoint (`fhir-open.cerner.com`) is read-only and unauthenticated; the secure endpoints require SMART on FHIR OAuth 2.0.'
   contact:
     name: Oracle Health Developer Program
     url: https://www.oracle.com/health/developer/
-  x-refined-note:
-  - x-derived-from differs across the merged source definitions and was not carried
-  - x-fhir-instantiates differs across the merged source definitions and was not carried
-  - x-fhir-patch-formats differs across the merged source definitions and was not carried
-  version: '1.0'
-  description: 'Operations tagged Condition across 2 of this provider''s published API definitions: cerner-condition-api-openapi.yml, cerner-millennium-fhir-r4-openapi.yml. Each path carries the servers of the definition it was published in.'
+  x-derived-from:
+    capability_statement: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata
+    smart_configuration: https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/.well-known/smart-configuration
+    fetched: '2026-08-14'
+  x-fhir-instantiates:
+  - http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server
+  - http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data
+  x-fhir-patch-formats:
+  - application/json-patch+json
 servers:
-- url: https://fhir-ehr.cerner.com/r4
-  description: Cerner Millennium FHIR R4 production endpoint
-- url: https://fhir-open.cerner.com/r4
-  description: Cerner Millennium FHIR R4 sandbox endpoint
 - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
   description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
   variables:
@@ -33,40 +35,19 @@ servers:
     tenant:
       default: ec2458f2-1e24-41c8-b71b-0e701af7583d
       description: Millennium tenant id.
+security:
+- smartOnFhir: []
 tags:
-- name: Condition
-  description: Patient conditions and problem-list entries.
+- name: Basic
+  description: FHIR R4 Basic resource as implemented by Oracle Health Millennium Platform.
 paths:
-  /Condition:
-    get:
-      operationId: searchCondition
-      summary: Search or Read Condition
-      description: Search or read Condition resources for a patient.
-      tags:
-      - Condition
-      parameters:
-      - name: patient
-        in: query
-        description: Patient resource reference.
-        schema:
-          type: string
-      responses:
-        '200':
-          description: A FHIR Bundle of Condition resources
-          content:
-            application/fhir+json:
-              schema:
-                $ref: '#/components/schemas/FHIRBundle'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-      security:
-      - oauth2: []
+  /Basic:
     post:
-      operationId: createCondition
-      summary: Create Condition
-      description: FHIR R4 `create` interaction for Condition.
+      operationId: createBasic
+      summary: Create Basic
+      description: FHIR R4 `create` interaction for Basic.
       tags:
-      - Condition
+      - Basic
       requestBody:
         required: true
         content:
@@ -75,7 +56,7 @@ paths:
               $ref: '#/components/schemas/Resource'
       responses:
         '201':
-          description: Condition created. The `Location` header carries the new resource URL.
+          description: Basic created. The `Location` header carries the new resource URL.
           headers:
             Location:
               description: URL of the created resource.
@@ -99,185 +80,47 @@ paths:
           $ref: '#/components/responses/Error422'
         '500':
           $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns
-      x-fhir-update-create: false
-      security:
-      - oauth2: []
-    servers:
-    - url: https://fhir-ehr.cerner.com/r4
-      description: Cerner Millennium FHIR R4 production endpoint
-    - url: https://fhir-open.cerner.com/r4
-      description: Cerner Millennium FHIR R4 sandbox endpoint
-  /Condition/{id}:
-    parameters:
-    - name: id
-      in: path
-      required: true
-      description: Logical id of the Condition resource.
-      schema:
-        type: string
-    get:
-      operationId: readCondition
-      summary: Read Condition
-      description: FHIR R4 `read` interaction for Condition.
-      tags:
-      - Condition
-      responses:
-        '200':
-          description: The requested Condition resource.
-          content:
-            application/fhir+json:
-              schema:
-                $ref: '#/components/schemas/Resource'
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-        '406':
-          $ref: '#/components/responses/Error406'
-        '422':
-          $ref: '#/components/responses/Error422'
-        '500':
-          $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns
-      x-fhir-update-create: false
-      security:
-      - smartOnFhir: []
-    put:
-      operationId: updateCondition
-      summary: Update Condition
-      description: FHIR R4 `update` interaction for Condition. Supply `If-Match` with the current version to avoid a 409 Conflict on a stale write.
-      tags:
-      - Condition
-      parameters:
-      - name: If-Match
-        in: header
-        required: false
-        description: Version ETag the client last read; the server rejects an out-of-date update with 409 Conflict.
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/fhir+json:
-            schema:
-              $ref: '#/components/schemas/Resource'
-      responses:
-        '200':
-          description: Condition updated.
-        '409':
-          $ref: '#/components/responses/Error409'
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-        '406':
-          $ref: '#/components/responses/Error406'
-        '422':
-          $ref: '#/components/responses/Error422'
-        '500':
-          $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-encounter-diagnosis
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns
-      x-fhir-update-create: false
-      security:
-      - smartOnFhir: []
-    servers:
-    - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
-      description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
-      variables:
-        tenant:
-          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
-          description: Millennium tenant id. The sandbox default is the Oracle Health public sandbox tenant.
-    - url: https://fhir-myrecord.cerner.com/r4/{tenant}
-      description: Secure endpoint for patient-access personas.
-      variables:
-        tenant:
-          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
-          description: Millennium tenant id.
-    - url: https://fhir-open.cerner.com/r4/{tenant}
-      description: Open, unauthenticated, read-only endpoint.
-      variables:
-        tenant:
-          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
-          description: Millennium tenant id.
 components:
+  responses:
+    Error422:
+      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error406:
+      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
+    Error404:
+      description: Not Found — the resource does not exist.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error403:
+      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error401:
+      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error400:
+      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error500:
+      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
   schemas:
-    FHIRBundle:
-      type: object
-      description: A FHIR R4 Bundle resource wrapping a collection of resources.
-      properties:
-        resourceType:
-          type: string
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      additionalProperties: true
-    FHIRResource:
-      type: object
-      description: A generic FHIR R4 resource.
-      properties:
-        resourceType:
-          type: string
-        id:
-          type: string
-      additionalProperties: true
-    Bundle:
-      type: object
-      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
-      properties:
-        resourceType:
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        link:
-          type: array
-          items:
-            type: object
-            properties:
-              relation:
-                type: string
-                examples:
-                - self
-                - next
-                - previous
-              url:
-                type: string
-                format: uri
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      required:
-      - resourceType
-      - type
-      additionalProperties: true
     OperationOutcome:
       type: object
       description: FHIR R4 OperationOutcome — the error envelope for every non-2xx response.
@@ -327,74 +170,7 @@ components:
       required:
       - resourceType
       additionalProperties: true
-  responses:
-    Unauthorized:
-      description: Authentication credentials are missing or invalid.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/FHIRResource'
-    Error422:
-      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error409:
-      description: Conflict — an update was attempted against an out-of-date version.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error406:
-      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
-    Error404:
-      description: Not Found — the resource does not exist.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error403:
-      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error401:
-      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error400:
-      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error500:
-      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
   securitySchemes:
-    oauth2:
-      type: oauth2
-      description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
-      flows:
-        authorizationCode:
-          authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
-          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-          scopes:
-            patient/*.read: Read all patient-scoped resources.
-            user/*.read: Read all user-scoped resources.
-            system/*.read: System-level read access.
-        clientCredentials:
-          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-          scopes:
-            system/*.read: System-level read access.
-            system/*.write: System-level write access.
     smartOnFhir:
       type: oauth2
       description: 'SMART on FHIR OAuth 2.0. Endpoints are tenant-scoped and are discovered per tenant from `/.well-known/smart-configuration`. Client authentication methods advertised by the server: client_secret_basic, private_key_jwt. PKCE methods: S256.'
@@ -710,8 +486,6 @@ components:
             system/Slot.write: 'System-level access: Slot.write'
             system/Specimen.read: 'System-level access: Specimen.read'
             system/Specimen.rs: 'System-level access: Specimen.rs'
-x-refined-from:
-- cerner-condition-api-openapi.yml
-- cerner-millennium-fhir-r4-openapi.yml
-x-generated-from: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-x-generated-by: claude-crawl-2026-05-08
+externalDocs:
+  description: Oracle Health Millennium Platform FHIR R4 API documentation
+  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html

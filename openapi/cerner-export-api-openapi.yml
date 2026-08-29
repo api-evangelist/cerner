@@ -1,0 +1,126 @@
+openapi: 3.2.0
+info:
+  title: Oracle Health Millennium Platform FHIR R4 Bulk Data Access Export API
+  version: '1.0'
+  summary: HL7 FHIR Bulk Data Access (Flat FHIR) export for Oracle Health Millennium Platform.
+  description: Asynchronous bulk export of Millennium EHR data as newline-delimited FHIR (NDJSON), following the HL7 FHIR Bulk Data Access (Flat FHIR) implementation guide. Every path and method in this document is published verbatim on the Oracle Health REST Endpoints page for the Bulk Data Access API; nothing is inferred. The flow is kick-off -> poll job -> download files -> delete job. Like the rest of the Millennium platform this API is multi-tenant, so the tenant id is a required path segment of the service root.
+  contact:
+    name: Oracle Health Developer Program
+    url: https://www.oracle.com/health/developer/
+  x-derived-from:
+    docs: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfbda/rest-endpoints.html
+    fetched: '2026-08-14'
+    note: Paths and methods are verbatim from the provider's REST Endpoints page. Request/response bodies, headers and status codes are not published on that page and are therefore NOT modelled here beyond what the Bulk Data Access IG mandates and the page states; they are left open rather than guessed.
+servers:
+- url: https://fhir-ehr.cerner.com/r4/{tenant}
+  description: Production FHIR service root.
+  variables:
+    tenant:
+      default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+      description: Millennium tenant id. The default is the Oracle Health public sandbox tenant.
+- url: https://fhir-ehr-code.cerner.com/r4/{tenant}
+  description: Secure sandbox FHIR service root.
+  variables:
+    tenant:
+      default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+      description: Millennium tenant id.
+security:
+- smartOnFhir: []
+tags:
+- name: Export
+  description: Kick off a bulk export job.
+paths:
+  /Group/{Group_ID}/$export:
+    parameters:
+    - name: Group_ID
+      in: path
+      required: true
+      description: Logical id of the FHIR Group whose members are exported.
+      schema:
+        type: string
+    get:
+      operationId: kickOffGroupExport
+      summary: Kick off a bulk export for a Group
+      description: 'Starts an asynchronous export of every member of the named Group. Per the Bulk Data Access IG the request carries `Accept: application/fhir+json` and `Prefer: respond-async`, and a successful kick-off returns 202 Accepted with a `Content-Location` header naming the job to poll.'
+      tags:
+      - Export
+      responses:
+        '202':
+          description: Export accepted. Poll the job named in `Content-Location`.
+          headers:
+            Content-Location:
+              description: URL of the export job to poll.
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/OperationOutcome'
+        '401':
+          $ref: '#/components/responses/OperationOutcome'
+        '403':
+          $ref: '#/components/responses/OperationOutcome'
+        '404':
+          $ref: '#/components/responses/OperationOutcome'
+  /Patient/$export:
+    post:
+      operationId: kickOffPatientListExport
+      summary: Kick off a bulk export for a supplied patient list
+      description: Starts an asynchronous export for a caller-provided list of patients. Published as POST because the patient list travels in the request body.
+      tags:
+      - Export
+      responses:
+        '202':
+          description: Export accepted. Poll the job named in `Content-Location`.
+          headers:
+            Content-Location:
+              description: URL of the export job to poll.
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/OperationOutcome'
+        '401':
+          $ref: '#/components/responses/OperationOutcome'
+        '403':
+          $ref: '#/components/responses/OperationOutcome'
+components:
+  schemas:
+    OperationOutcome:
+      type: object
+      description: FHIR R4 OperationOutcome — the error envelope for the Millennium platform.
+      properties:
+        resourceType:
+          const: OperationOutcome
+        issue:
+          type: array
+          items:
+            type: object
+            properties:
+              severity:
+                type: string
+              code:
+                type: string
+              diagnostics:
+                type: string
+      required:
+      - resourceType
+      - issue
+      additionalProperties: true
+  responses:
+    OperationOutcome:
+      description: FHIR OperationOutcome describing the failure.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+  securitySchemes:
+    smartOnFhir:
+      type: oauth2
+      description: SMART on FHIR OAuth 2.0, client-credentials flow with `system/` scopes. Endpoints are tenant-scoped and discovered from /.well-known/smart-configuration at the tenant service root. See scopes/cerner-scopes.yml for the 303 scopes the sandbox tenant advertises.
+      flows:
+        clientCredentials:
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            system/Patient.read: System-level read access to Patient.
+            system/Group.read: System-level read access to Group.
+externalDocs:
+  description: Oracle Health FHIR R4 Bulk Data Access APIs
+  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfbda/index.html

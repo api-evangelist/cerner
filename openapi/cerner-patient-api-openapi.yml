@@ -1,66 +1,459 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Oracle Health Millennium Platform FHIR R4 Capability Patient API
-  description: The Oracle Health (Cerner Millennium) FHIR R4 API provides OAuth 2.0-secured access to EHR data in the HL7 FHIR R4 format. It exposes USCDI-aligned resources such as Patient, Practitioner, Observation, Condition, MedicationRequest, DocumentReference, and Encounter for patient-access apps, provider apps, and interoperability partners. The API supports SMART on FHIR app launching and is the successor to the Cerner Millennium DSTU2 FHIR API.
-  version: R4
+  title: Cerner Patient API
   contact:
     name: Oracle Health Developer Program
     url: https://www.oracle.com/health/developer/
+  x-refined-note:
+  - x-derived-from differs across the merged source definitions and was not carried
+  - x-fhir-instantiates differs across the merged source definitions and was not carried
+  - x-fhir-patch-formats differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Patient across 2 of this provider''s published API definitions: cerner-millennium-fhir-r4-openapi.yml, cerner-patient-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
+- url: https://fhir-ehr-code.cerner.com/r4/{tenant}
+  description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
+  variables:
+    tenant:
+      default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+      description: Millennium tenant id. The sandbox default is the Oracle Health public sandbox tenant.
+- url: https://fhir-myrecord.cerner.com/r4/{tenant}
+  description: Secure endpoint for patient-access personas.
+  variables:
+    tenant:
+      default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+      description: Millennium tenant id.
+- url: https://fhir-open.cerner.com/r4/{tenant}
+  description: Open, unauthenticated, read-only endpoint.
+  variables:
+    tenant:
+      default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+      description: Millennium tenant id.
 - url: https://fhir-ehr.cerner.com/r4
   description: Cerner Millennium FHIR R4 production endpoint
 - url: https://fhir-open.cerner.com/r4
   description: Cerner Millennium FHIR R4 sandbox endpoint
-security:
-- oauth2: []
 tags:
 - name: Patient
-  description: Patient demographics and identifiers.
+  description: FHIR R4 Patient resource as implemented by Oracle Health Millennium Platform.
 paths:
   /Patient:
     get:
       operationId: searchPatient
-      summary: Search or Read Patient
-      description: Search or read Patient resources.
+      summary: Search Patient
+      description: FHIR R4 `search-type` interaction for Patient. Returns a searchset Bundle. Follow `Bundle.link[relation=next]` for pagination rather than constructing page URLs.
       tags:
       - Patient
       parameters:
+      - name: _id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: A single or comma separated list of Patient ids. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-patient-id
+        x-fhir-search-type: token
       - name: identifier
         in: query
-        description: Patient identifier.
+        required: false
         schema:
           type: string
+        description: A patient identifier. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-patient-identifier
+        x-fhir-search-type: token
       - name: name
         in: query
-        description: Patient name.
+        required: false
         schema:
           type: string
+        description: The beginning of any name of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-patient-name
+        x-fhir-search-type: string
+      - name: given
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The beginning of the given name of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-patient-given
+        x-fhir-search-type: string
+      - name: family
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The beginning of the family name of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-patient-family
+        x-fhir-search-type: string
+      - name: address-postalcode
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The postal code of the address of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/individual-address-postalcode
+        x-fhir-search-type: string
+      - name: birthdate
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The date of birth of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-patient-birthdate
+        x-fhir-search-type: date
+      - name: phone
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The value of the phone number of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/individual-phone
+        x-fhir-search-type: token
+      - name: email
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The value of the email address of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/individual-email
+        x-fhir-search-type: token
+      - name: gender
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The administrative gender of the patient. Gender may only be provided if another parameter other than '_id' is provided
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-patient-gender
+        x-fhir-search-type: token
+      - name: _count
+        in: query
+        required: false
+        schema:
+          type: number
+        description: The maximum number of results to return in a page. Not honored when '_id' or 'identifier' are set.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-count
+        x-fhir-search-type: number
       responses:
         '200':
-          description: A FHIR Bundle of Patient resources
+          description: A FHIR searchset Bundle of Patient resources.
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRBundle'
+                $ref: '#/components/schemas/Bundle'
+        '400':
+          $ref: '#/components/responses/Error400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
+      x-fhir-supported-profile:
+      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient
+      security:
+      - smartOnFhir: []
+    post:
+      operationId: createPatient
+      summary: Create Patient
+      description: FHIR R4 `create` interaction for Patient.
+      tags:
+      - Patient
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/Resource'
+      responses:
+        '201':
+          description: Patient created. The `Location` header carries the new resource URL.
+          headers:
+            Location:
+              description: URL of the created resource.
+              schema:
+                type: string
+            ETag:
+              description: Version identifier of the created resource.
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
+      x-fhir-supported-profile:
+      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient
+      security:
+      - smartOnFhir: []
+    servers:
+    - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
+      description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id. The sandbox default is the Oracle Health public sandbox tenant.
+    - url: https://fhir-myrecord.cerner.com/r4/{tenant}
+      description: Secure endpoint for patient-access personas.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
+    - url: https://fhir-open.cerner.com/r4/{tenant}
+      description: Open, unauthenticated, read-only endpoint.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
+  /Patient/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: Logical id of the Patient resource.
+      schema:
+        type: string
+    get:
+      operationId: readPatient
+      summary: Read Patient
+      description: FHIR R4 `read` interaction for Patient.
+      tags:
+      - Patient
+      responses:
+        '200':
+          description: The requested Patient resource.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
+      x-fhir-supported-profile:
+      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient
+      security:
+      - smartOnFhir: []
+    patch:
+      operationId: patchPatient
+      summary: Patch Patient
+      description: FHIR R4 `patch` interaction for Patient. The server advertises the JSON Patch and FHIRPath patch formats in `CapabilityStatement.patchFormat`.
+      tags:
+      - Patient
+      parameters:
+      - name: If-Match
+        in: header
+        required: false
+        description: Version ETag the client last read; the server rejects an out-of-date patch with 409 Conflict.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                type: object
+      responses:
+        '200':
+          description: Patient patched.
+        '409':
+          $ref: '#/components/responses/Error409'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
+      x-fhir-supported-profile:
+      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient
+      security:
+      - smartOnFhir: []
+    servers:
+    - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
+      description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id. The sandbox default is the Oracle Health public sandbox tenant.
+    - url: https://fhir-myrecord.cerner.com/r4/{tenant}
+      description: Secure endpoint for patient-access personas.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
+    - url: https://fhir-open.cerner.com/r4/{tenant}
+      description: Open, unauthenticated, read-only endpoint.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
+  /Patient/$health-cards-issue:
+    get:
+      operationId: opPatientHealthCardsIssue
+      summary: $health-cards-issue on Patient
+      description: 'Issues verifiable health cards for the patient. OperationDefinition: https://spec.smarthealth.cards/artifacts/operation-patient-i-health-cards-issue.json'
+      tags:
+      - Patient
+      x-fhir-operation-definition: https://spec.smarthealth.cards/artifacts/operation-patient-i-health-cards-issue.json
+      responses:
+        '200':
+          description: Operation result.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
+      security:
+      - smartOnFhir: []
+    servers:
+    - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
+      description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id. The sandbox default is the Oracle Health public sandbox tenant.
+    - url: https://fhir-myrecord.cerner.com/r4/{tenant}
+      description: Secure endpoint for patient-access personas.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
+    - url: https://fhir-open.cerner.com/r4/{tenant}
+      description: Open, unauthenticated, read-only endpoint.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
 components:
-  responses:
-    Unauthorized:
-      description: Authentication credentials are missing or invalid.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/FHIRResource'
   schemas:
-    FHIRResource:
+    Bundle:
       type: object
-      description: A generic FHIR R4 resource.
+      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
+      properties:
+        resourceType:
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                examples:
+                - self
+                - next
+                - previous
+              url:
+                type: string
+                format: uri
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+      - resourceType
+      - type
+      additionalProperties: true
+    OperationOutcome:
+      type: object
+      description: FHIR R4 OperationOutcome — the error envelope for every non-2xx response.
+      properties:
+        resourceType:
+          const: OperationOutcome
+        issue:
+          type: array
+          items:
+            type: object
+            properties:
+              severity:
+                type: string
+                examples:
+                - fatal
+                - error
+                - warning
+                - information
+              code:
+                type: string
+                examples:
+                - required
+                - business-rule
+                - extension
+                - not-supported
+              location:
+                type: array
+                items:
+                  type: string
+              diagnostics:
+                type: string
+      required:
+      - resourceType
+      - issue
+      additionalProperties: true
+    Resource:
+      type: object
+      description: A FHIR R4 resource. The wire format is `application/fhir+json`; element-level schemas are defined by HL7 FHIR R4 (4.0.1), not by this document.
       properties:
         resourceType:
           type: string
         id:
           type: string
+        meta:
+          type: object
+          additionalProperties: true
+      required:
+      - resourceType
       additionalProperties: true
     FHIRBundle:
       type: object
@@ -79,7 +472,382 @@ components:
             type: object
             additionalProperties: true
       additionalProperties: true
+    FHIRResource:
+      type: object
+      description: A generic FHIR R4 resource.
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+      additionalProperties: true
+  responses:
+    Error422:
+      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error409:
+      description: Conflict — an update was attempted against an out-of-date version.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error406:
+      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
+    Error404:
+      description: Not Found — the resource does not exist.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error403:
+      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error401:
+      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error400:
+      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error500:
+      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Unauthorized:
+      description: Authentication credentials are missing or invalid.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIRResource'
   securitySchemes:
+    smartOnFhir:
+      type: oauth2
+      description: 'SMART on FHIR OAuth 2.0. Endpoints are tenant-scoped and are discovered per tenant from `/.well-known/smart-configuration`. Client authentication methods advertised by the server: client_secret_basic, private_key_jwt. PKCE methods: S256.'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/provider/authorize
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+          refreshUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            fhirUser: Identity of the authorizing FHIR user.
+            launch: EHR launch context.
+            offline_access: Refresh token that survives the user session.
+            online_access: Refresh token bound to the user session.
+            openid: OpenID Connect authentication.
+            patient/Account.read: 'Patient-level access: Account.read'
+            patient/Account.rs: 'Patient-level access: Account.rs'
+            patient/AllergyIntolerance.crus: 'Patient-level access: AllergyIntolerance.crus'
+            patient/AllergyIntolerance.read: 'Patient-level access: AllergyIntolerance.read'
+            patient/AllergyIntolerance.write: 'Patient-level access: AllergyIntolerance.write'
+            patient/Appointment.crus: 'Patient-level access: Appointment.crus'
+            patient/Appointment.read: 'Patient-level access: Appointment.read'
+            patient/Appointment.write: 'Patient-level access: Appointment.write'
+            patient/Basic.c: 'Patient-level access: Basic.c'
+            patient/Basic.write: 'Patient-level access: Basic.write'
+            patient/Binary.r: 'Patient-level access: Binary.r'
+            patient/Binary.read: 'Patient-level access: Binary.read'
+            patient/CarePlan.read: 'Patient-level access: CarePlan.read'
+            patient/CarePlan.rs: 'Patient-level access: CarePlan.rs'
+            patient/CareTeam.read: 'Patient-level access: CareTeam.read'
+            patient/CareTeam.rs: 'Patient-level access: CareTeam.rs'
+            patient/ChargeItem.crs: 'Patient-level access: ChargeItem.crs'
+            patient/ChargeItem.read: 'Patient-level access: ChargeItem.read'
+            patient/ChargeItem.write: 'Patient-level access: ChargeItem.write'
+            patient/Communication.crus: 'Patient-level access: Communication.crus'
+            patient/Communication.read: 'Patient-level access: Communication.read'
+            patient/Communication.write: 'Patient-level access: Communication.write'
+            patient/Condition.crus: 'Patient-level access: Condition.crus'
+            patient/Condition.read: 'Patient-level access: Condition.read'
+            patient/Condition.write: 'Patient-level access: Condition.write'
+            patient/Consent.read: 'Patient-level access: Consent.read'
+            patient/Consent.rs: 'Patient-level access: Consent.rs'
+            patient/Coverage.cruds: 'Patient-level access: Coverage.cruds'
+            patient/Coverage.read: 'Patient-level access: Coverage.read'
+            patient/Coverage.write: 'Patient-level access: Coverage.write'
+            patient/Device.read: 'Patient-level access: Device.read'
+            patient/Device.rs: 'Patient-level access: Device.rs'
+            patient/DiagnosticReport.crs: 'Patient-level access: DiagnosticReport.crs'
+            patient/DiagnosticReport.read: 'Patient-level access: DiagnosticReport.read'
+            patient/DiagnosticReport.write: 'Patient-level access: DiagnosticReport.write'
+            patient/DocumentReference.crus: 'Patient-level access: DocumentReference.crus'
+            patient/DocumentReference.read: 'Patient-level access: DocumentReference.read'
+            patient/DocumentReference.write: 'Patient-level access: DocumentReference.write'
+            patient/Encounter.crus: 'Patient-level access: Encounter.crus'
+            patient/Encounter.read: 'Patient-level access: Encounter.read'
+            patient/Encounter.write: 'Patient-level access: Encounter.write'
+            patient/FamilyMemberHistory.crus: 'Patient-level access: FamilyMemberHistory.crus'
+            patient/FamilyMemberHistory.read: 'Patient-level access: FamilyMemberHistory.read'
+            patient/FamilyMemberHistory.write: 'Patient-level access: FamilyMemberHistory.write'
+            patient/Goal.read: 'Patient-level access: Goal.read'
+            patient/Goal.rs: 'Patient-level access: Goal.rs'
+            patient/Immunization.crus: 'Patient-level access: Immunization.crus'
+            patient/Immunization.read: 'Patient-level access: Immunization.read'
+            patient/Immunization.write: 'Patient-level access: Immunization.write'
+            patient/InsurancePlan.read: 'Patient-level access: InsurancePlan.read'
+            patient/InsurancePlan.rs: 'Patient-level access: InsurancePlan.rs'
+            patient/Media.r: 'Patient-level access: Media.r'
+            patient/Media.read: 'Patient-level access: Media.read'
+            patient/MedicationAdministration.read: 'Patient-level access: MedicationAdministration.read'
+            patient/MedicationAdministration.rs: 'Patient-level access: MedicationAdministration.rs'
+            patient/MedicationDispense.read: 'Patient-level access: MedicationDispense.read'
+            patient/MedicationDispense.rs: 'Patient-level access: MedicationDispense.rs'
+            patient/MedicationRequest.crus: 'Patient-level access: MedicationRequest.crus'
+            patient/MedicationRequest.read: 'Patient-level access: MedicationRequest.read'
+            patient/MedicationRequest.write: 'Patient-level access: MedicationRequest.write'
+            patient/NutritionOrder.read: 'Patient-level access: NutritionOrder.read'
+            patient/NutritionOrder.rs: 'Patient-level access: NutritionOrder.rs'
+            patient/Observation.crus: 'Patient-level access: Observation.crus'
+            patient/Observation.read: 'Patient-level access: Observation.read'
+            patient/Observation.write: 'Patient-level access: Observation.write'
+            patient/Patient.crus: 'Patient-level access: Patient.crus'
+            patient/Patient.read: 'Patient-level access: Patient.read'
+            patient/Patient.write: 'Patient-level access: Patient.write'
+            patient/Person.read: 'Patient-level access: Person.read'
+            patient/Person.rs: 'Patient-level access: Person.rs'
+            patient/Procedure.crs: 'Patient-level access: Procedure.crs'
+            patient/Procedure.read: 'Patient-level access: Procedure.read'
+            patient/Procedure.write: 'Patient-level access: Procedure.write'
+            patient/Provenance.crs: 'Patient-level access: Provenance.crs'
+            patient/Provenance.read: 'Patient-level access: Provenance.read'
+            patient/Provenance.write: 'Patient-level access: Provenance.write'
+            patient/Questionnaire.read: 'Patient-level access: Questionnaire.read'
+            patient/Questionnaire.rs: 'Patient-level access: Questionnaire.rs'
+            patient/QuestionnaireResponse.read: 'Patient-level access: QuestionnaireResponse.read'
+            patient/QuestionnaireResponse.rus: 'Patient-level access: QuestionnaireResponse.rus'
+            patient/QuestionnaireResponse.write: 'Patient-level access: QuestionnaireResponse.write'
+            patient/RelatedPerson.crus: 'Patient-level access: RelatedPerson.crus'
+            patient/RelatedPerson.read: 'Patient-level access: RelatedPerson.read'
+            patient/RelatedPerson.write: 'Patient-level access: RelatedPerson.write'
+            patient/Schedule.read: 'Patient-level access: Schedule.read'
+            patient/Schedule.rs: 'Patient-level access: Schedule.rs'
+            patient/ServiceRequest.read: 'Patient-level access: ServiceRequest.read'
+            patient/ServiceRequest.rs: 'Patient-level access: ServiceRequest.rs'
+            patient/Slot.read: 'Patient-level access: Slot.read'
+            patient/Slot.rus: 'Patient-level access: Slot.rus'
+            patient/Slot.write: 'Patient-level access: Slot.write'
+            patient/Specimen.read: 'Patient-level access: Specimen.read'
+            patient/Specimen.rs: 'Patient-level access: Specimen.rs'
+            profile: 'SMART on FHIR scope: profile'
+            user/Account.read: 'User-level access: Account.read'
+            user/Account.rs: 'User-level access: Account.rs'
+            user/AllergyIntolerance.crus: 'User-level access: AllergyIntolerance.crus'
+            user/AllergyIntolerance.read: 'User-level access: AllergyIntolerance.read'
+            user/AllergyIntolerance.write: 'User-level access: AllergyIntolerance.write'
+            user/Appointment.crus: 'User-level access: Appointment.crus'
+            user/Appointment.read: 'User-level access: Appointment.read'
+            user/Appointment.write: 'User-level access: Appointment.write'
+            user/Basic.c: 'User-level access: Basic.c'
+            user/Basic.write: 'User-level access: Basic.write'
+            user/Binary.r: 'User-level access: Binary.r'
+            user/Binary.read: 'User-level access: Binary.read'
+            user/CarePlan.read: 'User-level access: CarePlan.read'
+            user/CarePlan.rs: 'User-level access: CarePlan.rs'
+            user/CareTeam.read: 'User-level access: CareTeam.read'
+            user/CareTeam.rs: 'User-level access: CareTeam.rs'
+            user/ChargeItem.crs: 'User-level access: ChargeItem.crs'
+            user/ChargeItem.read: 'User-level access: ChargeItem.read'
+            user/ChargeItem.write: 'User-level access: ChargeItem.write'
+            user/Communication.crus: 'User-level access: Communication.crus'
+            user/Communication.read: 'User-level access: Communication.read'
+            user/Communication.write: 'User-level access: Communication.write'
+            user/Condition.crus: 'User-level access: Condition.crus'
+            user/Condition.read: 'User-level access: Condition.read'
+            user/Condition.write: 'User-level access: Condition.write'
+            user/Consent.read: 'User-level access: Consent.read'
+            user/Consent.rs: 'User-level access: Consent.rs'
+            user/Coverage.cruds: 'User-level access: Coverage.cruds'
+            user/Coverage.read: 'User-level access: Coverage.read'
+            user/Coverage.write: 'User-level access: Coverage.write'
+            user/Device.read: 'User-level access: Device.read'
+            user/Device.rs: 'User-level access: Device.rs'
+            user/DiagnosticReport.crs: 'User-level access: DiagnosticReport.crs'
+            user/DiagnosticReport.read: 'User-level access: DiagnosticReport.read'
+            user/DiagnosticReport.write: 'User-level access: DiagnosticReport.write'
+            user/DocumentReference.crus: 'User-level access: DocumentReference.crus'
+            user/DocumentReference.read: 'User-level access: DocumentReference.read'
+            user/DocumentReference.write: 'User-level access: DocumentReference.write'
+            user/Encounter.crus: 'User-level access: Encounter.crus'
+            user/Encounter.read: 'User-level access: Encounter.read'
+            user/Encounter.write: 'User-level access: Encounter.write'
+            user/FamilyMemberHistory.crus: 'User-level access: FamilyMemberHistory.crus'
+            user/FamilyMemberHistory.read: 'User-level access: FamilyMemberHistory.read'
+            user/FamilyMemberHistory.write: 'User-level access: FamilyMemberHistory.write'
+            user/Goal.read: 'User-level access: Goal.read'
+            user/Goal.rs: 'User-level access: Goal.rs'
+            user/Immunization.crus: 'User-level access: Immunization.crus'
+            user/Immunization.read: 'User-level access: Immunization.read'
+            user/Immunization.write: 'User-level access: Immunization.write'
+            user/InsurancePlan.read: 'User-level access: InsurancePlan.read'
+            user/InsurancePlan.rs: 'User-level access: InsurancePlan.rs'
+            user/Location.read: 'User-level access: Location.read'
+            user/Location.rs: 'User-level access: Location.rs'
+            user/Media.r: 'User-level access: Media.r'
+            user/Media.read: 'User-level access: Media.read'
+            user/MedicationAdministration.read: 'User-level access: MedicationAdministration.read'
+            user/MedicationAdministration.rs: 'User-level access: MedicationAdministration.rs'
+            user/MedicationDispense.read: 'User-level access: MedicationDispense.read'
+            user/MedicationDispense.rs: 'User-level access: MedicationDispense.rs'
+            user/MedicationRequest.crus: 'User-level access: MedicationRequest.crus'
+            user/MedicationRequest.read: 'User-level access: MedicationRequest.read'
+            user/MedicationRequest.write: 'User-level access: MedicationRequest.write'
+            user/NutritionOrder.read: 'User-level access: NutritionOrder.read'
+            user/NutritionOrder.rs: 'User-level access: NutritionOrder.rs'
+            user/Observation.crus: 'User-level access: Observation.crus'
+            user/Observation.read: 'User-level access: Observation.read'
+            user/Observation.write: 'User-level access: Observation.write'
+            user/Organization.crs: 'User-level access: Organization.crs'
+            user/Organization.read: 'User-level access: Organization.read'
+            user/Organization.write: 'User-level access: Organization.write'
+            user/Patient.crus: 'User-level access: Patient.crus'
+            user/Patient.read: 'User-level access: Patient.read'
+            user/Patient.write: 'User-level access: Patient.write'
+            user/Person.read: 'User-level access: Person.read'
+            user/Person.rs: 'User-level access: Person.rs'
+            user/Practitioner.crs: 'User-level access: Practitioner.crs'
+            user/Practitioner.read: 'User-level access: Practitioner.read'
+            user/Practitioner.write: 'User-level access: Practitioner.write'
+            user/Procedure.crs: 'User-level access: Procedure.crs'
+            user/Procedure.read: 'User-level access: Procedure.read'
+            user/Procedure.write: 'User-level access: Procedure.write'
+            user/Provenance.crs: 'User-level access: Provenance.crs'
+            user/Provenance.read: 'User-level access: Provenance.read'
+            user/Provenance.write: 'User-level access: Provenance.write'
+            user/Questionnaire.read: 'User-level access: Questionnaire.read'
+            user/Questionnaire.rs: 'User-level access: Questionnaire.rs'
+            user/QuestionnaireResponse.read: 'User-level access: QuestionnaireResponse.read'
+            user/QuestionnaireResponse.rus: 'User-level access: QuestionnaireResponse.rus'
+            user/QuestionnaireResponse.write: 'User-level access: QuestionnaireResponse.write'
+            user/RelatedPerson.crus: 'User-level access: RelatedPerson.crus'
+            user/RelatedPerson.read: 'User-level access: RelatedPerson.read'
+            user/RelatedPerson.write: 'User-level access: RelatedPerson.write'
+            user/Schedule.read: 'User-level access: Schedule.read'
+            user/Schedule.rs: 'User-level access: Schedule.rs'
+            user/ServiceRequest.read: 'User-level access: ServiceRequest.read'
+            user/ServiceRequest.rs: 'User-level access: ServiceRequest.rs'
+            user/Slot.read: 'User-level access: Slot.read'
+            user/Slot.rus: 'User-level access: Slot.rus'
+            user/Slot.write: 'User-level access: Slot.write'
+            user/Specimen.read: 'User-level access: Specimen.read'
+            user/Specimen.rs: 'User-level access: Specimen.rs'
+        clientCredentials:
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/hosts/fhir-ehr-code.cerner.com/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            system/Account.read: 'System-level access: Account.read'
+            system/Account.rs: 'System-level access: Account.rs'
+            system/AllergyIntolerance.crus: 'System-level access: AllergyIntolerance.crus'
+            system/AllergyIntolerance.read: 'System-level access: AllergyIntolerance.read'
+            system/AllergyIntolerance.write: 'System-level access: AllergyIntolerance.write'
+            system/Appointment.crus: 'System-level access: Appointment.crus'
+            system/Appointment.read: 'System-level access: Appointment.read'
+            system/Appointment.write: 'System-level access: Appointment.write'
+            system/Basic.c: 'System-level access: Basic.c'
+            system/Basic.write: 'System-level access: Basic.write'
+            system/Binary.r: 'System-level access: Binary.r'
+            system/Binary.read: 'System-level access: Binary.read'
+            system/CarePlan.read: 'System-level access: CarePlan.read'
+            system/CarePlan.rs: 'System-level access: CarePlan.rs'
+            system/CareTeam.read: 'System-level access: CareTeam.read'
+            system/CareTeam.rs: 'System-level access: CareTeam.rs'
+            system/ChargeItem.crs: 'System-level access: ChargeItem.crs'
+            system/ChargeItem.read: 'System-level access: ChargeItem.read'
+            system/ChargeItem.write: 'System-level access: ChargeItem.write'
+            system/Communication.crus: 'System-level access: Communication.crus'
+            system/Communication.read: 'System-level access: Communication.read'
+            system/Communication.write: 'System-level access: Communication.write'
+            system/Condition.crus: 'System-level access: Condition.crus'
+            system/Condition.read: 'System-level access: Condition.read'
+            system/Condition.write: 'System-level access: Condition.write'
+            system/Consent.read: 'System-level access: Consent.read'
+            system/Consent.rs: 'System-level access: Consent.rs'
+            system/Coverage.cruds: 'System-level access: Coverage.cruds'
+            system/Coverage.read: 'System-level access: Coverage.read'
+            system/Coverage.write: 'System-level access: Coverage.write'
+            system/Device.read: 'System-level access: Device.read'
+            system/Device.rs: 'System-level access: Device.rs'
+            system/DiagnosticReport.crs: 'System-level access: DiagnosticReport.crs'
+            system/DiagnosticReport.read: 'System-level access: DiagnosticReport.read'
+            system/DiagnosticReport.write: 'System-level access: DiagnosticReport.write'
+            system/DocumentReference.crus: 'System-level access: DocumentReference.crus'
+            system/DocumentReference.read: 'System-level access: DocumentReference.read'
+            system/DocumentReference.write: 'System-level access: DocumentReference.write'
+            system/Encounter.crus: 'System-level access: Encounter.crus'
+            system/Encounter.read: 'System-level access: Encounter.read'
+            system/Encounter.write: 'System-level access: Encounter.write'
+            system/FamilyMemberHistory.crus: 'System-level access: FamilyMemberHistory.crus'
+            system/FamilyMemberHistory.read: 'System-level access: FamilyMemberHistory.read'
+            system/FamilyMemberHistory.write: 'System-level access: FamilyMemberHistory.write'
+            system/FinancialTransaction.c: 'System-level access: FinancialTransaction.c'
+            system/FinancialTransaction.write: 'System-level access: FinancialTransaction.write'
+            system/Goal.read: 'System-level access: Goal.read'
+            system/Goal.rs: 'System-level access: Goal.rs'
+            system/Immunization.crus: 'System-level access: Immunization.crus'
+            system/Immunization.read: 'System-level access: Immunization.read'
+            system/Immunization.write: 'System-level access: Immunization.write'
+            system/InsurancePlan.read: 'System-level access: InsurancePlan.read'
+            system/InsurancePlan.rs: 'System-level access: InsurancePlan.rs'
+            system/Location.read: 'System-level access: Location.read'
+            system/Location.rs: 'System-level access: Location.rs'
+            system/Media.r: 'System-level access: Media.r'
+            system/Media.read: 'System-level access: Media.read'
+            system/MedicationAdministration.read: 'System-level access: MedicationAdministration.read'
+            system/MedicationAdministration.rs: 'System-level access: MedicationAdministration.rs'
+            system/MedicationDispense.read: 'System-level access: MedicationDispense.read'
+            system/MedicationDispense.rs: 'System-level access: MedicationDispense.rs'
+            system/MedicationRequest.crus: 'System-level access: MedicationRequest.crus'
+            system/MedicationRequest.read: 'System-level access: MedicationRequest.read'
+            system/MedicationRequest.write: 'System-level access: MedicationRequest.write'
+            system/NutritionOrder.read: 'System-level access: NutritionOrder.read'
+            system/NutritionOrder.rs: 'System-level access: NutritionOrder.rs'
+            system/Observation.crus: 'System-level access: Observation.crus'
+            system/Observation.read: 'System-level access: Observation.read'
+            system/Observation.write: 'System-level access: Observation.write'
+            system/Organization.crs: 'System-level access: Organization.crs'
+            system/Organization.read: 'System-level access: Organization.read'
+            system/Organization.write: 'System-level access: Organization.write'
+            system/Patient.crus: 'System-level access: Patient.crus'
+            system/Patient.read: 'System-level access: Patient.read'
+            system/Patient.write: 'System-level access: Patient.write'
+            system/Person.read: 'System-level access: Person.read'
+            system/Person.rs: 'System-level access: Person.rs'
+            system/Practitioner.crs: 'System-level access: Practitioner.crs'
+            system/Practitioner.read: 'System-level access: Practitioner.read'
+            system/Practitioner.write: 'System-level access: Practitioner.write'
+            system/Procedure.crs: 'System-level access: Procedure.crs'
+            system/Procedure.read: 'System-level access: Procedure.read'
+            system/Procedure.write: 'System-level access: Procedure.write'
+            system/Provenance.crs: 'System-level access: Provenance.crs'
+            system/Provenance.read: 'System-level access: Provenance.read'
+            system/Provenance.write: 'System-level access: Provenance.write'
+            system/Questionnaire.read: 'System-level access: Questionnaire.read'
+            system/Questionnaire.rs: 'System-level access: Questionnaire.rs'
+            system/QuestionnaireResponse.read: 'System-level access: QuestionnaireResponse.read'
+            system/QuestionnaireResponse.rus: 'System-level access: QuestionnaireResponse.rus'
+            system/QuestionnaireResponse.write: 'System-level access: QuestionnaireResponse.write'
+            system/RelatedPerson.crus: 'System-level access: RelatedPerson.crus'
+            system/RelatedPerson.read: 'System-level access: RelatedPerson.read'
+            system/RelatedPerson.write: 'System-level access: RelatedPerson.write'
+            system/Schedule.read: 'System-level access: Schedule.read'
+            system/Schedule.rs: 'System-level access: Schedule.rs'
+            system/ServiceRequest.read: 'System-level access: ServiceRequest.read'
+            system/ServiceRequest.rs: 'System-level access: ServiceRequest.rs'
+            system/Slot.read: 'System-level access: Slot.read'
+            system/Slot.rus: 'System-level access: Slot.rus'
+            system/Slot.write: 'System-level access: Slot.write'
+            system/Specimen.read: 'System-level access: Specimen.read'
+            system/Specimen.rs: 'System-level access: Specimen.rs'
     oauth2:
       type: oauth2
       description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
@@ -96,8 +864,8 @@ components:
           scopes:
             system/*.read: System-level read access.
             system/*.write: System-level write access.
-externalDocs:
-  description: Oracle Health Millennium FHIR R4 Documentation
-  url: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
+x-refined-from:
+- cerner-millennium-fhir-r4-openapi.yml
+- cerner-patient-api-openapi.yml
 x-generated-from: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
 x-generated-by: claude-crawl-2026-05-08
