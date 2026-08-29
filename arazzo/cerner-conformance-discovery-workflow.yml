@@ -10,8 +10,11 @@ info:
     advertises. Every step inlines its request so the flow is self-contained.
   version: 1.0.0
 sourceDescriptions:
-- name: cernerFhir
-  url: ../openapi/_original/cerner-oracle-health-fhir-r4-api-openapi.yml
+- name: capabilityApi
+  url: ../openapi/cerner-capability-api-openapi.yml
+  type: openapi
+- name: definitionsApi
+  url: ../openapi/cerner-definitions-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: conformance-discovery

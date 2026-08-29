@@ -11,8 +11,11 @@ info:
     its request so the flow is self-contained.
   version: 1.0.0
 sourceDescriptions:
-- name: cernerFhir
-  url: ../openapi/_original/cerner-oracle-health-fhir-r4-api-openapi.yml
+- name: genericApi
+  url: ../openapi/cerner-generic-api-openapi.yml
+  type: openapi
+- name: patientApi
+  url: ../openapi/cerner-patient-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: clinical-resource-write-back

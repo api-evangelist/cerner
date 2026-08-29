@@ -1,7 +1,7 @@
-generated: '2026-08-14'
-method: derived
-source: arazzo/*.yml
-note: >-
+x-generated: '2026-08-14'
+x-method: derived
+x-source: arazzo/*.yml
+x-note: >-
   Catalog of the Arazzo 1.0.1 workflows in this repository. Every sourceDescription was repaired this pass:
   the three workflows pointed at ../openapi/cerner-oracle-health-fhir-r4-api-openapi.yml, which does not
   exist at that path — the spec they reference lives in openapi/_original/. Every operationId referenced
@@ -46,6 +46,6 @@ workflows:
       - searchPatient
       - createResource
       - updateResource
-summary:
+x-summary:
   workflow_files: 3
   arazzo_version: 1.0.1

@@ -11,8 +11,20 @@ info:
     without opening the underlying OpenAPI description.
   version: 1.0.0
 sourceDescriptions:
-- name: cernerFhir
-  url: ../openapi/_original/cerner-oracle-health-fhir-r4-api-openapi.yml
+- name: capabilityApi
+  url: ../openapi/cerner-capability-api-openapi.yml
+  type: openapi
+- name: conditionApi
+  url: ../openapi/cerner-condition-api-openapi.yml
+  type: openapi
+- name: encounterApi
+  url: ../openapi/cerner-encounter-api-openapi.yml
+  type: openapi
+- name: patientApi
+  url: ../openapi/cerner-patient-api-openapi.yml
+  type: openapi
+- name: procedureApi
+  url: ../openapi/cerner-procedure-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: smart-patient-data-retrieval
