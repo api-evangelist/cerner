@@ -13,7 +13,7 @@ tags:
 - FHIR
 - Fortune 1000
 - HL7
-- HL7v2
+- HL7 v2
 - Healthcare
 - Interoperability
 - Millennium Platform
@@ -145,7 +145,7 @@ apis:
   tags:
   - CareAware
   - Device Integration
-  - HL7v2
+  - HL7 v2
   - Medical Device
   tags_raw:
   - CareAware
@@ -191,7 +191,7 @@ apis:
   humanURL: >-
     https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
-  - Capabilities
+  - Capability
   tags_raw:
   - Capability
   properties:
@@ -590,6 +590,8 @@ apis:
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
   tags:
+  - Communications
+  tags_raw:
   - Communication
   properties:
   - type: OpenAPI
@@ -831,6 +833,8 @@ apis:
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -951,6 +955,8 @@ apis:
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
   tags:
+  - Job
+  tags_raw:
   - Jobs
   properties:
   - type: OpenAPI
@@ -1253,6 +1259,8 @@ apis:
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
   tags:
+  - Persons
+  tags_raw:
   - Person
   properties:
   - type: OpenAPI
