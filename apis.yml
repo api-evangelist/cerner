@@ -13,7 +13,7 @@ tags:
 - FHIR
 - Fortune 1000
 - HL7
-- HL7 v2
+- HL7v2
 - Healthcare
 - Interoperability
 - Millennium Platform
@@ -145,7 +145,7 @@ apis:
   tags:
   - CareAware
   - Device Integration
-  - HL7 v2
+  - HL7v2
   - Medical Device
   tags_raw:
   - CareAware
@@ -191,7 +191,7 @@ apis:
   humanURL: >-
     https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
   tags:
-  - Capability
+  - Capabilities
   tags_raw:
   - Capability
   properties:
