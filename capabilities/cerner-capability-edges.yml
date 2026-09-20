@@ -42,7 +42,8 @@ edges:
   reason: Create, modify and credit of clinical charge items is charge capture within provider revenue
     cycle management.
 - tag: MedicationAdministration
-  spec_file: cerner-medicationadministration-api-openapi.yml
+  spec_file: cerner-medication-administration-api-openapi.yml
+  reanchored_from: cerner-medicationadministration-api-openapi.yml
   capability_id: BC-2850.40
   capability_id_l1: BC-2850
   capability_name: Medication Administration & Reconciliation
@@ -100,7 +101,8 @@ edges:
     used to verify coverage and benefits before service. Revenue-cycle claim production is an adjacent
     alternative reading, hence 0.7.
 - tag: MedicationRequest
-  spec_file: cerner-medicationrequest-api-openapi.yml
+  spec_file: cerner-medication-request-api-openapi.yml
+  reanchored_from: cerner-medicationrequest-api-openapi.yml
   capability_id: BC-2830.20
   capability_id_l1: BC-2830
   capability_name: Computerised Provider Order Entry
