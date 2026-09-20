@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 11
+edge_count: 14
 edges:
 - tag: Appointment
   spec_file: cerner-appointment-api-openapi.yml
@@ -90,6 +90,41 @@ edges:
   reason: FHIR Patient resource create/read/search/patch is the capture and stewardship of patient demographic
     and identity data — patient registration. Some ambiguity with master patient index stewardship, hence
     moderate confidence.
+- tag: AllergyIntolerance
+  spec_file: cerner-allergy-intolerance-api-openapi.yml
+  capability_id: BC-2830
+  capability_id_l1: BC-2830
+  capability_name: Clinical Documentation Management
+  confidence: 0.7
+  evidence: POST /AllergyIntolerance  createAllergyIntolerance; PUT /AllergyIntolerance/{id}  updateAllergyIntolerance
+  reason: Create/update of allergy and intolerance entries is clinician documentation of the active patient
+    record in the EHR. Which sub-capability (note documentation vs decision support input) is not determinable,
+    so L1 only.
+  recovered_from: healthcare-vertical-edges.json
+  reanchored_from: cerner-allergyintolerance-api-openapi.yml
+- tag: CarePlan
+  spec_file: cerner-care-plan-api-openapi.yml
+  capability_id: BC-2820
+  capability_id_l1: BC-2820
+  capability_name: Care Coordination Management
+  confidence: 0.7
+  evidence: GET /CarePlan searchCarePlan Search CarePlan
+  reason: FHIR CarePlan holds the patient's planned care activities and goals, which sits in care coordination/care
+    planning. Read-only search/read surface gives no signal on which sub-capability (case management vs
+    discharge planning), so only the L1 is asserted.
+  recovered_from: healthcare-vertical-edges.json
+  reanchored_from: cerner-careplan-api-openapi.yml
+- tag: Condition
+  spec_file: cerner-condition-api-openapi.yml
+  capability_id: BC-2830
+  capability_id_l1: BC-2830
+  capability_name: Clinical Documentation Management
+  confidence: 0.7
+  evidence: POST /Condition createCondition Create Condition
+  reason: Condition is the problem-list/diagnosis element of the active clinical record, created and updated
+    by clinicians — clinical documentation. Which sub-capability (note documentation vs decision support)
+    is not evidenced.
+  recovered_from: healthcare-vertical-edges.json
 - tag: Coverage
   spec_file: cerner-coverage-api-openapi.yml
   capability_id: BC-2800.30
