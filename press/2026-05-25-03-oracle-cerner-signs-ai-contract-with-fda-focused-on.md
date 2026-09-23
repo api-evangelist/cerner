@@ -1,7 +1,9 @@
 ---
 title: Oracle Cerner signs AI contract with FDA focused on ...
 url: https://fedscoop.com/oracle-cerner-fda-ai-contract/
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Cerner" press release artificial intelligence'
 position: 3
 source: serpapi-google

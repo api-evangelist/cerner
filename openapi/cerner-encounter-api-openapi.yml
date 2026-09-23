@@ -9,12 +9,8 @@ info:
   - x-fhir-instantiates differs across the merged source definitions and was not carried
   - x-fhir-patch-formats differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged Encounter across 2 of this provider''s published API definitions: cerner-encounter-api-openapi.yml, cerner-millennium-fhir-r4-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Encounter across 2 of this provider''s published API definitions: cerner-millennium-fhir-r4-openapi.yml, cerner-oracle-health-fhir-r4-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
-- url: https://fhir-ehr.cerner.com/r4
-  description: Cerner Millennium FHIR R4 production endpoint
-- url: https://fhir-open.cerner.com/r4
-  description: Cerner Millennium FHIR R4 sandbox endpoint
 - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
   description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
   variables:
@@ -33,34 +29,118 @@ servers:
     tenant:
       default: ec2458f2-1e24-41c8-b71b-0e701af7583d
       description: Millennium tenant id.
+- url: https://fhir-ehr.cerner.com/r4
+  description: Cerner Millennium FHIR R4 production endpoint
+- url: https://fhir-open.cerner.com/r4
+  description: Cerner Millennium FHIR R4 sandbox endpoint
 tags:
 - name: Encounter
-  description: Patient encounter records.
+  description: FHIR R4 Encounter resource as implemented by Oracle Health Millennium Platform.
 paths:
   /Encounter:
     get:
       operationId: searchEncounter
-      summary: Search or Read Encounter
-      description: Search or read Encounter resources for a patient.
+      summary: Search Encounter
+      description: FHIR R4 `search-type` interaction for Encounter. Returns a searchset Bundle. Follow `Bundle.link[relation=next]` for pagination rather than constructing page URLs.
       tags:
       - Encounter
       parameters:
-      - name: patient
+      - name: _id
         in: query
-        description: Patient resource reference.
+        required: false
         schema:
           type: string
+        description: A single or comma separated list of Encounter ids. It is a required field if the account or identifier or -pageContext or patient or subject fields are not given.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-id
+        x-fhir-search-type: token
+      - name: _count
+        in: query
+        required: false
+        schema:
+          type: number
+        description: The maximum number of results to return in a page. Not honored when '_id' is set.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-count
+        x-fhir-search-type: number
+      - name: patient
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The patient present at the encounter. It is a required field if the account or _id or identifier or -pageContext or subject fields are not given.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-patient
+        x-fhir-search-type: reference
+      - name: subject
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The patient present at the encounter. It is a required field if the account or _id or identifier or -pageContext or patient fields are not given.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Encounter-subject
+        x-fhir-search-type: reference
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The status of the encounter. Must be set with patient.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-status
+        x-fhir-search-type: token
+      - name: date
+        in: query
+        required: false
+        schema:
+          type: string
+        description: A date parameter may be provided once with a prefix and time component to imply a date range. Alternately it may be provided twice with 'le', 'lt', 'ge', or 'gt' prefixes and time component to search for encounters within a specific range. The date and prefix pairs must create a closed range. Must be set with patient or subject.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-date
+        x-fhir-search-type: date
+      - name: identifier
+        in: query
+        required: false
+        schema:
+          type: string
+        description: An encounter's identifier. It is a required field if the account or _id or -pageContext or patient or subject fields are not given.
+        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-identifier
+        x-fhir-search-type: token
+      - name: account
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The account associated with the encounters. This parameter is required if patient, subject, _id, or identifier is not used.
+        x-fhir-search-type: reference
+      - name: _lastUpdated
+        in: query
+        required: false
+        schema:
+          type: string
+        description: A date or date range used to search for Encounter records which were last updated in that period. The '_lastUpdated' parameter may be provided once without a prefix or time component to imply a date range or once without a prefix and with a time component to search for Encounter records at a specific time. Alternately it may be provided twice with 'le', 'lt', 'ge', or 'gt' prefixes to search for Encounter records within a specific range. The date and prefix pairs must create a closed range.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-lastUpdated
+        x-fhir-search-type: date
       responses:
         '200':
-          description: A FHIR Bundle of Encounter resources
+          description: A FHIR searchset Bundle of Encounter resources.
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/FHIRBundle'
+                $ref: '#/components/schemas/Bundle'
+        '400':
+          $ref: '#/components/responses/Error400'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '406':
+          $ref: '#/components/responses/Error406'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '500':
+          $ref: '#/components/responses/Error500'
+      x-fhir-supported-profile:
+      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter
       security:
-      - oauth2: []
+      - smartOnFhir: []
     post:
       operationId: createEncounter
       summary: Create Encounter
@@ -102,12 +182,26 @@ paths:
       x-fhir-supported-profile:
       - http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter
       security:
-      - oauth2: []
+      - smartOnFhir: []
     servers:
-    - url: https://fhir-ehr.cerner.com/r4
-      description: Cerner Millennium FHIR R4 production endpoint
-    - url: https://fhir-open.cerner.com/r4
-      description: Cerner Millennium FHIR R4 sandbox endpoint
+    - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
+      description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id. The sandbox default is the Oracle Health public sandbox tenant.
+    - url: https://fhir-myrecord.cerner.com/r4/{tenant}
+      description: Secure endpoint for patient-access personas.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
+    - url: https://fhir-open.cerner.com/r4/{tenant}
+      description: Open, unauthenticated, read-only endpoint.
+      variables:
+        tenant:
+          default: ec2458f2-1e24-41c8-b71b-0e701af7583d
+          description: Millennium tenant id.
   /Encounter/{id}:
     parameters:
     - name: id
@@ -211,66 +305,58 @@ paths:
           default: ec2458f2-1e24-41c8-b71b-0e701af7583d
           description: Millennium tenant id.
 components:
+  responses:
+    Error404:
+      description: Not Found — the resource does not exist.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error403:
+      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error406:
+      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
+    Error500:
+      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error409:
+      description: Conflict — an update was attempted against an out-of-date version.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error422:
+      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error400:
+      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error401:
+      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Unauthorized:
+      description: Authentication credentials are missing or invalid.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIRResource'
   schemas:
-    FHIRBundle:
-      type: object
-      description: A FHIR R4 Bundle resource wrapping a collection of resources.
-      properties:
-        resourceType:
-          type: string
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      additionalProperties: true
-    FHIRResource:
-      type: object
-      description: A generic FHIR R4 resource.
-      properties:
-        resourceType:
-          type: string
-        id:
-          type: string
-      additionalProperties: true
-    Bundle:
-      type: object
-      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
-      properties:
-        resourceType:
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        link:
-          type: array
-          items:
-            type: object
-            properties:
-              relation:
-                type: string
-                examples:
-                - self
-                - next
-                - previous
-              url:
-                type: string
-                format: uri
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      required:
-      - resourceType
-      - type
-      additionalProperties: true
     OperationOutcome:
       type: object
       description: FHIR R4 OperationOutcome — the error envelope for every non-2xx response.
@@ -306,6 +392,39 @@ components:
       - resourceType
       - issue
       additionalProperties: true
+    Bundle:
+      type: object
+      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
+      properties:
+        resourceType:
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                examples:
+                - self
+                - next
+                - previous
+              url:
+                type: string
+                format: uri
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+      - resourceType
+      - type
+      additionalProperties: true
     Resource:
       type: object
       description: A FHIR R4 resource. The wire format is `application/fhir+json`; element-level schemas are defined by HL7 FHIR R4 (4.0.1), not by this document.
@@ -320,74 +439,33 @@ components:
       required:
       - resourceType
       additionalProperties: true
-  responses:
-    Unauthorized:
-      description: Authentication credentials are missing or invalid.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/FHIRResource'
-    Error422:
-      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error409:
-      description: Conflict — an update was attempted against an out-of-date version.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error406:
-      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
-    Error404:
-      description: Not Found — the resource does not exist.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error403:
-      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error401:
-      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error400:
-      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error500:
-      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
+    FHIRBundle:
+      type: object
+      description: A FHIR R4 Bundle resource wrapping a collection of resources.
+      properties:
+        resourceType:
+          type: string
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      additionalProperties: true
+    FHIRResource:
+      type: object
+      description: A generic FHIR R4 resource.
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+      additionalProperties: true
   securitySchemes:
-    oauth2:
-      type: oauth2
-      description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
-      flows:
-        authorizationCode:
-          authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
-          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-          scopes:
-            patient/*.read: Read all patient-scoped resources.
-            user/*.read: Read all user-scoped resources.
-            system/*.read: System-level read access.
-        clientCredentials:
-          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
-          scopes:
-            system/*.read: System-level read access.
-            system/*.write: System-level write access.
     smartOnFhir:
       type: oauth2
       description: 'SMART on FHIR OAuth 2.0. Endpoints are tenant-scoped and are discovered per tenant from `/.well-known/smart-configuration`. Client authentication methods advertised by the server: client_secret_basic, private_key_jwt. PKCE methods: S256.'
@@ -703,8 +781,22 @@ components:
             system/Slot.write: 'System-level access: Slot.write'
             system/Specimen.read: 'System-level access: Specimen.read'
             system/Specimen.rs: 'System-level access: Specimen.rs'
+    oauth2:
+      type: oauth2
+      description: SMART on FHIR OAuth 2.0 with patient, user, and system scopes.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/personas/patient/authorize
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            patient/*.read: Read all patient-scoped resources.
+            user/*.read: Read all user-scoped resources.
+            system/*.read: System-level read access.
+        clientCredentials:
+          tokenUrl: https://authorization.cerner.com/tenants/{tenant}/protocols/oauth2/profiles/smart-v1/token
+          scopes:
+            system/*.read: System-level read access.
+            system/*.write: System-level write access.
 x-refined-from:
-- cerner-encounter-api-openapi.yml
 - cerner-millennium-fhir-r4-openapi.yml
-x-generated-from: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-x-generated-by: claude-crawl-2026-05-08
+- cerner-oracle-health-fhir-r4-api-openapi.yml

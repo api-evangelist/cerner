@@ -9,7 +9,7 @@ info:
   - x-fhir-instantiates differs across the merged source definitions and was not carried
   - x-fhir-patch-formats differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged Patient across 2 of this provider''s published API definitions: cerner-millennium-fhir-r4-openapi.yml, cerner-patient-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Patient across 2 of this provider''s published API definitions: cerner-millennium-fhir-r4-openapi.yml, cerner-oracle-health-fhir-r4-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://fhir-ehr-code.cerner.com/r4/{tenant}
   description: Secure endpoint for provider / non-patient personas (also the secure sandbox).
@@ -372,40 +372,58 @@ paths:
           default: ec2458f2-1e24-41c8-b71b-0e701af7583d
           description: Millennium tenant id.
 components:
+  responses:
+    Error404:
+      description: Not Found — the resource does not exist.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error403:
+      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error406:
+      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
+    Error500:
+      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error409:
+      description: Conflict — an update was attempted against an out-of-date version.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error422:
+      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error400:
+      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error401:
+      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Unauthorized:
+      description: Authentication credentials are missing or invalid.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/FHIRResource'
   schemas:
-    Bundle:
-      type: object
-      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
-      properties:
-        resourceType:
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        link:
-          type: array
-          items:
-            type: object
-            properties:
-              relation:
-                type: string
-                examples:
-                - self
-                - next
-                - previous
-              url:
-                type: string
-                format: uri
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      required:
-      - resourceType
-      - type
-      additionalProperties: true
     OperationOutcome:
       type: object
       description: FHIR R4 OperationOutcome — the error envelope for every non-2xx response.
@@ -440,6 +458,39 @@ components:
       required:
       - resourceType
       - issue
+      additionalProperties: true
+    Bundle:
+      type: object
+      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
+      properties:
+        resourceType:
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                examples:
+                - self
+                - next
+                - previous
+              url:
+                type: string
+                format: uri
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+      - resourceType
+      - type
       additionalProperties: true
     Resource:
       type: object
@@ -481,57 +532,6 @@ components:
         id:
           type: string
       additionalProperties: true
-  responses:
-    Error422:
-      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error409:
-      description: Conflict — an update was attempted against an out-of-date version.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error406:
-      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
-    Error404:
-      description: Not Found — the resource does not exist.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error403:
-      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error401:
-      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error400:
-      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error500:
-      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Unauthorized:
-      description: Authentication credentials are missing or invalid.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/FHIRResource'
   securitySchemes:
     smartOnFhir:
       type: oauth2
@@ -866,6 +866,4 @@ components:
             system/*.write: System-level write access.
 x-refined-from:
 - cerner-millennium-fhir-r4-openapi.yml
-- cerner-patient-api-openapi.yml
-x-generated-from: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-x-generated-by: claude-crawl-2026-05-08
+- cerner-oracle-health-fhir-r4-api-openapi.yml

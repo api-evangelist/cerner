@@ -1,7 +1,9 @@
 ---
 title: Oracle to launch new AI-backed EHR in 2025
 url: https://www.healthcaredive.com/news/oracle-new-ai-backed-ehr-2025/731398/
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Cerner" press release artificial intelligence'
 position: 1
 source: serpapi-google

@@ -1,7 +1,9 @@
 ---
 title: Oracle Buys Cerner
 url: https://www.prnewswire.com/news-releases/oracle-buys-cerner-301448252.html
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Cerner" press release artificial intelligence'
 position: 2
 source: serpapi-google

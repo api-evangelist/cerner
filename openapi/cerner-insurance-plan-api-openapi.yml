@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Oracle Health Millennium Platform FHIR R4 Medication Administration API
+  title: Oracle Health Millennium Platform FHIR R4 Insurance Plan API
   version: 4.0.1
   summary: HL7 FHIR R4 API for Oracle Health Millennium Platform (formerly Cerner Millennium).
-  description: 'REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`. Every path, interaction, search parameter and OAuth scope in this document is present in one of those two provider-served resources; nothing was authored by hand. Millennium is multi-tenant: the tenant id is a required path segment of the service root, so the server variable `{tenant}` must be bound before any call. The open endpoint (`fhir-open.cerner.com`) is read-only and unauthenticated; the secure endpoints require SMART on FHIR OAuth 2.0.'
+  description: REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`.
   contact:
     name: Oracle Health Developer Program
     url: https://www.oracle.com/health/developer/
@@ -38,60 +38,36 @@ servers:
 security:
 - smartOnFhir: []
 tags:
-- name: MedicationAdministration
-  description: FHIR R4 MedicationAdministration resource as implemented by Oracle Health Millennium Platform.
+- name: Insurance Plan
+  description: FHIR R4 InsurancePlan resource as implemented by Oracle Health Millennium Platform.
 paths:
-  /MedicationAdministration:
+  /InsurancePlan:
     get:
-      operationId: searchMedicationAdministration
-      summary: Search MedicationAdministration
-      description: FHIR R4 `search-type` interaction for MedicationAdministration. Returns a searchset Bundle. Follow `Bundle.link[relation=next]` for pagination rather than constructing page URLs.
+      operationId: searchInsurancePlan
+      summary: Search InsurancePlan
+      description: FHIR R4 `search-type` interaction for InsurancePlan. Returns a searchset Bundle. Follow `Bundle.link[relation=next]` for pagination rather than constructing page URLs.
       tags:
-      - MedicationAdministration
+      - Insurance Plan
       parameters:
       - name: _id
         in: query
         required: false
         schema:
           type: string
-        description: A single or comma separated list of MedicationAdministration ids.
+        description: A single or comma separated list of InsurancePlan ids.
         x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-id
         x-fhir-search-type: token
-      - name: patient
+      - name: owned-by
         in: query
         required: false
         schema:
           type: string
-        description: The identity of a patient to list administrations for. It is a required field if the _id field is not given.
-        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-patient
+        description: The organization that is providing the health insurance product.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/InsurancePlan-owned-by
         x-fhir-search-type: reference
-      - name: status
-        in: query
-        required: false
-        schema:
-          type: string
-        description: MedicationAdministration event status.
-        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-status
-        x-fhir-search-type: token
-      - name: performer
-        in: query
-        required: false
-        schema:
-          type: string
-        description: The identity of the individual who administered the medication.
-        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-performer
-        x-fhir-search-type: reference
-      - name: effective-time
-        in: query
-        required: false
-        schema:
-          type: string
-        description: A effective-time parameter may be provided once with 'le' or 'lt' or 'ge' or 'gt' prefix and time component to imply a date range. Alternately it may be provided twice with 'le', 'lt', 'ge', or 'gt' prefixes and time component to search for medications administered within a specific range. The date and prefix pairs must create a closed range.
-        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-effective-time
-        x-fhir-search-type: date
       responses:
         '200':
-          description: A FHIR searchset Bundle of MedicationAdministration resources.
+          description: A FHIR searchset Bundle of InsurancePlan resources.
           content:
             application/fhir+json:
               schema:
@@ -110,23 +86,23 @@ paths:
           $ref: '#/components/responses/Error422'
         '500':
           $ref: '#/components/responses/Error500'
-  /MedicationAdministration/{id}:
+  /InsurancePlan/{id}:
     parameters:
     - name: id
       in: path
       required: true
-      description: Logical id of the MedicationAdministration resource.
+      description: Logical id of the InsurancePlan resource.
       schema:
         type: string
     get:
-      operationId: readMedicationAdministration
-      summary: Read MedicationAdministration
-      description: FHIR R4 `read` interaction for MedicationAdministration.
+      operationId: readInsurancePlan
+      summary: Read InsurancePlan
+      description: FHIR R4 `read` interaction for InsurancePlan.
       tags:
-      - MedicationAdministration
+      - Insurance Plan
       responses:
         '200':
-          description: The requested MedicationAdministration resource.
+          description: The requested InsurancePlan resource.
           content:
             application/fhir+json:
               schema:
@@ -146,40 +122,46 @@ paths:
         '500':
           $ref: '#/components/responses/Error500'
 components:
+  responses:
+    Error404:
+      description: Not Found — the resource does not exist.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error403:
+      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error406:
+      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
+    Error500:
+      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error422:
+      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error400:
+      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error401:
+      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
   schemas:
-    Bundle:
-      type: object
-      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
-      properties:
-        resourceType:
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        link:
-          type: array
-          items:
-            type: object
-            properties:
-              relation:
-                type: string
-                examples:
-                - self
-                - next
-                - previous
-              url:
-                type: string
-                format: uri
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      required:
-      - resourceType
-      - type
-      additionalProperties: true
     OperationOutcome:
       type: object
       description: FHIR R4 OperationOutcome — the error envelope for every non-2xx response.
@@ -215,6 +197,39 @@ components:
       - resourceType
       - issue
       additionalProperties: true
+    Bundle:
+      type: object
+      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
+      properties:
+        resourceType:
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                examples:
+                - self
+                - next
+                - previous
+              url:
+                type: string
+                format: uri
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+      - resourceType
+      - type
+      additionalProperties: true
     Resource:
       type: object
       description: A FHIR R4 resource. The wire format is `application/fhir+json`; element-level schemas are defined by HL7 FHIR R4 (4.0.1), not by this document.
@@ -229,45 +244,6 @@ components:
       required:
       - resourceType
       additionalProperties: true
-  responses:
-    Error422:
-      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error406:
-      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
-    Error404:
-      description: Not Found — the resource does not exist.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error403:
-      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error401:
-      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error400:
-      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error500:
-      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
   securitySchemes:
     smartOnFhir:
       type: oauth2

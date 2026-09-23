@@ -1,7 +1,9 @@
 ---
 title: Oracle explores Cerner sale to fund AI expansion
 url: https://www.linkedin.com/posts/timlynott_healthtech-healthcareit-ehr-activity-7423118955730493440-4Eci
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Cerner" press release artificial intelligence'
 position: 5
 source: serpapi-google

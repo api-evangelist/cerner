@@ -3,7 +3,7 @@ info:
   title: Oracle Health Millennium Platform FHIR R4 Basic API
   version: 4.0.1
   summary: HL7 FHIR R4 API for Oracle Health Millennium Platform (formerly Cerner Millennium).
-  description: 'REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`. Every path, interaction, search parameter and OAuth scope in this document is present in one of those two provider-served resources; nothing was authored by hand. Millennium is multi-tenant: the tenant id is a required path segment of the service root, so the server variable `{tenant}` must be bound before any call. The open endpoint (`fhir-open.cerner.com`) is read-only and unauthenticated; the secure endpoints require SMART on FHIR OAuth 2.0.'
+  description: REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`.
   contact:
     name: Oracle Health Developer Program
     url: https://www.oracle.com/health/developer/
@@ -82,14 +82,6 @@ paths:
           $ref: '#/components/responses/Error500'
 components:
   responses:
-    Error422:
-      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error406:
-      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
     Error404:
       description: Not Found — the resource does not exist.
       content:
@@ -102,8 +94,16 @@ components:
         application/fhir+json:
           schema:
             $ref: '#/components/schemas/OperationOutcome'
-    Error401:
-      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
+    Error406:
+      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
+    Error500:
+      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error422:
+      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
       content:
         application/fhir+json:
           schema:
@@ -114,8 +114,8 @@ components:
         application/fhir+json:
           schema:
             $ref: '#/components/schemas/OperationOutcome'
-    Error500:
-      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+    Error401:
+      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
       content:
         application/fhir+json:
           schema:

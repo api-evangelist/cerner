@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Oracle Health Millennium Platform FHIR R4 Allergy Intolerance API
+  title: Oracle Health Millennium Platform FHIR R4 Medication…
   version: 4.0.1
   summary: HL7 FHIR R4 API for Oracle Health Millennium Platform (formerly Cerner Millennium).
-  description: 'REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`. Every path, interaction, search parameter and OAuth scope in this document is present in one of those two provider-served resources; nothing was authored by hand. Millennium is multi-tenant: the tenant id is a required path segment of the service root, so the server variable `{tenant}` must be bound before any call. The open endpoint (`fhir-open.cerner.com`) is read-only and unauthenticated; the secure endpoints require SMART on FHIR OAuth 2.0.'
+  description: REST surface of the Oracle Health Millennium Platform FHIR R4 API, derived operation-for-operation from the CapabilityStatement Oracle Health serves at `/metadata` on the secure sandbox tenant, and from the SMART on FHIR discovery document served at `/.well-known/smart-configuration`.
   contact:
     name: Oracle Health Developer Program
     url: https://www.oracle.com/health/developer/
@@ -38,23 +38,23 @@ servers:
 security:
 - smartOnFhir: []
 tags:
-- name: AllergyIntolerance
-  description: FHIR R4 AllergyIntolerance resource as implemented by Oracle Health Millennium Platform.
+- name: Medication Administration
+  description: FHIR R4 MedicationAdministration resource as implemented by Oracle Health Millennium Platform.
 paths:
-  /AllergyIntolerance:
+  /MedicationAdministration:
     get:
-      operationId: searchAllergyIntolerance
-      summary: Search AllergyIntolerance
-      description: FHIR R4 `search-type` interaction for AllergyIntolerance. Returns a searchset Bundle. Follow `Bundle.link[relation=next]` for pagination rather than constructing page URLs.
+      operationId: searchMedicationAdministration
+      summary: Search MedicationAdministration
+      description: FHIR R4 `search-type` interaction for MedicationAdministration. Returns a searchset Bundle. Follow `Bundle.link[relation=next]` for pagination rather than constructing page URLs.
       tags:
-      - AllergyIntolerance
+      - Medication Administration
       parameters:
       - name: _id
         in: query
         required: false
         schema:
           type: string
-        description: A single or comma separated list of AllergyIntolerance ids. It is a required field if the patient field is not given.
+        description: A single or comma separated list of MedicationAdministration ids.
         x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-id
         x-fhir-search-type: token
       - name: patient
@@ -62,28 +62,36 @@ paths:
         required: false
         schema:
           type: string
-        description: Who the sensitivity is for. It is a required field if the _id field is not given.
-        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-allergyintolerance-patient
+        description: The identity of a patient to list administrations for. It is a required field if the _id field is not given.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-patient
         x-fhir-search-type: reference
-      - name: clinical-status
+      - name: status
         in: query
         required: false
         schema:
           type: string
-        description: Certainty of the allergy or intolerance.
-        x-fhir-search-parameter: http://hl7.org/fhir/us/core/SearchParameter/us-core-allergyintolerance-clinical-status
+        description: MedicationAdministration event status.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-status
         x-fhir-search-type: token
-      - name: _lastUpdated
+      - name: performer
         in: query
         required: false
         schema:
           type: string
-        description: A date or date range used to search for AllergyIntolerance records which were last updated in that period. The '_lastUpdated' parameter may be provided once without a prefix or time component to imply a date range or once without a prefix and with a time component to search for AllergyIntolerance records at a specific time. Alternately it may be provided twice with 'le', 'lt', 'ge', or 'gt' prefixes to search for AllergyIntolerance records within a specific range. The date and prefix pairs must create a closed range.
-        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/Resource-lastUpdated
+        description: The identity of the individual who administered the medication.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-performer
+        x-fhir-search-type: reference
+      - name: effective-time
+        in: query
+        required: false
+        schema:
+          type: string
+        description: A effective-time parameter may be provided once with 'le' or 'lt' or 'ge' or 'gt' prefix and time component to imply a date range. Alternately it may be provided twice with 'le', 'lt', 'ge', or 'gt' prefixes and time component to search for medications administered within a specific range. The date and prefix pairs must create a closed range.
+        x-fhir-search-parameter: http://hl7.org/fhir/R4/SearchParameter/medicationadministration-effective-time
         x-fhir-search-type: date
       responses:
         '200':
-          description: A FHIR searchset Bundle of AllergyIntolerance resources.
+          description: A FHIR searchset Bundle of MedicationAdministration resources.
           content:
             application/fhir+json:
               schema:
@@ -102,67 +110,23 @@ paths:
           $ref: '#/components/responses/Error422'
         '500':
           $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance
-      x-fhir-update-create: false
-    post:
-      operationId: createAllergyIntolerance
-      summary: Create AllergyIntolerance
-      description: FHIR R4 `create` interaction for AllergyIntolerance.
-      tags:
-      - AllergyIntolerance
-      requestBody:
-        required: true
-        content:
-          application/fhir+json:
-            schema:
-              $ref: '#/components/schemas/Resource'
-      responses:
-        '201':
-          description: AllergyIntolerance created. The `Location` header carries the new resource URL.
-          headers:
-            Location:
-              description: URL of the created resource.
-              schema:
-                type: string
-            ETag:
-              description: Version identifier of the created resource.
-              schema:
-                type: string
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-        '406':
-          $ref: '#/components/responses/Error406'
-        '422':
-          $ref: '#/components/responses/Error422'
-        '500':
-          $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance
-      x-fhir-update-create: false
-  /AllergyIntolerance/{id}:
+  /MedicationAdministration/{id}:
     parameters:
     - name: id
       in: path
       required: true
-      description: Logical id of the AllergyIntolerance resource.
+      description: Logical id of the MedicationAdministration resource.
       schema:
         type: string
     get:
-      operationId: readAllergyIntolerance
-      summary: Read AllergyIntolerance
-      description: FHIR R4 `read` interaction for AllergyIntolerance.
+      operationId: readMedicationAdministration
+      summary: Read MedicationAdministration
+      description: FHIR R4 `read` interaction for MedicationAdministration.
       tags:
-      - AllergyIntolerance
+      - Medication Administration
       responses:
         '200':
-          description: The requested AllergyIntolerance resource.
+          description: The requested MedicationAdministration resource.
           content:
             application/fhir+json:
               schema:
@@ -181,85 +145,47 @@ paths:
           $ref: '#/components/responses/Error422'
         '500':
           $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance
-      x-fhir-update-create: false
-    put:
-      operationId: updateAllergyIntolerance
-      summary: Update AllergyIntolerance
-      description: FHIR R4 `update` interaction for AllergyIntolerance. Supply `If-Match` with the current version to avoid a 409 Conflict on a stale write.
-      tags:
-      - AllergyIntolerance
-      parameters:
-      - name: If-Match
-        in: header
-        required: false
-        description: Version ETag the client last read; the server rejects an out-of-date update with 409 Conflict.
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/fhir+json:
-            schema:
-              $ref: '#/components/schemas/Resource'
-      responses:
-        '200':
-          description: AllergyIntolerance updated.
-        '409':
-          $ref: '#/components/responses/Error409'
-        '400':
-          $ref: '#/components/responses/Error400'
-        '401':
-          $ref: '#/components/responses/Error401'
-        '403':
-          $ref: '#/components/responses/Error403'
-        '404':
-          $ref: '#/components/responses/Error404'
-        '406':
-          $ref: '#/components/responses/Error406'
-        '422':
-          $ref: '#/components/responses/Error422'
-        '500':
-          $ref: '#/components/responses/Error500'
-      x-fhir-supported-profile:
-      - http://hl7.org/fhir/us/core/StructureDefinition/us-core-allergyintolerance
-      x-fhir-update-create: false
 components:
+  responses:
+    Error404:
+      description: Not Found — the resource does not exist.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error403:
+      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error406:
+      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
+    Error500:
+      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error422:
+      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error400:
+      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+    Error401:
+      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
   schemas:
-    Bundle:
-      type: object
-      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
-      properties:
-        resourceType:
-          const: Bundle
-        type:
-          type: string
-        total:
-          type: integer
-        link:
-          type: array
-          items:
-            type: object
-            properties:
-              relation:
-                type: string
-                examples:
-                - self
-                - next
-                - previous
-              url:
-                type: string
-                format: uri
-        entry:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      required:
-      - resourceType
-      - type
-      additionalProperties: true
     OperationOutcome:
       type: object
       description: FHIR R4 OperationOutcome — the error envelope for every non-2xx response.
@@ -295,6 +221,39 @@ components:
       - resourceType
       - issue
       additionalProperties: true
+    Bundle:
+      type: object
+      description: 'A FHIR R4 Bundle. Search results are returned as `type: searchset`; paging is carried on `link[relation=next]`.'
+      properties:
+        resourceType:
+          const: Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                examples:
+                - self
+                - next
+                - previous
+              url:
+                type: string
+                format: uri
+        entry:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+      - resourceType
+      - type
+      additionalProperties: true
     Resource:
       type: object
       description: A FHIR R4 resource. The wire format is `application/fhir+json`; element-level schemas are defined by HL7 FHIR R4 (4.0.1), not by this document.
@@ -309,51 +268,6 @@ components:
       required:
       - resourceType
       additionalProperties: true
-  responses:
-    Error422:
-      description: Unprocessable Entity — syntactically valid JSON that violates a business rule, carries unsupported fields, modifier extensions, or implicit rules.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error409:
-      description: Conflict — an update was attempted against an out-of-date version.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error406:
-      description: 'Not Acceptable — a non-JSON media type was requested. Returned with `Content-Length: 0`.'
-    Error404:
-      description: Not Found — the resource does not exist.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error403:
-      description: Forbidden — unknown instance or the caller is not authorized for this tenant ("Tenant not valid or accessible").
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error401:
-      description: Unauthorized — no valid credentials were supplied to a secure endpoint.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error400:
-      description: Bad Request — a required search parameter was omitted. The server responds "No supported search parameters provided".
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
-    Error500:
-      description: Internal Server Error — including a response that is missing a field FHIR requires (OperationOutcome severity `fatal`, code `required`).
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
   securitySchemes:
     smartOnFhir:
       type: oauth2

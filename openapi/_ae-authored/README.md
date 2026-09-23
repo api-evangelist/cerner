@@ -11,4 +11,4 @@ file was discounted once and credited once.
 Moved, not deleted: they describe real APIs and the pipeline reads them. The only thing wrong was
 the claim their location made about who wrote them.
 
-Moved 2026-08-29, roadmap#2 item 4 / roadmap#48.
+Moved 2026-08-30, roadmap#2 item 4 / roadmap#48.

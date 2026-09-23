@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Oracle Health Millennium Platform FHIR R4 Bulk Data Access Files API
+  title: Oracle Health Millennium Platform FHIR R4 Bulk Data Access…
   version: '1.0'
   summary: HL7 FHIR Bulk Data Access (Flat FHIR) export for Oracle Health Millennium Platform.
-  description: Asynchronous bulk export of Millennium EHR data as newline-delimited FHIR (NDJSON), following the HL7 FHIR Bulk Data Access (Flat FHIR) implementation guide. Every path and method in this document is published verbatim on the Oracle Health REST Endpoints page for the Bulk Data Access API; nothing is inferred. The flow is kick-off -> poll job -> download files -> delete job. Like the rest of the Millennium platform this API is multi-tenant, so the tenant id is a required path segment of the service root.
+  description: Asynchronous bulk export of Millennium EHR data as newline-delimited FHIR (NDJSON), following the HL7 FHIR Bulk Data Access (Flat FHIR) implementation guide.
   contact:
     name: Oracle Health Developer Program
     url: https://www.oracle.com/health/developer/

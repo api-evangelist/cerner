@@ -1,7 +1,9 @@
 ---
 title: Oracle must stop kicking the Cerner can down the road— ...
 url: https://www.hfsresearch.com/research/oracle-kicking-cerner-decisive/
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Cerner" press release artificial intelligence'
 position: 4
 source: serpapi-google
