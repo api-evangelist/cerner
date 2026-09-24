@@ -1,5 +1,5 @@
-aid: cerner
-url: https://raw.githubusercontent.com/api-evangelist/cerner/refs/heads/main/apis.yml
+aid: oracle-health
+url: https://raw.githubusercontent.com/api-evangelist/oracle-health/refs/heads/main/apis.yml
 name: Oracle Health (Cerner)
 tags:
 - Bulk FHIR
@@ -96,7 +96,7 @@ description: 'Oracle Health, formerly Cerner, builds and operates Millennium —
   device and integration platform. There is no OpenAPI, no GraphQL endpoint, no MCP server, no agent card, no published
   pricing, no published rate limits, no status page and no first-party SDK for the FHIR API.'
 apis:
-- aid: cerner:oracle-health-fhir-dstu2-api
+- aid: oracle-health:oracle-health-fhir-dstu2-api
   name: Oracle Health Millennium FHIR DSTU2 API
   tags:
   - DSTU2
@@ -114,7 +114,7 @@ apis:
     Meaningful Use 2015 CEHRT certification criteria, and remains available alongside the newer R4 implementation
     for backward compatibility.
   baseURL: https://fhir-ehr.cerner.com/dstu2/{tenant}
-- aid: cerner:oracle-health-code-console
+- aid: oracle-health:oracle-health-code-console
   name: Oracle Health Code Console (Developer Portal)
   tags:
   - Code Console
@@ -141,7 +141,7 @@ apis:
     on FHIR and system-level applications, configure redirect URIs and launch parameters, manage OAuth
     2.0 client credentials, and access the Millennium sandbox for initial testing.
   baseURL: https://www.oracle.com/health/developer/
-- aid: cerner:cerner-careaware
+- aid: oracle-health:cerner-careaware
   name: Cerner CareAware Integration APIs
   tags:
   - CareAware
@@ -162,7 +162,7 @@ apis:
     capture, bi-directional HL7 v2 messaging, and workflow embedding into Millennium, supporting medical
     device manufacturers and hospital biomedical teams.
   baseURL: https://www.cerner.com/solutions/careaware-interoperability
-- aid: cerner:oracle-health-smart-on-fhir
+- aid: oracle-health:oracle-health-smart-on-fhir
   name: Oracle Health SMART on FHIR App Launch
   tags:
   - App Launch
@@ -186,7 +186,7 @@ apis:
     Connect identity tokens, enabling third-party clinician and patient-facing applications to embed inside
     Millennium PowerChart and Oracle Health portals.
   baseURL: https://authorization.cerner.com/tenants/{tenant}
-- aid: cerner:cerner-capability-api
+- aid: oracle-health:cerner-capability-api
   name: Cerner (Oracle Health) Capability API
   description: FHIR server metadata and capability statements.
   humanURL: >-
@@ -206,7 +206,7 @@ apis:
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-- aid: cerner:cerner-condition-api
+- aid: oracle-health:cerner-condition-api
   name: Cerner (Oracle Health) Condition API
   description: Patient conditions and problem-list entries.
   humanURL: >-
@@ -224,7 +224,7 @@ apis:
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-- aid: cerner:cerner-definitions-api
+- aid: oracle-health:cerner-definitions-api
   name: Cerner (Oracle Health) Definitions API
   description: FHIR conformance definitions and operations.
   humanURL: >-
@@ -242,7 +242,7 @@ apis:
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-- aid: cerner:cerner-encounter-api
+- aid: oracle-health:cerner-encounter-api
   name: Cerner (Oracle Health) Encounter API
   description: Patient encounter records.
   humanURL: >-
@@ -260,7 +260,7 @@ apis:
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-- aid: cerner:cerner-generic-api
+- aid: oracle-health:cerner-generic-api
   name: Cerner (Oracle Health) Generic API
   description: Generic FHIR resource read/write operations.
   humanURL: >-
@@ -278,7 +278,7 @@ apis:
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-- aid: cerner:cerner-patient-api
+- aid: oracle-health:cerner-patient-api
   name: Cerner (Oracle Health) Patient API
   description: Patient demographics and identifiers.
   humanURL: >-
@@ -298,7 +298,7 @@ apis:
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-- aid: cerner:cerner-procedure-api
+- aid: oracle-health:cerner-procedure-api
   name: Cerner (Oracle Health) Procedure API
   description: Patient procedures.
   humanURL: >-
@@ -316,7 +316,7 @@ apis:
   - type: DeveloperProgram
     url: https://www.oracle.com/health/developer/
   baseURL: https://fhir-ehr.cerner.com/r4/{tenant}
-- aid: cerner:cerner-account-api
+- aid: oracle-health:cerner-account-api
   name: Oracle Health (Cerner) Account API
   description: FHIR R4 Account resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -346,7 +346,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-appointment-api
+- aid: oracle-health:cerner-appointment-api
   name: Oracle Health (Cerner) Appointment API
   description: FHIR R4 Appointment resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -376,7 +376,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-basic-api
+- aid: oracle-health:cerner-basic-api
   name: Oracle Health (Cerner) Basic API
   description: FHIR R4 Basic resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -406,7 +406,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-binary-api
+- aid: oracle-health:cerner-binary-api
   name: Oracle Health (Cerner) Binary API
   description: FHIR R4 Binary resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -436,7 +436,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-careteam-api
+- aid: oracle-health:cerner-careteam-api
   name: Oracle Health (Cerner) Care Team API
   description: FHIR R4 CareTeam resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -466,7 +466,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-chargeitem-api
+- aid: oracle-health:cerner-chargeitem-api
   name: Oracle Health (Cerner) Charge Item API
   description: FHIR R4 ChargeItem resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -496,7 +496,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-communication-api
+- aid: oracle-health:cerner-communication-api
   name: Oracle Health (Cerner) Communication API
   description: FHIR R4 Communication resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -528,7 +528,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-consent-api
+- aid: oracle-health:cerner-consent-api
   name: Oracle Health (Cerner) Consent API
   description: FHIR R4 Consent resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -558,7 +558,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-coverage-api
+- aid: oracle-health:cerner-coverage-api
   name: Oracle Health (Cerner) Coverage API
   description: FHIR R4 Coverage resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -588,7 +588,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-device-api
+- aid: oracle-health:cerner-device-api
   name: Oracle Health (Cerner) Device API
   description: FHIR R4 Device resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -618,7 +618,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-diagnosticreport-api
+- aid: oracle-health:cerner-diagnosticreport-api
   name: Oracle Health (Cerner) Diagnostic Report API
   description: FHIR R4 DiagnosticReport resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -648,7 +648,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-export-api
+- aid: oracle-health:cerner-export-api
   name: Oracle Health (Cerner) Export API
   description: Kick off a bulk export job.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -678,7 +678,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-familymemberhistory-api
+- aid: oracle-health:cerner-familymemberhistory-api
   name: Oracle Health (Cerner) Family Member History API
   description: >-
     FHIR R4 FamilyMemberHistory resource as implemented by Oracle Health Millennium Platform.
@@ -709,7 +709,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-files-api
+- aid: oracle-health:cerner-files-api
   name: Oracle Health (Cerner) Files API
   description: Retrieve the download URLs for completed export files.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -741,7 +741,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-goal-api
+- aid: oracle-health:cerner-goal-api
   name: Oracle Health (Cerner) Goal API
   description: FHIR R4 Goal resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -771,7 +771,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-immunization-api
+- aid: oracle-health:cerner-immunization-api
   name: Oracle Health (Cerner) Immunization API
   description: FHIR R4 Immunization resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -801,7 +801,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-jobs-api
+- aid: oracle-health:cerner-jobs-api
   name: Oracle Health (Cerner) Jobs API
   description: Poll and cancel bulk export jobs.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -833,7 +833,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-location-api
+- aid: oracle-health:cerner-location-api
   name: Oracle Health (Cerner) Location API
   description: FHIR R4 Location resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -863,7 +863,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-media-api
+- aid: oracle-health:cerner-media-api
   name: Oracle Health (Cerner) Media API
   description: FHIR R4 Media resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -893,7 +893,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-medicationdispense-api
+- aid: oracle-health:cerner-medicationdispense-api
   name: Oracle Health (Cerner) Medication Dispense API
   description: FHIR R4 MedicationDispense resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -923,7 +923,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-nutritionorder-api
+- aid: oracle-health:cerner-nutritionorder-api
   name: Oracle Health (Cerner) Nutrition Order API
   description: FHIR R4 NutritionOrder resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -953,7 +953,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-observation-api
+- aid: oracle-health:cerner-observation-api
   name: Oracle Health (Cerner) Observation API
   description: FHIR R4 Observation resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -983,7 +983,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-operationdefinition-api
+- aid: oracle-health:cerner-operationdefinition-api
   name: Oracle Health (Cerner) Operation Definition API
   description: >-
     FHIR R4 OperationDefinition resource as implemented by Oracle Health Millennium Platform.
@@ -1014,7 +1014,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-organization-api
+- aid: oracle-health:cerner-organization-api
   name: Oracle Health (Cerner) Organization API
   description: FHIR R4 Organization resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1044,7 +1044,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-person-api
+- aid: oracle-health:cerner-person-api
   name: Oracle Health (Cerner) Person API
   description: FHIR R4 Person resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1076,7 +1076,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-practitioner-api
+- aid: oracle-health:cerner-practitioner-api
   name: Oracle Health (Cerner) Practitioner API
   description: FHIR R4 Practitioner resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1106,7 +1106,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-provenance-api
+- aid: oracle-health:cerner-provenance-api
   name: Oracle Health (Cerner) Provenance API
   description: FHIR R4 Provenance resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1136,7 +1136,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-questionnaire-api
+- aid: oracle-health:cerner-questionnaire-api
   name: Oracle Health (Cerner) Questionnaire API
   description: FHIR R4 Questionnaire resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1166,7 +1166,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-questionnaireresponse-api
+- aid: oracle-health:cerner-questionnaireresponse-api
   name: Oracle Health (Cerner) Questionnaire Response API
   description: >-
     FHIR R4 QuestionnaireResponse resource as implemented by Oracle Health Millennium Platform.
@@ -1197,7 +1197,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-relatedperson-api
+- aid: oracle-health:cerner-relatedperson-api
   name: Oracle Health (Cerner) Related Person API
   description: FHIR R4 RelatedPerson resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1227,7 +1227,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-schedule-api
+- aid: oracle-health:cerner-schedule-api
   name: Oracle Health (Cerner) Schedule API
   description: FHIR R4 Schedule resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1257,7 +1257,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-servicerequest-api
+- aid: oracle-health:cerner-servicerequest-api
   name: Oracle Health (Cerner) Service Request API
   description: FHIR R4 ServiceRequest resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1287,7 +1287,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-slot-api
+- aid: oracle-health:cerner-slot-api
   name: Oracle Health (Cerner) Slot API
   description: FHIR R4 Slot resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1317,7 +1317,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-specimen-api
+- aid: oracle-health:cerner-specimen-api
   name: Oracle Health (Cerner) Specimen API
   description: FHIR R4 Specimen resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1347,7 +1347,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-structuredefinition-api
+- aid: oracle-health:cerner-structuredefinition-api
   name: Oracle Health (Cerner) Structure Definition API
   description: >-
     FHIR R4 StructureDefinition resource as implemented by Oracle Health Millennium Platform.
@@ -1378,7 +1378,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-system-api
+- aid: oracle-health:cerner-system-api
   name: Oracle Health (Cerner) System API
   description: 'System-level FHIR interactions: conformance metadata and batch.'
   humanURL: https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/index.html
@@ -1408,7 +1408,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-allergy-intolerance-api
+- aid: oracle-health:cerner-allergy-intolerance-api
   name: Oracle Health (Cerner) Allergy Intolerance API
   description: FHIR R4 AllergyIntolerance resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://fhir.cerner.com/millennium/dstu2/
@@ -1440,7 +1440,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-capability-statement-api
+- aid: oracle-health:cerner-capability-statement-api
   name: Oracle Health (Cerner) Capability Statement API
   description: >-
     FHIR R4 CapabilityStatement resource as implemented by Oracle Health Millennium Platform.
@@ -1473,7 +1473,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-care-plan-api
+- aid: oracle-health:cerner-care-plan-api
   name: Oracle Health (Cerner) Care plan API
   description: FHIR R4 CarePlan resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://fhir.cerner.com/millennium/dstu2/
@@ -1505,7 +1505,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-document-reference-api
+- aid: oracle-health:cerner-document-reference-api
   name: Oracle Health (Cerner) Document Reference API
   description: FHIR R4 DocumentReference resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://fhir.cerner.com/millennium/dstu2/
@@ -1537,7 +1537,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-insurance-plan-api
+- aid: oracle-health:cerner-insurance-plan-api
   name: Oracle Health (Cerner) Insurance Plan API
   description: FHIR R4 InsurancePlan resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://fhir.cerner.com/millennium/dstu2/
@@ -1569,7 +1569,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-medication-administration-api
+- aid: oracle-health:cerner-medication-administration-api
   name: Oracle Health (Cerner) Medication Administration API
   description: >-
     FHIR R4 MedicationAdministration resource as implemented by Oracle Health Millennium Platform.
@@ -1602,7 +1602,7 @@ apis:
   - type: Reference
     url: >-
       https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/r4_overview.html
-- aid: cerner:cerner-medication-request-api
+- aid: oracle-health:cerner-medication-request-api
   name: Oracle Health (Cerner) Medication Request API
   description: FHIR R4 MedicationRequest resource as implemented by Oracle Health Millennium Platform.
   humanURL: https://fhir.cerner.com/millennium/dstu2/
@@ -1754,3 +1754,4 @@ x-enrichment:
 x-parent: oracle
 x-relationship: acquisition
 x-acquired: 2022
+x-former-name: Cerner Corporation
